@@ -9,15 +9,13 @@ Main = React.createClass
   getInitialState: ->
     n: 0 # range
     set: [] # truth set and lie set
-    # set: [[[1, 1000, 1], [1, 1000, 0]], [[1, 500, 0], [1, 500, 1], [501, 1000, 0]]]
+    maxLies: 2 # maximal number of lies
 
     # input values
-    rangeInput: 1000
-    qaInput: 1
-    qbInput: 500
-    qxInput: No
-
-  componentWillMount: ->
+    range: 1000
+    qa: 1
+    qb: 500
+    qx: No
 
   componentDidMount: ->
     @handlePlayButton()
@@ -45,18 +43,18 @@ Main = React.createClass
       set: []
 
   handlePlayButton: ->
-    n = @state.rangeInput
+    n = @state.range
     if n isnt ''
       @setState
         n: n
         set: [[[1, n, 1], [1, n, 0]]]
 
   handleSubmitButton: ->
-    if @state.qaInput is ''
+    if @state.qa is ''
       return null
-    if @state.qbInput is ''
+    if @state.qb is ''
       return null
-    if @state.qxInput is ''
+    if @state.qx is ''
       return null
     set = @state.set
     h = @generateHistory()
@@ -65,65 +63,37 @@ Main = React.createClass
     @setState set: set
 
   generateHistory: ->
-    set = @state.set
-    qa = @state.qaInput
-    qb = @state.qbInput
-    qx = @state.qxInput
+    {set, qa, qb, qx, maxLies} = @state
     h = []
     last = set[set.length - 1]
     for i in [1...last.length]
-      s = last[i]
-      # console.log 'h', h[0]
-      # console.log 's', s
-      if qx is Yes # the answer is Yes
-        if s[2] is 1 # the set is lie
-          if qb >= s[0] && qa <= s[1]
-            h.push([Math.max(s[0], qa), Math.min(s[1], qb), 1]) # add to lie set
-        else if s[2] is 0 # the set is truth
-          if qb >= s[0] && qa <= s[1]
-            if qa - 1 >= s[0]
-              h.push([s[0], qa - 1, 1]) # add to lie set
-            h.push([Math.max(s[0], qa), Math.min(s[1], qb), 0]) # add to truth set
-            if qb + 1 <= s[1]
-              h.push([qb + 1, s[1], 1]) # add to lie set
-          else
-            h.push([s[0], s[1], 1]) # add to lie set
-      else if qx is No # the answer is No
-        if s[2] is 1 # the set is lie
-          if qb >= s[0] && qa <= s[1]
-            if qa - 1 >= s[0]
-              h.push([s[0], qa - 1, 1]) # add to lie set
-            if qb + 1 <= s[1]
-              h.push([qb + 1, s[1], 1]) # add to lie set
-          else
-            h.push([s[0], s[1], 1]) # add to lie set
-        else if s[2] is 0 # the set is truth
-          if qb >= s[0] && qa <= s[1]
-            if qa - 1 >= s[0]
-              h.push([s[0], qa - 1, 0]) # add to lie set
-            h.push([Math.max(s[0], qa), Math.min(s[1], qb), 1]) # add to truth set
-            if qb + 1 <= s[1]
-              h.push([qb + 1, s[1], 0]) # add to lie set
-          else
-            h.push([s[0], s[1], 0]) # add to lie set
+      [sa, sb, sx] = last[i]
+      x = qx is Yes # correctness of range given
+      if qb >= sa && qa <= sb
+        if qa - 1 >= sa
+          if sx + x <= maxLies
+            h.push([sa, qa - 1, sx + x]) # A - U
+        if sx + !x <= maxLies
+          h.push([Math.max(sa, qa), Math.min(sb, qb), sx + !x]) # U
+        if qb + 1 <= sb
+          if sx + x <= maxLies
+            h.push([qb + 1, sb, sx + x]) # A - U
       else
-        console.log 'answer is undefined'
-        console.log qx
+        if sx + x <= maxLies
+          h.push([sa, sb, sx + x]) # A - U
     h.unshift([qa, qb, qx])
-    console.log 'return h', h
     return h
 
   render: ->
     dom 'section', className: 'row',
       dom 'span', className: 'five columns',
-
         dom 'div', {},
           dom 'label', {}, 'Range [1-n]'
           dom 'input',
             type: 'text'
-            name: 'rangeInput'
+            name: 'range'
             onChange: @handleInputNumberChange
-            value: @state.rangeInput
+            value: @state.range
             disabled: @state.set.length isnt 0
           dom 'i', {}, ' '
           if @state.set.length is 0
@@ -147,9 +117,9 @@ Main = React.createClass
             dom 'input',
               type: 'text'
               className: 'u-full-width'
-              name: 'qaInput'
+              name: 'qa'
               onChange: @handleInputNumberChange
-              value: @state.qaInput
+              value: @state.qa
               disabled: @state.set.length is 0
 
           dom 'div', className: 'three columns',
@@ -157,22 +127,22 @@ Main = React.createClass
             dom 'input',
               type: 'text'
               className: 'u-full-width'
-              name: 'qbInput'
+              name: 'qb'
               onChange: @handleInputNumberChange
-              value: @state.qbInput
+              value: @state.qb
               disabled: @state.set.length is 0
 
           dom 'div', className: 'three columns',
             dom 'label', {}, 'Answer'
             dom 'select',
               className: 'u-full-width'
-              name: 'qxInput'
+              name: 'qx'
               onChange: @handleInputChange
-              value: @state.qxInput
+              value: @state.qx
               disabled: @state.set.length is 0
               dom 'option', key: -1, value: '', disabled: true, ''
-              dom 'option', key: 0, value: 0, 'No'
               dom 'option', key: 1, value: 1, 'Yes'
+              dom 'option', key: 0, value: 0, 'No'
 
           dom 'div', className: 'three columns',
             dom 'label', className: 'u-invisible', 'i'
@@ -183,19 +153,33 @@ Main = React.createClass
               onClick: @handleSubmitButton
               'Submit'
 
+        dom 'hr'
+        dom 'span', {}, "Judge has chosen a number x in the range [1, n]. Guesser
+          has to find the number x using query range [a, b], then judge has to
+          answer if the number is inside range [a, b]."
+        dom 'br'
+        dom 'span', {}, "Firstly, define the range from 1 to n, then press start
+          button. You can always restart the game by pressing restart button.
+          Then each turn, Guesser give a query range [a, b], Judge then answer
+          the query whether the number is inside range [a, b] given by Guesser."
+        dom 'br'
+        dom 'small', {}, "Judge is allowed to lie #{@state.maxLies} times in
+          single game. Program will memorize all queries and answers to ensure
+          Judge doesn't lie more than #{@state.maxLies} times"
+
       # History of truth and lie sets
       dom 'span', className: 'six columns',
-        dom 'div', {}, 'Question bar'
+        dom 'label', {}, 'Question bar'
         for history, i in @state.set
           dom 'div', key: i, className: 'history',
             for set, j in history
               if j is 0
                 dom 'span', key: j, className: 'set color-muted',
-                  "#{set[0]} - #{set[1]}: #{if set[2] is Yes then 'yes' else 'no'}"
+                  "#{set[0]} - #{set[1]}: #{if set[2] is Yes then 'Yes' else 'No'}"
               else
                 dom 'span', key: j,
                   dom 'span',
-                    className: "set color-#{set[2] * 6}-muted",
+                    className: "set color-#{(set[2] * 5) % 12}-muted",
                     "#{set[0]} - #{set[1]}"
                   dom 'i', {}, ' '
 

@@ -17,7 +17,6 @@ hr {
 }
 
 $colors-list:
-  #5ca793
   #1395BA
   #117899
   #0f5b78
@@ -28,7 +27,9 @@ $colors-list:
   #ef8b2c
   #ecaa38
   #ebc844
-  #a2b86c;
+  #a2b86c
+  #5ca793
+  ;
 @each $current-color in $colors-list {
   $i: index($colors-list, $current-color) - 1;
   .color-#{$i} { 
