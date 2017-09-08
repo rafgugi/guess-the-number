@@ -1,0 +1,40 @@
+hr {
+  margin-top: 0;
+  margin-bottom: 25px;
+}
+
+.color-muted {
+  color: #adadad;
+}
+
+.history {
+  margin-bottom: 15px;
+
+  .set {
+    padding: 2px 4px;
+    border-radius: 5px;    
+  }
+}
+
+$colors-list:
+  #5ca793
+  #1395BA
+  #117899
+  #0f5b78
+  #0d3c55
+  #c02e1d
+  #d94e1f
+  #f16c20
+  #ef8b2c
+  #ecaa38
+  #ebc844
+  #a2b86c;
+@each $current-color in $colors-list {
+  $i: index($colors-list, $current-color) - 1;
+  .color-#{$i} { 
+    background-color: $current-color;
+  }
+  .color-#{$i}-muted {
+    background-color: ($current-color * 1 + #ffffff * 3) / 4;
+  }
+}

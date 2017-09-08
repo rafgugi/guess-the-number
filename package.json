@@ -1,0 +1,28 @@
+{
+  "name": "",
+  "version": "0.0.01",
+  "description": "",
+  "main": "gulpfile.js",
+  "scripts": {
+    "start": "gulp",
+    "build": "gulp build --production"
+  },
+  "author": "Risyanggi Azmi Faizin <switgarlik@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^4.17.2"
+  },
+  "devDependencies": {
+    "coffeeify": "^2.0.1",
+    "gulp": "gulpjs/gulp#4.0",
+    "gulp-browserify": "^0.5.1",
+    "gulp-coffee": "^2.3.3",
+    "gulp-concat": "^2.6.1",
+    "gulp-cssnano": "^2.1.0",
+    "gulp-load-plugins": "^1.1.0",
+    "gulp-sass": "^3.1.0",
+    "gulp-uglify": "^3.0.0",
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2"
+  }
+}
