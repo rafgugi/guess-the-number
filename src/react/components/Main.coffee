@@ -1,5 +1,6 @@
 React = require 'react'
 dom = React.createElement
+{abs, min, max} = Math
 Yes = '1'
 No = '0'
 
@@ -7,7 +8,6 @@ Main = React.createClass
   displayName: 'Main'
 
   getInitialState: ->
-    n: 0 # range
     set: [] # truth set and lie set
     maxLies: 2 # maximal number of lies
 
@@ -21,15 +21,14 @@ Main = React.createClass
     @handlePlayButton()
 
   handleInputNumberChange: (event)->
-    target = event.target
-    value = parseInt(target.value)
-    name = target.name
+    value = parseInt(event.target.value)
+    name = event.target.name
 
     baru = []
-    if target.value is ''
+    if event.target.value is ''
       baru[name] = ''
     else if not isNaN(value)
-      baru[name] = Math.abs(value)
+      baru[name] = abs(value)
     @setState baru
 
   handleInputChange: (event)->
@@ -39,28 +38,25 @@ Main = React.createClass
 
   handleResetButton: ->
     @setState
-      n: 0
       set: []
 
   handlePlayButton: ->
-    n = @state.range
-    if n isnt ''
+    {range} = @state
+    if range isnt ''
       @setState
-        n: n
-        set: [[[1, n, 1], [1, n, 0]]]
+        set: [[[1, range, Yes], [1, range, 0]]]
 
   handleSubmitButton: ->
-    if @state.qa is ''
-      return null
-    if @state.qb is ''
-      return null
-    if @state.qx is ''
-      return null
-    set = @state.set
+    if not @queryValidator()
+      return
     h = @generateHistory()
-    console.log 'generateHistory', h
+    {set} = @state
     set.push(h)
     @setState set: set
+
+  queryValidator: ->
+    {qa, qb, qx, range} = @state
+    1 <= qa <= qb <= range && qx isnt ''
 
   generateHistory: ->
     {set, qa, qb, qx, maxLies} = @state
@@ -71,16 +67,16 @@ Main = React.createClass
       x = qx is Yes # correctness of range given
       if qb >= sa && qa <= sb
         if qa - 1 >= sa
-          if sx + x <= maxLies
-            h.push([sa, qa - 1, sx + x]) # A - U
-        if sx + !x <= maxLies
-          h.push([Math.max(sa, qa), Math.min(sb, qb), sx + !x]) # U
+          if sx + x <= maxLies # A - U (left)
+            h.push([sa, qa - 1, sx + x])
+        if sx + !x <= maxLies # U
+          h.push([max(sa, qa), min(sb, qb), sx + !x])
         if qb + 1 <= sb
-          if sx + x <= maxLies
-            h.push([qb + 1, sb, sx + x]) # A - U
+          if sx + x <= maxLies # A - U (right)
+            h.push([qb + 1, sb, sx + x])
       else
-        if sx + x <= maxLies
-          h.push([sa, sb, sx + x]) # A - U
+        if sx + x <= maxLies # A - U
+          h.push([sa, sb, sx + x])
     h.unshift([qa, qb, qx])
     return h
 
@@ -155,7 +151,7 @@ Main = React.createClass
 
         dom 'hr'
         dom 'span', {}, "Judge has chosen a number x in the range [1, n]. Guesser
-          has to find the number x using query range [a, b], then judge has to
+          has to find the number x using query range [a, b], then Judge has to
           answer if the number is inside range [a, b]."
         dom 'br'
         dom 'span', {}, "Firstly, define the range from 1 to n, then press start
