@@ -10,4 +10,6 @@
 
 ### What to do with this app?
 
-What? Just play the game.
+What? Just play the game. A game for couple. First has chosen a number x in the range [1, n].
+Second has to find the number x using query range [a, b], then first has to answer if the
+number is inside range [a-b].
