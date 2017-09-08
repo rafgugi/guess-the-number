@@ -9,16 +9,16 @@ Main = React.createClass
 
   getInitialState: ->
     set: [] # truth set and lie set
-    maxLies: 2 # maximal number of lies
 
     # input values
     range: 1000
-    qa: 1
-    qb: 500
-    qx: No
+    maxLies: 2 # maximal number of lies
+    qa: 1 # query start
+    qb: 500 # query end
+    qx: No # query answer
 
   componentDidMount: ->
-    @handlePlayButton()
+    # @handlePlayButton()
 
   handleInputNumberChange: (event)->
     value = parseInt(event.target.value)
@@ -37,14 +37,14 @@ Main = React.createClass
     @setState baru
 
   handleResetButton: ->
-    @setState
-      set: []
+    @setState set: []
 
   handlePlayButton: ->
-    {range} = @state
-    if range isnt ''
+    {range, maxLies} = @state
+    if range isnt '' && maxLies isnt ''
       @setState
         set: [[[1, range, Yes], [1, range, 0]]]
+        maxLies: min(16, max(0, maxLies))
 
   handleSubmitButton: ->
     if not @queryValidator()
@@ -83,27 +83,39 @@ Main = React.createClass
   render: ->
     dom 'section', className: 'row',
       dom 'span', className: 'five columns',
-        dom 'div', {},
-          dom 'label', {}, 'Range [1-n]'
-          dom 'input',
-            type: 'text'
-            name: 'range'
-            onChange: @handleInputNumberChange
-            value: @state.range
-            disabled: @state.set.length isnt 0
-          dom 'i', {}, ' '
-          if @state.set.length is 0
-            dom 'button',
-              type: 'button'
-              className: 'button-primary'
-              onClick: @handlePlayButton
-              'Start'
-          else
-            dom 'button',
-              type: 'button'
-              className: 'button-danger'
-              onClick: @handleResetButton
-              'Restart'
+        dom 'div', className: 'row',
+          dom 'div', className: 'five columns',
+            dom 'label', {}, 'Range [1-n]'
+            dom 'input',
+              type: 'text'
+              className: 'u-full-width'
+              name: 'range'
+              onChange: @handleInputNumberChange
+              value: @state.range
+              disabled: @state.set.length isnt 0
+          dom 'div', className: 'two columns',
+            dom 'label', {}, 'Lie(s)'
+            dom 'input',
+              type: 'text'
+              className: 'u-full-width'
+              name: 'maxLies'
+              onChange: @handleInputNumberChange
+              value: @state.maxLies
+              disabled: @state.set.length isnt 0
+          dom 'div', className: 'four columns',
+            dom 'label', className: 'u-invisible', 'i'
+            if @state.set.length is 0
+              dom 'button',
+                type: 'button'
+                className: 'button-primary'
+                onClick: @handlePlayButton
+                'Start'
+            else
+              dom 'button',
+                type: 'button'
+                className: 'button-danger'
+                onClick: @handleResetButton
+                'Restart'
 
         # Query game
         dom 'hr'
@@ -128,7 +140,7 @@ Main = React.createClass
               value: @state.qb
               disabled: @state.set.length is 0
 
-          dom 'div', className: 'three columns',
+          dom 'div', className: 'two columns',
             dom 'label', {}, 'Answer'
             dom 'select',
               className: 'u-full-width'
@@ -144,7 +156,7 @@ Main = React.createClass
             dom 'label', className: 'u-invisible', 'i'
             dom 'button',
               type: 'button'
-              className: 'button-primary u-full-width'
+              className: 'button-primary'
               disabled: @state.set.length is 0
               onClick: @handleSubmitButton
               'Submit'
@@ -176,7 +188,7 @@ Main = React.createClass
                 dom 'span', key: j,
                   dom 'span',
                     className: "set color-#{(set[2] * 5) % 12}-muted",
-                    "#{set[0]} - #{set[1]}"
+                    "#{set[0]} - #{set[1]} (#{set[2]})"
                   dom 'i', {}, ' '
 
 module.exports = Main
