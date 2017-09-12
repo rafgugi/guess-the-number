@@ -10,8 +10,8 @@
 
 ### What to do with this app?
 
-Judge has chosen a number x in the range [1, n]. Guesser has to find the number x using query
-range [a, b], then Judge has to answer if the number is inside range [a, b].
+Judge has chosen a number x in the range [1, n]. Guesser has to find the number x using q
+queries range [a, b], then Judge has to answer if the number x is inside range [a, b].
 
 Firstly, define the range from 1 to n, then press start button. You can always restart the game
 by pressing restart button. Then each turn, Guesser give a query range [a, b], Judge then answer

@@ -1,8 +1,8 @@
 React = require 'react'
 dom = React.createElement
 {abs, min, max} = Math
-Yes = '1'
-No = '0'
+[No, Yes] = ['0', '1']
+lieLimit = 16 # limitation of lie by the program
 
 Main = React.createClass
   displayName: 'Main'
@@ -43,8 +43,11 @@ Main = React.createClass
     {range, maxLies} = @state
     if range isnt '' && maxLies isnt ''
       @setState
-        set: [[[1, range, Yes], [1, range, 0]]]
-        maxLies: min(16, max(0, maxLies))
+        set: [
+          q: [1, range, Yes]
+          s: [[1, range, 0]]
+        ]
+        maxLies: min(lieLimit, max(0, maxLies))
 
   handleSubmitButton: ->
     if not @queryValidator()
@@ -62,8 +65,7 @@ Main = React.createClass
     {set, qa, qb, qx, maxLies} = @state
     h = []
     last = set[set.length - 1]
-    for i in [1...last.length]
-      [sa, sb, sx] = last[i]
+    for [sa, sb, sx] in last.s
       x = qx is Yes # correctness of range given
       if qb >= sa && qa <= sb
         if qa - 1 >= sa
@@ -77,8 +79,7 @@ Main = React.createClass
       else
         if sx + x <= maxLies # A - U
           h.push([sa, sb, sx + x])
-    h.unshift([qa, qb, qx])
-    return h
+    return {q: [qa, qb, qx], s: h}
 
   render: ->
     dom 'section', className: 'row',
@@ -163,8 +164,8 @@ Main = React.createClass
 
         dom 'hr'
         dom 'span', {}, "Judge has chosen a number x in the range [1, n]. Guesser
-          has to find the number x using query range [a, b], then Judge has to
-          answer if the number is inside range [a, b]."
+          has to find the number x using q queries range [a, b], then Judge has
+          to answer if the number x is inside range [a, b]."
         dom 'br'
         dom 'span', {}, "Firstly, define the range from 1 to n, then press start
           button. You can always restart the game by pressing restart button.
@@ -180,11 +181,10 @@ Main = React.createClass
         dom 'label', {}, 'Question bar'
         for history, i in @state.set
           dom 'div', key: i, className: 'history',
-            for set, j in history
-              if j is 0
-                dom 'span', key: j, className: 'set color-muted',
-                  "#{set[0]} - #{set[1]}: #{if set[2] is Yes then 'Yes' else 'No'}"
-              else
+            dom 'span', className: 'set color-muted',
+              "#{history.q[0]} - #{history.q[1]}: #{if history.q[2] is Yes then 'Yes' else 'No'}"
+            dom 'span', {},
+              for set, j in history.s
                 dom 'span', key: j,
                   dom 'span',
                     className: "set color-#{(set[2] * 5) % 12}-muted",
