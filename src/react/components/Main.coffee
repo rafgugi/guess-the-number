@@ -1,10 +1,11 @@
 React = require 'react'
+createReactClass = require('create-react-class')
 dom = React.createElement
 {abs, min, max} = Math
 [No, Yes] = ['0', '1']
 lieLimit = 16 # limitation of lie by the program
 
-Main = React.createClass
+Main = createReactClass
   displayName: 'Main'
 
   getInitialState: ->
@@ -46,6 +47,7 @@ Main = React.createClass
         set: [
           q: [1, range, Yes]
           s: [[1, range, 0]]
+          n: [range].concat(0 for i in [0..maxLies - 1])
         ]
         maxLies: min(lieLimit, max(0, maxLies))
 
@@ -61,25 +63,30 @@ Main = React.createClass
     {qa, qb, qx, range} = @state
     1 <= qa <= qb <= range && qx isnt ''
 
+  pusH: ({s, n}, a, b, x) ->
+    if x <= @state.maxLies
+      s.push([a, b, x])
+      n[x] += b - a + 1
+
   generateHistory: ->
     {set, qa, qb, qx, maxLies} = @state
-    h = []
+    s = []
+    n = (0 for i in [0..maxLies])
+    q = [qa, qb, qx]
+    h = {q, s, n}
     last = set[set.length - 1]
+
     for [sa, sb, sx] in last.s
       x = qx is Yes # correctness of range given
       if qb >= sa && qa <= sb
         if qa - 1 >= sa
-          if sx + x <= maxLies # A - U (left)
-            h.push([sa, qa - 1, sx + x])
-        if sx + !x <= maxLies # U
-          h.push([max(sa, qa), min(sb, qb), sx + !x])
+          @pusH(h, sa, qa - 1, sx + x) # A - U (left)
+        @pusH(h, max(sa, qa), min(sb, qb), sx + !x) # U
         if qb + 1 <= sb
-          if sx + x <= maxLies # A - U (right)
-            h.push([qb + 1, sb, sx + x])
+          @pusH(h, qb + 1, sb, sx + x) # A - U (right)
       else
-        if sx + x <= maxLies # A - U
-          h.push([sa, sb, sx + x])
-    return {q: [qa, qb, qx], s: h}
+        @pusH(h, sa, sb, sx + x) # A - U
+    return h
 
   render: ->
     dom 'section', className: 'row',
@@ -149,15 +156,15 @@ Main = React.createClass
               onChange: @handleInputChange
               value: @state.qx
               disabled: @state.set.length is 0
-              dom 'option', key: -1, value: '', disabled: true, ''
-              dom 'option', key: 1, value: 1, 'Yes'
-              dom 'option', key: 0, value: 0, 'No'
+              dom 'option', value: '', disabled: true, ''
+              dom 'option', value: 1, 'Yes'
+              dom 'option', value: 0, 'No'
 
           dom 'div', className: 'three columns',
             dom 'label', className: 'u-invisible', 'i'
             dom 'button',
               type: 'button'
-              className: 'button-primary'
+              className: 'button' + if @state.set.length isnt 0 then '-primary'
               disabled: @state.set.length is 0
               onClick: @handleSubmitButton
               'Submit'
@@ -174,21 +181,36 @@ Main = React.createClass
         dom 'br'
         dom 'small', {}, "Judge is allowed to lie #{@state.maxLies} times in
           single game. Program will memorize all queries and answers to ensure
-          Judge doesn't lie more than #{@state.maxLies} times"
+          Judge doesn't lie more than #{@state.maxLies} times."
 
-      # History of truth and lie sets
+      # History of truth and lies sets
       dom 'span', className: 'six columns',
         dom 'label', {}, 'Question bar'
-        for history, i in @state.set
+        if @state.set.length <= 0
+          # Example
           dom 'div', key: i, className: 'history',
             dom 'span', className: 'set color-muted',
-              "#{history.q[0]} - #{history.q[1]}: #{if history.q[2] is Yes then 'Yes' else 'No'}"
+              "<query_start> - <query_end>: <query_answer>"
+            dom 'div', {},
+              dom 'span',
+                className: "set bg-color-0-muted",
+                "<ch_start> - <ch_end> (<lie_ch>)"
+              dom 'i', {}, ' '
+            dom 'small', className: 'color-muted', "[ lie_ch_count ]"
+        else for h, i in @state.set
+          dom 'div', key: i, className: 'history',
+            # Query
+            dom 'span', className: 'set color-muted',
+              "#{h.q[0]} - #{h.q[1]}: #{if h.q[2] is Yes then 'Yes' else 'No'}"
+            # Set
             dom 'span', {},
-              for set, j in history.s
+              for set, j in h.s
                 dom 'span', key: j,
                   dom 'span',
-                    className: "set color-#{(set[2] * 5) % 12}-muted",
+                    className: "set bg-color-#{(set[2] * 5) % 12}-muted",
                     "#{set[0]} - #{set[1]} (#{set[2]})"
                   dom 'i', {}, ' '
+            # Number
+            dom 'small', className: 'color-muted', "[#{h.n.toString()}]"
 
 module.exports = Main

@@ -32,10 +32,16 @@ $colors-list:
   ;
 @each $current-color in $colors-list {
   $i: index($colors-list, $current-color) - 1;
-  .color-#{$i} { 
+  .bg-color-#{$i} { 
     background-color: $current-color;
   }
-  .color-#{$i}-muted {
+  .bg-color-#{$i}-muted {
     background-color: ($current-color * 1 + #ffffff * 3) / 4;
+  }
+  .color-#{$i} { 
+    color: $current-color;
+  }
+  .color-#{$i}-muted {
+    color: ($current-color * 1 + #ffffff * 3) / 4;
   }
 }
