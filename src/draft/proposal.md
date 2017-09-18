@@ -1,6 +1,22 @@
 <!-- # PENYELESAIAN PERMASALAHAN ULAM PADA PERMASALAHAN SPOJ TANTANGAN 17820 GUESS THE NUMBER WITH LIES V5 -->
 # ALGORITMA PENCARIAN BINER NON INTERAKTIF UNTUK PENYELESAIAN PERMASALAHAN PENCARIAN ULAM DENGAN KEBOHONGAN LEBIH DARI DUA
 
+## Abstrak
+
+Dalam perkembangan dunia teknologi informasi selama beberapa dekade terakhir, teknologi informasi seringkali dijadikan solusi bagi permasalahan-permasalahan yang pernah ada, yang sebelumnya diselesaikan secara manual oleh manusia. Contoh permasalahan yang pernah ada adalah salah satu permasalahan klasik pencarian Rényi–Berlekamp–Ulam, atau dapat disingkat menjadi RBU. Permasalahan ini dapat diilustrasikan dengan adanya dua pemain yang disebut penanya dan penjawab.
+
+Sudah ada beberapa variasi pada permasalahan RBU. Pelc menyelesaikan permasalahan RBU dengan _query_ rentang [a,b] dan dengan maksimal jumlah bohong adalah satu. Mundici et all dan Min et all menyelesaikan permasalahan RBU dengan _query_ rentang [a,b] dan dengan maksimal jumlah bohong dua. Ahlswede mengilustrasikan permasalah RBU dengan maksimal bobot bohong adalah e dengan _graph_ _bipartite_.
+
+Salah satu variasi permasalahan RBU yang diangkat dalam penelitian ini adalah pencarian Ulam dengan m _query_ _subset_ Qi={q1,q2,...,qj} dimana qj ∈ Sn, maksimal bohong adalah e, dan penjawab hanya boleh menjawab _query_ penanya setelah penanya selesai menanyakan semua _query_-nya. Permasalahan ini dapat diselesaikan dengan pencarian biner non interaktif.
+
+## Abstract
+
+In the development of the world of information technology over the last few decades, information technology is often used as a solution to the problems that ever existed, which was previously solved manually by humans. Examples of problems that ever existed were one of the classic problems of searching Rényi-Berlekamp-Ulam, or it could be shortened to RBU. This problem can be illustrated by the presence of two players called pen and answer.
+
+There have been several variations on RBU issues. Pelc solves the RBU problem with query range [a, b] and with a maximum number of lies is one. Mundici et all and Min et all solved the RBU problem with query range [a, b] and with a maximum of two lying numbers. Ahlswede illustrates the problem of RBU with maximum lie weight is e with bipartite graph.
+
+One of the variations of RBU issues raised in this research is the Ulam search with m query subset Qi = {q1, q2, ..., qj} where qj ∈ Sn, max lie is e, and answerer can only answer query the asker after the asker is finished asking all query it. This problem can be solved by non-interactive binary search.
+
 ## BAB 1 Pendahuluan
 
 ### 1.1 Latar belakang
