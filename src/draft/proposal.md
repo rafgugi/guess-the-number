@@ -1,5 +1,5 @@
 <!-- # PENYELESAIAN PERMASALAHAN ULAM PADA PERMASALAHAN SPOJ TANTANGAN 17820 GUESS THE NUMBER WITH LIES V5 -->
-# PENGGUNAAN ALGORITMA PENCARIAN BINER NON INTERAKTIF UNTUK PENYELESAIAN PERMASALAHAN PENCARIAN ULAM DENGAN KEBOHONGAN
+# ALGORITMA PENCARIAN BINER NON INTERAKTIF UNTUK PENYELESAIAN PERMASALAHAN PENCARIAN ULAM DENGAN KEBOHONGAN LEBIH DARI DUA
 
 ## BAB 1 Pendahuluan
 
@@ -7,19 +7,19 @@
 
 Dalam perkembangan dunia teknologi informasi selama beberapa dekade terakhir, teknologi informasi seringkali dijadikan solusi bagi permasalahan-permasalahan yang pernah ada, yang sebelumnya diselesaikan secara manual oleh manusia. Contoh permasalahan yang pernah ada adalah salah satu permasalahan klasik pencarian Rényi–Berlekamp–Ulam, atau dapat disingkat menjadi RBU. Permasalahan ini dapat diilustrasikan dengan adanya dua pemain yang disebut penanya dan penjawab. Diberikan range pertanyaan Sn = {1,2,...,n}. Penjawab menentukan sebuah bilangan x ∈ Sn. Penanya harus menemukan nilai x dengan memberikan beberapa _query_ khusus apakah "x ∈ Q?", dimana Q adalah _subset_ dari Sn, lalu penjawab menjawab "ya" atau "tidak". Permasalahan utama adalah penjawab dapat berbohong sampai e kali. Tujuan dari RBU adalah mencari jumlah _query_ minimal untuk dapat menentukan nilai x. Permasalahan ini adalah turunan dari kerangka kerja pencarian adaptif biner.
 
-Sudah ada beberapa variasi pada permasalahan RBU. Pelc (1987) menyelesaikan permasalahan RBU dengan _query_ rentang a dan b dan dengan maksimal jumlah bohong adalah satu. Mundici et all (1997) dan Min et all (2016) menyelesaikan permasalahan RBU dengan _query_ rentang a dan b dan dengan maksimal jumlah bohong dua. Ahlswede (2007) mengilustrasikan permasalah RBU dengan maksimal bobot bohong adalah e, dengan menggunakan _bipartite graph_ untuk menyimpan channel kebohongan dan memberikan batasan asimtotik yang ketat untuk jumlah _query_ yang dibutuhkan untuk memecahkan masalah ini.
+Sudah ada beberapa variasi pada permasalahan RBU. Pelc (1987) menyelesaikan permasalahan RBU dengan _query_ rentang [a,b] dan dengan maksimal jumlah bohong adalah satu. Mundici et all (1997) dan Min et all (2016) menyelesaikan permasalahan RBU dengan _query_ rentang [a,b] dan dengan maksimal jumlah bohong dua. Ahlswede (2007) mengilustrasikan permasalah RBU dengan maksimal bobot bohong adalah e, dengan menggunakan _bipartite graph_ untuk menyimpan channel kebohongan dan memberikan batasan asimtotik yang ketat untuk jumlah _query_ yang dibutuhkan untuk memecahkan masalah ini.
 
-Permasalahan RBU yang diangkat dalam penelitian ini adalah variasi permasalahan dengan m _query_ _subset_ Qi = {q1,q2,...,qj} dimana qj ∈ Sn, maksimal bohong adalah e, dan penjawab hanya boleh menjawab _query_ penanya setelah penanya selesai menanyakan semua _query_-nya. Minimal jumlah _query_ yang dapat ditanyakan penanya adalah (2e + 1) * log2(n). Permasalahan ini ada pada SPOJ Challenge, Guess The Number With Lies v5 (GUESSN5).
+Salah satu variasi permasalahan RBU yang diangkat dalam penelitian ini adalah pencarian Ulam dengan m _query_ _subset_ Qi={q1,q2,...,qj} dimana qj ∈ Sn, maksimal bohong adalah e, dan penjawab hanya boleh menjawab _query_ penanya setelah penanya selesai menanyakan semua _query_-nya. Minimal jumlah _query_ yang dapat ditanyakan penanya adalah (2e + 1) * log2(n). Belum ada penelitian yang menyelesaikan permasalahan ini. Oleh karena itu penelitian ini bertujuan untuk memberikan solusi pada permasalahan ini.
 
 ### 1.2 Perumusan masalah
 
-1. Bagaimana merumuskan pertanyaan untuk mencari bilangan diskrit pada interval yang diberikan pada permasalahan SPOJ GUESSN5 dengan pertanyaan seminimal mungkin?
-2. Bagaimana implementasi struktur data yang efisien dan optimal untuk menyelesaikan permasalahan SPOJ GUESSN5?
+1. Bagaimana merumuskan _query_ untuk mencari bilangan diskrit pada interval yang diberikan pada permasalahan pencarian Ulam dengan pertanyaan seminimal mungkin?
+2. Bagaimana implementasi struktur data yang efisien dan optimal untuk menyelesaikan permasalahan pencarian Ulam?
 
 ### 1.3 Tujuan penelitian
 
-1. Melakukan analisis dan mendesain algoritma dan struktur data untuk mencari bilangan dengan kebohongan dalam studi kasus permasalahan SPOJ GUESSN5.
-2. Mengevaluasi hasil dan kinerja algoritma dan struktur data yang telah dirancang untuk permasalahan SPOJ GUESSN5.
+1. Melakukan analisis dan mendesain algoritma dan struktur data untuk mencari bilangan dengan kebohongan dalam studi kasus permasalahan pencarian Ulam non interaktif dengan kebohongan.
+2. Mengevaluasi hasil dan kinerja algoritma dan struktur data yang telah dirancang untuk permasalahan pencarian Ulam non interaktif dengan kebohongan.
 
 ### 1.4 Manfaat penelitian
 
@@ -27,7 +27,7 @@ Penelitian tesis ini diharapkan dapat mengimplementasi solusi dari permasalahan 
 
 ### 1.5 Kontribusi penelitian
 
-Kondisi terkini adalah metode data hiding yang diusulkan sebelumnya masih belum optimal dalam memanfaatkan blok bertipe smooth sehingga tingkat kerusakan objek stego masih cukup tinggi. Penelitian ini mengembangkan metode baru untuk mengurangi permasalahan tersebut. Kontribusi dari penelitian ini adalah mengembangkan metode baru untuk mengelompokkan piksel bernilai mirip serta mereduksi nilai expanded prediction error setelah dilakukan penyisipan data lebih dari 1 bit.
+Penelitian tentang permasalahan Ulam selama ini hanya membahas tentang _query_ yang interaktif dari penanya dan penjawab, baik dengan jumlah maksimal bohong satu, dua, tiga, dan lebih dari tiga. Namun belum ada ilmiay untuk permasalahan Ulam dengan _query_ non interaktif dengan jumlah bohong lebih dari dua. Kontribusi dari penelitian ini adalah menggunakan metode pencarian biner non interaktif untuk menyelesaikan permasalahan Ulam.
 
 ### 1.6 Batasan masalah
 
@@ -38,7 +38,7 @@ Kondisi terkini adalah metode data hiding yang diusulkan sebelumnya masih belum 
 
 ## BAB 2 Tinjauan pustaka
 
-### 2.1 Deskripsi umum permasalahan SPOJ GUESSN5
+### 2.1 Deskripsi umum permasalahan
 
 Penjawab menentukan sebuah bilangan x pada rentang Sn=[1,n]. Penanya harus mencari nilai x dengan memberikan maksimal m _query_ khusus apakah "x ∈ Q?", lalu penjawab menjawab "ya" atau "tidak" pada setiap _query_ yang ditanyakan. Permasalahan utama adalah penjawab dapat berbohong sampai e kali. Selain itu, penjawab hanya boleh menjawab _query_ penanya setelah penanya selesai menanyakan semua _query_-nya. Tujuan dari RBU adalah mencari jumlah _query_ minimal untuk dapat menentukan nilai x.
 
@@ -49,7 +49,7 @@ Batasan dari permasalahan ini adalah jumlah kasus percobaan tidak lebih dari 2^7
 Tugas sesungguhnya dari permasalahan ini adalah bukan untuk mencari nilai x, tapi hanya menyiapkan _query_ yang dapat memeungkinkan untuk mendapatkan nilai x dari semua kemungkinan jawaban dari penjawab. Penjawab tidak akan menjawab _query_ yang diberikan penanya. Jika penjawab menemukan ada suatu set jawaban yang menyebabkan lebih dari satu kemungkinan nilai x, maka pengujian dianggap gagal. Jika berhasil, maka nilai skor bertambah q^2. Jika gagal, maka nilai skor bertambah 4m^2.
 
 ![Alt text](example.png "Example")
-> Gambar XXX Contoh uji kasus permasalahan SPOJ GUESSN5
+> Gambar XXX Contoh uji kasus permasalahan
 
 Gambar XXX adalah contoh empat uji kasus dari permasalahan SPOJ GUESSN5. Pada uji kasus yang pertama hanya terdapat dua angka. Penjawab dapat menjawab "YYYYYY" atau "NNNNNN" jika penjawab tidak berbohong. Penjawab dapat menjawab "YYYYYN", "YYYYNY", "YYYNYY", "YYNYYY", "YNYYYY", "NYYYYY", "NNNNNY", "NNNNYN", "NNNYNN", "NNYNNN", "NYNNNN", atau "YNNNNN" jika penjawab berbohong satu kali. Penjawab dapat menjawab "NNNNYY", "NNNYNY", "NNNYYN", "NNYNNY", "NNYNYN", "NNYYNN", "NYNNNY", "NYNNYN", "NYNYNN", "NYYNNN", "YNNNNY", "YNNNYN", "YNNYNN", "YNYNNN", "YYNNNN", "NNYYYY", "NYNYYY", "NYYNYY", "NYYYNY", "NYYYYN", "YNNYYY", "YNYNYY", "YNYYNY", "YNYYYN", "YYNNYY", "YYNYNY", "YYNYYN", "YYYNNY", "YYYNYN", atau "YYYYNN" jika penjawab berbohong dua kali. Kemungkinan jawaban selain tersebut di atas tidak mungkin karena penjawab akan berbohong tiga kali. Oleh karena itu penanya mendapatkan skor 6^2=36.
 
@@ -59,21 +59,19 @@ Pada uji kasus yang ketiga penanya tidak memberikan solusi. Penanya mendapatkan 
 
 Pada uji kasus yang keempat penanya memberikan _query_ yang lebih sedikit dari jumlah _query_ maksimal yang diperbolehkan. Dari semua kemungkinan jawaban penjawab, pasti hanya ada satu jawaban nilai x, jadi solusi penanya berhasil dan mendapatkan skor 15^5=255. Dari semua uji kasus, total skor penanya adalah 36 + 256 + 4624 + 225 = 5141.
 
-### 2.2 Definisi domain solusi
+### 2.2 Solusi pada permasalahan ULAM secara umum
 
 Pada permasalahan RBU, penjawab menentukan sebuah angka x dimana x ∈ Sn, lalu penanya akan menanyakan _query_ untuk membantu mencari nilai x. Pada kenyataannya, penjawab tidak benar-benar memilih sebuah angka x, namun mempersiapkan n angka dengan state keboongan dari setiap angka. State kebohongan setiap angka dapat digambarkan dengan _bipartite graph channel_ untuk status kebohongan, Ci adalah status kebohongan dari bilangan i ∈ Sn, bernilai antara rentang [0,e+1] Ahlswede et all(2007).
 
-Setiap ada query Qi={q1,q2,...,qj}, dengan jawaban penjawab "ya" maka set angka yang dianggap benar pada query tersebut adalah Qt=Qi sedangkan jika jawaban "tidak" maka set angka yang dianggap benar pada query tersebut adalah Qt=Sn-Qi. Maka semua angka yang dianggap salah Sn-Qt={t1,t2,...,tk} akan dipindahkan ke state _channel_ setelahnya Ctk=Ctk+1.
-
-<!-- ### 2.3 Analisis penyelesaian masalah -->
+Setiap ada _query_ Qi={q1,q2,...,qj}, dengan jawaban penjawab "ya" maka set angka yang dianggap benar pada _query_ tersebut adalah Qt=Qi sedangkan jika jawaban "tidak" maka set angka yang dianggap benar pada _query_ tersebut adalah Qt=Sn-Qi. Maka semua angka yang dianggap salah Sn-Qt={t1,t2,...,tk} akan dipindahkan ke state _channel_ setelahnya Ctk=Ctk+1.
 
 ## BAB 3 Analisis dan perancangan
 
 ### 3.1 Analisis penyelesaian masalah
 
-Pada permasalahan SPOJ GUESSN5, penjawab tidak diperbolehkan menjawab sebelum penanya selesai menanyakan seluruh _query_. Pendekatan yang paling mungkin untuk menyelesaikan permasalahan ini adalah dengan mempersiapkan pencarian biner. Pencarian biner berjumlah log2(n), agar setiap kemungkinan jawaban dari penjawab dapat mewakili semua kemungkinan nilai x. Lalu setiap query akan diulang sebanyak 2*e+1 kali agar penjawab pasti menjawab dengan jujur, karena e query untuk jawaban bohong, ditambah dengan e query untuk mengeliminasi jawaban bohong, ditambah dengan satu query jawaban pasti jujur karena kesempatan penjawab untuk berbohong sudah habis.
+Pada permasalahan pencarian Ulam non interaktif, penjawab tidak diperbolehkan menjawab sebelum penanya selesai menanyakan seluruh _query_. Pendekatan yang paling mungkin untuk menyelesaikan permasalahan ini adalah dengan mempersiapkan pencarian biner. Pencarian biner berjumlah qb=log2(n), agar setiap kemungkinan jawaban dari penjawab dapat mewakili semua kemungkinan nilai x. Lalu setiap _query_ akan diulang sebanyak qe=2*e+1 kali agar penjawab pasti menjawab dengan jujur, karena e _query_ untuk jawaban bohong, ditambah dengan e _query_ untuk mengeliminasi jawaban bohong, ditambah dengan satu _query_ jawaban pasti jujur karena kesempatan penjawab untuk berbohong sudah habis.
 
-Misalnya jika n=4, e=1, m=6, maka query pencarian biner adalah 0011 dan 0101 dengan masing-masing query diulang sebanyak 3 kali, jadi total adalah enam query.
+Misalnya jika n=4, e=1, m=6, maka _query_ pencarian biner adalah 0011 dan 0101 dengan masing-masing _query_ diulang sebanyak 3 kali, jadi total adalah enam _query_. Untuk setiap jawaban jujur penjawab NN, NY, YN, dan YY, nilai x adalah 1, 2, 3, dan 4.
 
 ### 3.2 Implementasi algoritma
 
