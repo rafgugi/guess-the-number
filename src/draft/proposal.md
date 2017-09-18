@@ -1,4 +1,3 @@
-<!-- # PENYELESAIAN PERMASALAHAN ULAM PADA PERMASALAHAN SPOJ TANTANGAN 17820 GUESS THE NUMBER WITH LIES V5 -->
 # ALGORITMA PENCARIAN BINER NON INTERAKTIF UNTUK PENYELESAIAN PERMASALAHAN PENCARIAN ULAM DENGAN KEBOHONGAN LEBIH DARI DUA
 
 ## Abstrak
@@ -11,11 +10,11 @@ Salah satu variasi permasalahan RBU yang diangkat dalam penelitian ini adalah pe
 
 ## Abstract
 
-In the development of the world of information technology over the last few decades, information technology is often used as a solution to the problems that ever existed, which was previously solved manually by humans. Examples of problems that ever existed were one of the classic problems of searching Rényi-Berlekamp-Ulam, or it could be shortened to RBU. This problem can be illustrated by the presence of two players called pen and answer.
+In the development of the world of information technology over the last few decades, information technology is often used as a solution to the problems that ever existed, which was previously solved manually by humans. Example of problems that ever existed were one of the classic problems, Rényi-Berlekamp-Ulam searching game, abbreviated by RBU. This problem can be illustrated by the presence of two players called asker and responder.
 
-There have been several variations on RBU issues. Pelc solves the RBU problem with query range [a, b] and with a maximum number of lies is one. Mundici et all and Min et all solved the RBU problem with query range [a, b] and with a maximum of two lying numbers. Ahlswede illustrates the problem of RBU with maximum lie weight is e with bipartite graph.
+There have been several variations on RBU issues. Pelc solved the RBU problem with query range [a, b] and with a maximum number of lies is one. Mundici et all and Min et all solved the RBU problem with query range [a, b] and with a maximum of two lies. Ahlswede illustrated the RBU problem with maximum lie weight is e with bipartite graph.
 
-One of the variations of RBU issues raised in this research is the Ulam search with m query subset Qi = {q1, q2, ..., qj} where qj ∈ Sn, max lie is e, and answerer can only answer query the asker after the asker is finished asking all query it. This problem can be solved by non-interactive binary search.
+One of the RBU problem variations raised in this research is the RBU search with m query subset Qi = {q1, q2, ..., qh} where qj ∈ Sn, max lie is e, and responder can only answer all queries after the asker has finished asking all queries. This problem can be solved by non-interactive binary search.
 
 ## BAB 1 Pendahuluan
 
@@ -65,9 +64,10 @@ Batasan dari permasalahan ini adalah jumlah kasus percobaan tidak lebih dari 2^7
 Tugas sesungguhnya dari permasalahan ini adalah bukan untuk mencari nilai x, tapi hanya menyiapkan _query_ yang dapat memeungkinkan untuk mendapatkan nilai x dari semua kemungkinan jawaban dari penjawab. Penjawab tidak akan menjawab _query_ yang diberikan penanya. Jika penjawab menemukan ada suatu set jawaban yang menyebabkan lebih dari satu kemungkinan nilai x, maka pengujian dianggap gagal. Jika berhasil, maka nilai skor bertambah q^2. Jika gagal, maka nilai skor bertambah 4m^2.
 
 ![Alt text](example.png "Example")
+
 > Gambar XXX Contoh uji kasus permasalahan
 
-Gambar XXX adalah contoh empat uji kasus dari permasalahan SPOJ GUESSN5. Pada uji kasus yang pertama hanya terdapat dua angka. Penjawab dapat menjawab "YYYYYY" atau "NNNNNN" jika penjawab tidak berbohong. Penjawab dapat menjawab "YYYYYN", "YYYYNY", "YYYNYY", "YYNYYY", "YNYYYY", "NYYYYY", "NNNNNY", "NNNNYN", "NNNYNN", "NNYNNN", "NYNNNN", atau "YNNNNN" jika penjawab berbohong satu kali. Penjawab dapat menjawab "NNNNYY", "NNNYNY", "NNNYYN", "NNYNNY", "NNYNYN", "NNYYNN", "NYNNNY", "NYNNYN", "NYNYNN", "NYYNNN", "YNNNNY", "YNNNYN", "YNNYNN", "YNYNNN", "YYNNNN", "NNYYYY", "NYNYYY", "NYYNYY", "NYYYNY", "NYYYYN", "YNNYYY", "YNYNYY", "YNYYNY", "YNYYYN", "YYNNYY", "YYNYNY", "YYNYYN", "YYYNNY", "YYYNYN", atau "YYYYNN" jika penjawab berbohong dua kali. Kemungkinan jawaban selain tersebut di atas tidak mungkin karena penjawab akan berbohong tiga kali. Oleh karena itu penanya mendapatkan skor 6^2=36.
+**Gambar XXX** adalah contoh empat uji kasus dari permasalahan SPOJ GUESSN5. Pada uji kasus yang pertama hanya terdapat dua angka. Penjawab dapat menjawab "YYYYYY" atau "NNNNNN" jika penjawab tidak berbohong. Penjawab dapat menjawab "YYYYYN", "YYYYNY", "YYYNYY", "YYNYYY", "YNYYYY", "NYYYYY", "NNNNNY", "NNNNYN", "NNNYNN", "NNYNNN", "NYNNNN", atau "YNNNNN" jika penjawab berbohong satu kali. Penjawab dapat menjawab "NNNNYY", "NNNYNY", "NNNYYN", "NNYNNY", "NNYNYN", "NNYYNN", "NYNNNY", "NYNNYN", "NYNYNN", "NYYNNN", "YNNNNY", "YNNNYN", "YNNYNN", "YNYNNN", "YYNNNN", "NNYYYY", "NYNYYY", "NYYNYY", "NYYYNY", "NYYYYN", "YNNYYY", "YNYNYY", "YNYYNY", "YNYYYN", "YYNNYY", "YYNYNY", "YYNYYN", "YYYNNY", "YYYNYN", atau "YYYYNN" jika penjawab berbohong dua kali. Kemungkinan jawaban selain tersebut di atas tidak mungkin karena penjawab akan berbohong tiga kali. Oleh karena itu penanya mendapatkan skor 6^2=36.
 
 Pada uji kasus yang kedua penjawab mencoba memberikan solusi namun jawabannya salah. Penanya dapat menjawab "YYYNNN" yaitu jawaban yang valid karena jumlah bohong tiga kali untuk kedua kemungkinan angka. Pada kasus ini, penanya membutuhkan _query_ tambahan. Penanya mendapatkan skor 4*8^2=256.
 
@@ -85,9 +85,18 @@ Setiap ada _query_ Qi={q1,q2,...,qj}, dengan jawaban penjawab "ya" maka set angk
 
 ### 3.1 Analisis penyelesaian masalah
 
-Pada permasalahan pencarian Ulam non interaktif, penjawab tidak diperbolehkan menjawab sebelum penanya selesai menanyakan seluruh _query_. Pendekatan yang paling mungkin untuk menyelesaikan permasalahan ini adalah dengan mempersiapkan pencarian biner. Pencarian biner berjumlah qb=log2(n), agar setiap kemungkinan jawaban dari penjawab dapat mewakili semua kemungkinan nilai x. Lalu setiap _query_ akan diulang sebanyak qe=2*e+1 kali agar penjawab pasti menjawab dengan jujur, karena e _query_ untuk jawaban bohong, ditambah dengan e _query_ untuk mengeliminasi jawaban bohong, ditambah dengan satu _query_ jawaban pasti jujur karena kesempatan penjawab untuk berbohong sudah habis.
+Pada permasalahan pencarian Ulam non interaktif, penjawab tidak diperbolehkan menjawab sebelum penanya selesai menanyakan seluruh _query_. Pendekatan yang paling mungkin untuk menyelesaikan permasalahan ini adalah dengan mempersiapkan pencarian biner. Pencarian biner berjumlah qb=log2(n), agar setiap kemungkinan jawaban dari penjawab dapat mewakili semua kemungkinan nilai x. Lalu setiap _query_ akan diulang sebanyak qe=2*e+1 kali agar penjawab pasti menjawab dengan jujur, karena e _query_ untuk jawaban bohong, ditambah dengan e _query_ untuk mengeliminasi jawaban bohong, ditambah dengan satu _query_ jawaban pasti jujur karena kesempatan penjawab untuk berbohong sudah habis. Total jumlah _query_ q=qb*qe.
 
-Misalnya jika n=4, e=1, m=6, maka _query_ pencarian biner adalah 0011 dan 0101 dengan masing-masing _query_ diulang sebanyak 3 kali, jadi total adalah enam _query_. Untuk setiap jawaban jujur penjawab NN, NY, YN, dan YY, nilai x adalah 1, 2, 3, dan 4.
+> Tabel XXX Contoh pada masalah n=8
+
+| x | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
+| :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-:
+| q1 | 0 | 0 | 0 | 0 | 1 | 1 | 1 | 1
+| q2 | 0 | 0 | 1 | 1 | 0 | 0 | 1 | 1
+| q3 | 0 | 1 | 0 | 1 | 0 | 1 | 0 | 1
+| jawaban | NNN | NNY | NYN | NYY | YNN | YNY | YYN | YYY
+
+Misalnya jika n=8, e=2, m=6, maka jumlah qb untuk pencarian biner adalah 00001111, 00110011 dan 01010101 seperti pada **Tabel XXX**. Dari tiga query, tersebut, semua jawaban juri dapat mewakili semua nilai x dalam Sn={1,2,...,8} sehingga nilai qb=3. Lalu masing-masing _query_ diulang sebanyak qe=e*2+1=5 kali. Maka total dari q=qb*qe=9.
 
 ### 3.2 Implementasi algoritma
 
@@ -99,4 +108,4 @@ Tahap pengujian adalah melakukan uji coba menggunakan dataset pada Online Judge 
 
 ### 3.4 Dokumentasi dan jadwal penelitian
 
-Proses dokumentasi digunakan untuk penulisan laporan hasil penelitian yang dilakukan. Setiap tahapan dalam proses penelitian juga disertakan dalam laporan yang ditulis. Kegiatan dokumentasi ini akan dicantumkan pada jadwal penelitian yang direncanakan mulai bulan Agustus 2017 hingga Desember 2017 yang secara rinci terlihat pada Tabel XXX.
+Proses dokumentasi digunakan untuk penulisan laporan hasil penelitian yang dilakukan. Setiap tahapan dalam proses penelitian juga disertakan dalam laporan yang ditulis. Kegiatan dokumentasi ini akan dicantumkan pada jadwal penelitian yang direncanakan mulai bulan Agustus 2017 hingga Desember 2017 yang secara rinci terlihat pada **Tabel XXX**.
