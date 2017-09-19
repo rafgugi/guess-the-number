@@ -77,15 +77,15 @@ Pada uji kasus yang keempat penanya memberikan _query_ yang lebih sedikit dari j
 
 ### 2.2 Solusi pada permasalahan ULAM secara umum
 
-Pada permasalahan RBU, penjawab menentukan sebuah angka x dimana x ∈ Sn, lalu penanya akan menanyakan _query_ untuk membantu mencari nilai x. Pada kenyataannya, penjawab tidak benar-benar memilih sebuah angka x, namun mempersiapkan n angka dengan state keboongan dari setiap angka. State kebohongan setiap angka dapat digambarkan dengan _bipartite graph channel_ untuk status kebohongan, Ci adalah status kebohongan dari bilangan i ∈ Sn, bernilai antara rentang [0,e+1] Ahlswede et all(2008).
+Pada permasalahan RBU, penjawab menentukan sebuah angka x dimana x ∈ Sn, lalu penanya akan menanyakan _query_ untuk membantu mencari nilai x. Pada kenyataannya, penjawab tidak benar-benar memilih sebuah angka x, namun mempersiapkan n angka dengan state keboongan dari setiap angka. State kebohongan setiap angka dapat digambarkan dengan _bipartite graph channel_ untuk status kebohongan, Ci adalah status kebohongan dari bilangan i ∈ Sn, bernilai antara rentang [0,e] Ahlswede et all(2008).
 
-Setiap ada _query_ Qi={q1,q2,...,qj}, dengan jawaban penjawab "ya" maka set angka yang dianggap benar pada _query_ tersebut adalah Qt=Qi sedangkan jika jawaban "tidak" maka set angka yang dianggap benar pada _query_ tersebut adalah Qt=Sn-Qi. Maka semua angka yang dianggap salah Sn-Qt={t1,t2,...,tk} akan dipindahkan ke state _channel_ setelahnya Ctk=Ctk+1.
+Setiap _query_ Qi={q1,q2,...,qj}, dengan jawaban penjawab adalah "ya" maka set angka yang dianggap benar pada _query_ tersebut adalah Qt=Qi sedangkan jika jawaban penjawab adalah "tidak" maka set angka yang dianggap benar pada _query_ tersebut adalah Qt=Sn-Qi. Semua angka yang dianggap salah yaitu Sn-Qt={t1,t2,...,tk} akan dipindahkan ke state _channel_ setelahnya Ctk=Ctk+1. Jika Ctk > e, maka angka tk akan dikeluarkan dari _channel_, sehingga nilai x pasti bukan tk karena melampaui jumlah bohong maksimal.
 
 ## BAB 3 Analisis dan perancangan
 
 ### 3.1 Analisis penyelesaian masalah
 
-Pada permasalahan pencarian Ulam non interaktif, penjawab tidak diperbolehkan menjawab sebelum penanya selesai menanyakan seluruh _query_. Pendekatan yang paling mungkin untuk menyelesaikan permasalahan ini adalah dengan mempersiapkan pencarian biner. Pencarian biner berjumlah qb=log2(n), agar setiap kemungkinan jawaban dari penjawab dapat mewakili semua kemungkinan nilai x. Lalu setiap _query_ akan diulang sebanyak qe=2\*e+1 kali agar penjawab pasti menjawab dengan jujur, karena e _query_ untuk jawaban bohong, ditambah dengan e _query_ untuk mengeliminasi jawaban bohong, ditambah dengan satu _query_ jawaban pasti jujur karena kesempatan penjawab untuk berbohong sudah habis. Total jumlah _query_ q=qb\*qe.
+Pada permasalahan pencarian Ulam non interaktif, penjawab tidak diperbolehkan menjawab sebelum penanya selesai menanyakan seluruh _query_. Pendekatan yang paling mungkin untuk menyelesaikan permasalahan ini adalah dengan mempersiapkan pencarian biner. Pencarian biner berjumlah qb=ceil(log2(n)), yaitu bilangan bulat minimal yang jika dipangkat dua akan bernilai minimal n, agar setiap kemungkinan jawaban dari penjawab dapat mewakili semua kemungkinan nilai x. Lalu setiap _query_ akan diulang sebanyak qe=2\*e+1 kali agar penjawab pasti menjawab dengan jujur, karena e _query_ untuk jawaban bohong, ditambah dengan e _query_ untuk mengeliminasi jawaban bohong, ditambah dengan satu _query_ jawaban pasti jujur karena kesempatan penjawab untuk berbohong sudah habis. Total jumlah _query_ q=qb\*qe.
 
 > Tabel XXX Contoh pada masalah n=8
 
@@ -94,9 +94,9 @@ Pada permasalahan pencarian Ulam non interaktif, penjawab tidak diperbolehkan me
 | q1 | 0 | 0 | 0 | 0 | 1 | 1 | 1 | 1
 | q2 | 0 | 0 | 1 | 1 | 0 | 0 | 1 | 1
 | q3 | 0 | 1 | 0 | 1 | 0 | 1 | 0 | 1
-| jawaban | NNN | NNY | NYN | NYY | YNN | YNY | YYN | YYY
+| jawab | NNN | NNY | NYN | NYY | YNN | YNY | YYN | YYY
 
-Misalnya jika n=8 dan e=2, maka jumlah qb untuk pencarian biner adalah 00001111, 00110011 dan 01010101 seperti pada **Tabel XXX**. Dari tiga query, tersebut, semua jawaban juri dapat mewakili semua nilai x dalam Sn={1,2,...,8} sehingga nilai qb=3. Lalu masing-masing _query_ diulang sebanyak qe=e*2+1=5 kali. Maka total dari q=qb*qe=9.
+Misalnya jika n=8 dan e=2, maka jumlah qb untuk pencarian biner adalah tiga yaitu 00001111, 00110011 dan 01010101 seperti pada **Tabel XXX**. Dari tiga _query_ tersebut, semua jawaban penjawab mulai dari "NNN" sampai "YYY" dapat mewakili semua nilai x dalam Sn={1,2,...,8} sehingga nilai qb=3. Lalu masing-masing _query_ diulang sebanyak qe=e\*2+1=5 kali. Maka total dari q=qb\*qe=9.
 
 ### 3.2 Implementasi algoritma
 
