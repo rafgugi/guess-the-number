@@ -22,7 +22,7 @@ One of the RBU problem variations raised in this research is the RBU search with
 
 Dalam perkembangan dunia teknologi informasi selama beberapa dekade terakhir, teknologi informasi seringkali dijadikan solusi bagi permasalahan-permasalahan yang pernah ada, yang sebelumnya diselesaikan secara manual oleh manusia. Contoh permasalahan yang pernah ada adalah salah satu permasalahan klasik pencarian Rényi–Berlekamp–Ulam, atau dapat disingkat menjadi RBU. Permasalahan ini dapat diilustrasikan dengan adanya dua pemain yang disebut penanya dan penjawab. Diberikan range pertanyaan Sn = {1,2,...,n}. Penjawab menentukan sebuah bilangan x ∈ Sn. Penanya harus menemukan nilai x dengan memberikan beberapa _query_ khusus apakah "x ∈ Q?", dimana Q adalah _subset_ dari Sn, lalu penjawab menjawab "ya" atau "tidak". Permasalahan utama adalah penjawab dapat berbohong sampai e kali. Tujuan dari RBU adalah mencari jumlah _query_ minimal untuk dapat menentukan nilai x. Permasalahan ini adalah turunan dari kerangka kerja pencarian adaptif biner.
 
-Sudah ada beberapa variasi pada permasalahan RBU. Pelc (1987) menyelesaikan permasalahan RBU dengan _query_ rentang [a,b] dan dengan maksimal jumlah bohong adalah satu. Mundici et all (1997) dan Min et all (2016) menyelesaikan permasalahan RBU dengan _query_ rentang [a,b] dan dengan maksimal jumlah bohong dua. Ahlswede (2007) mengilustrasikan permasalah RBU dengan maksimal bobot bohong adalah e, dengan menggunakan _bipartite graph_ untuk menyimpan channel kebohongan dan memberikan batasan asimtotik yang ketat untuk jumlah _query_ yang dibutuhkan untuk memecahkan masalah ini.
+Sudah ada beberapa variasi pada permasalahan RBU. Pelc (1987) menyelesaikan permasalahan RBU dengan _query_ rentang [a,b] dan dengan maksimal jumlah bohong adalah satu. Mundici et all (1997) dan Min et all (2016) menyelesaikan permasalahan RBU dengan _query_ rentang [a,b] dan dengan maksimal jumlah bohong dua. Ahlswede (2008) mengilustrasikan permasalah RBU dengan maksimal bobot bohong adalah e, dengan menggunakan _bipartite graph_ untuk menyimpan channel kebohongan dan memberikan batasan asimtotik yang ketat untuk jumlah _query_ yang dibutuhkan untuk memecahkan masalah ini.
 
 Salah satu variasi permasalahan RBU yang diangkat dalam penelitian ini adalah pencarian Ulam dengan m _query_ _subset_ Qi={q1,q2,...,qj} dimana qj ∈ Sn, maksimal bohong adalah e, dan penjawab hanya boleh menjawab _query_ penanya setelah penanya selesai menanyakan semua _query_-nya. Minimal jumlah _query_ yang dapat ditanyakan penanya adalah (2e + 1) * log2(n). Belum ada penelitian yang menyelesaikan permasalahan ini. Oleh karena itu penelitian ini bertujuan untuk memberikan solusi pada permasalahan ini.
 
@@ -77,7 +77,7 @@ Pada uji kasus yang keempat penanya memberikan _query_ yang lebih sedikit dari j
 
 ### 2.2 Solusi pada permasalahan ULAM secara umum
 
-Pada permasalahan RBU, penjawab menentukan sebuah angka x dimana x ∈ Sn, lalu penanya akan menanyakan _query_ untuk membantu mencari nilai x. Pada kenyataannya, penjawab tidak benar-benar memilih sebuah angka x, namun mempersiapkan n angka dengan state keboongan dari setiap angka. State kebohongan setiap angka dapat digambarkan dengan _bipartite graph channel_ untuk status kebohongan, Ci adalah status kebohongan dari bilangan i ∈ Sn, bernilai antara rentang [0,e+1] Ahlswede et all(2007).
+Pada permasalahan RBU, penjawab menentukan sebuah angka x dimana x ∈ Sn, lalu penanya akan menanyakan _query_ untuk membantu mencari nilai x. Pada kenyataannya, penjawab tidak benar-benar memilih sebuah angka x, namun mempersiapkan n angka dengan state keboongan dari setiap angka. State kebohongan setiap angka dapat digambarkan dengan _bipartite graph channel_ untuk status kebohongan, Ci adalah status kebohongan dari bilangan i ∈ Sn, bernilai antara rentang [0,e+1] Ahlswede et all(2008).
 
 Setiap ada _query_ Qi={q1,q2,...,qj}, dengan jawaban penjawab "ya" maka set angka yang dianggap benar pada _query_ tersebut adalah Qt=Qi sedangkan jika jawaban "tidak" maka set angka yang dianggap benar pada _query_ tersebut adalah Qt=Sn-Qi. Maka semua angka yang dianggap salah Sn-Qt={t1,t2,...,tk} akan dipindahkan ke state _channel_ setelahnya Ctk=Ctk+1.
 
@@ -85,7 +85,7 @@ Setiap ada _query_ Qi={q1,q2,...,qj}, dengan jawaban penjawab "ya" maka set angk
 
 ### 3.1 Analisis penyelesaian masalah
 
-Pada permasalahan pencarian Ulam non interaktif, penjawab tidak diperbolehkan menjawab sebelum penanya selesai menanyakan seluruh _query_. Pendekatan yang paling mungkin untuk menyelesaikan permasalahan ini adalah dengan mempersiapkan pencarian biner. Pencarian biner berjumlah qb=log2(n), agar setiap kemungkinan jawaban dari penjawab dapat mewakili semua kemungkinan nilai x. Lalu setiap _query_ akan diulang sebanyak qe=2*e+1 kali agar penjawab pasti menjawab dengan jujur, karena e _query_ untuk jawaban bohong, ditambah dengan e _query_ untuk mengeliminasi jawaban bohong, ditambah dengan satu _query_ jawaban pasti jujur karena kesempatan penjawab untuk berbohong sudah habis. Total jumlah _query_ q=qb*qe.
+Pada permasalahan pencarian Ulam non interaktif, penjawab tidak diperbolehkan menjawab sebelum penanya selesai menanyakan seluruh _query_. Pendekatan yang paling mungkin untuk menyelesaikan permasalahan ini adalah dengan mempersiapkan pencarian biner. Pencarian biner berjumlah qb=log2(n), agar setiap kemungkinan jawaban dari penjawab dapat mewakili semua kemungkinan nilai x. Lalu setiap _query_ akan diulang sebanyak qe=2\*e+1 kali agar penjawab pasti menjawab dengan jujur, karena e _query_ untuk jawaban bohong, ditambah dengan e _query_ untuk mengeliminasi jawaban bohong, ditambah dengan satu _query_ jawaban pasti jujur karena kesempatan penjawab untuk berbohong sudah habis. Total jumlah _query_ q=qb\*qe.
 
 > Tabel XXX Contoh pada masalah n=8
 
@@ -96,7 +96,7 @@ Pada permasalahan pencarian Ulam non interaktif, penjawab tidak diperbolehkan me
 | q3 | 0 | 1 | 0 | 1 | 0 | 1 | 0 | 1
 | jawaban | NNN | NNY | NYN | NYY | YNN | YNY | YYN | YYY
 
-Misalnya jika n=8, e=2, m=6, maka jumlah qb untuk pencarian biner adalah 00001111, 00110011 dan 01010101 seperti pada **Tabel XXX**. Dari tiga query, tersebut, semua jawaban juri dapat mewakili semua nilai x dalam Sn={1,2,...,8} sehingga nilai qb=3. Lalu masing-masing _query_ diulang sebanyak qe=e*2+1=5 kali. Maka total dari q=qb*qe=9.
+Misalnya jika n=8 dan e=2, maka jumlah qb untuk pencarian biner adalah 00001111, 00110011 dan 01010101 seperti pada **Tabel XXX**. Dari tiga query, tersebut, semua jawaban juri dapat mewakili semua nilai x dalam Sn={1,2,...,8} sehingga nilai qb=3. Lalu masing-masing _query_ diulang sebanyak qe=e*2+1=5 kali. Maka total dari q=qb*qe=9.
 
 ### 3.2 Implementasi algoritma
 
