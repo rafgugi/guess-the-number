@@ -1,6 +1,4 @@
-# ALGORITMA PENCARIAN BINER NON INTERAKTIF UNTUK PENYELESAIAN PERMASALAHAN PENCARIAN ULAM DENGAN KEBOHONGAN LEBIH DARI DUA
-
-## Abstrak
+## Abstrak - Pengembangan Algoritma Pencarian Non Interaktif untuk Penyelesaian Permasalahan Pencarian Ulam dengan Kebohongan Jamak
 
 Dalam perkembangan dunia teknologi informasi selama beberapa dekade terakhir, teknologi informasi seringkali dijadikan solusi bagi permasalahan-permasalahan yang pernah ada, yang sebelumnya diselesaikan secara manual oleh manusia. Contoh permasalahan yang pernah ada adalah salah satu permasalahan klasik pencarian Rényi–Berlekamp–Ulam, atau dapat disingkat menjadi RBU. Permasalahan ini dapat diilustrasikan dengan adanya dua pemain yang disebut penanya dan penjawab.
 
@@ -8,7 +6,7 @@ Sudah ada beberapa variasi pada permasalahan RBU. Pelc menyelesaikan permasalaha
 
 Salah satu variasi permasalahan RBU yang diangkat dalam penelitian ini adalah pencarian Ulam dengan m _query_ _subset_ Qi={q1,q2,...,qj} dimana qj ∈ Sn, maksimal bohong adalah e, dan penjawab hanya boleh menjawab _query_ penanya setelah penanya selesai menanyakan semua _query_-nya. Permasalahan ini dapat diselesaikan dengan pencarian biner non interaktif.
 
-## Abstract
+## Abstract - Development of Non-Interactive Searching Algorithm for Solving Ulam's Searching Problem with Many Lies
 
 In the development of the world of information technology over the last few decades, information technology is often used as a solution to the problems that ever existed, which was previously solved manually by humans. Example of problems that ever existed were one of the classic problems, Rényi-Berlekamp-Ulam searching game, abbreviated by RBU. This problem can be illustrated by the presence of two players called asker and responder.
 
@@ -42,7 +40,7 @@ Penelitian tesis ini diharapkan dapat mengimplementasi solusi dari permasalahan 
 
 ### 1.5 Kontribusi penelitian
 
-Penelitian tentang permasalahan Ulam selama ini hanya membahas tentang _query_ yang interaktif dari penanya dan penjawab, baik dengan jumlah maksimal bohong satu, dua, tiga, dan lebih dari tiga. Namun belum ada ilmiay untuk permasalahan Ulam dengan _query_ non interaktif dengan jumlah bohong lebih dari dua. Kontribusi dari penelitian ini adalah menggunakan metode pencarian biner non interaktif untuk menyelesaikan permasalahan Ulam.
+Penelitian tentang permasalahan Ulam selama ini hanya membahas tentang _query_ yang interaktif dari penanya dan penjawab, baik dengan jumlah maksimal bohong satu, dua, tiga, dan lebih dari tiga. Namun belum ada jurnal ilmiah yang membahas permasalahan Ulam dengan _query_ non interaktif dengan jumlah bohong lebih dari dua. Kontribusi dari penelitian ini adalah menggunakan metode pencarian biner non interaktif untuk menyelesaikan permasalahan Ulam.
 
 ### 1.6 Batasan masalah
 
@@ -61,7 +59,7 @@ Bentuk dari _query_ adalah string s1s2s3...sn dimana si bernilai '0' atau '1'. J
 
 Batasan dari permasalahan ini adalah jumlah kasus percobaan tidak lebih dari 2^7. Jumlah maksimal bohong antara 2<=e<=2^4. Jumlah n antara 2<=n<=2^12. Jumlah maksimal _query_ adalah (2w+1) * [log2(n)].
 
-Tugas sesungguhnya dari permasalahan ini adalah bukan untuk mencari nilai x, tapi hanya menyiapkan _query_ yang dapat memeungkinkan untuk mendapatkan nilai x dari semua kemungkinan jawaban dari penjawab. Penjawab tidak akan menjawab _query_ yang diberikan penanya. Jika penjawab menemukan ada suatu set jawaban yang menyebabkan lebih dari satu kemungkinan nilai x, maka pengujian dianggap gagal. Jika berhasil, maka nilai skor bertambah q^2. Jika gagal, maka nilai skor bertambah 4m^2.
+Tugas sesungguhnya dari permasalahan ini adalah bukan untuk mencari nilai x, tapi hanya menyiapkan _query_ yang dapat memeungkinkan untuk mendapatkan nilai x dari semua kemungkinan jawaban dari penjawab. Penjawab tidak akan menjawab _query_ yang diberikan penanya. Jika penjawab menemukan ada suatu set jawaban yang menyebabkan lebih dari satu kemungkinan nilai x, maka pengujian dianggap gagal.
 
 ![Alt text](example.png "Example")
 
@@ -104,7 +102,9 @@ Implementasi merupakan tahap untuk membangun algoritma yang akan digunakan. Pada
 
 ### 3.3 Pengujian
 
-Tahap pengujian adalah melakukan uji coba menggunakan dataset pada Online Judge SPOJ GUESSN5 untuk mengetahui hasil dan performa dari metode dan struktur data yang dibangun. Evaluasi dan perbaikan juga akan dilakukan pada Online Judge hingga perangkat lunak yang diuji mengeluarkan hasil dan performa yang sesuai dengan data uji pada Online Judge SPOJ.
+Tahap pengujian adalah melakukan uji coba menggunakan dataset pada Online Judge SPOJ GUESSN5 untuk mengetahui hasil dan performa dari metode dan struktur data yang dibangun. Hal yang dinilai pada pengujian adalah skor, penggunaan memory, dan waktu yang dibutuhkan. Pembobotan skor adalah jika penjawab menemukan ada suatu set jawaban yang menyebabkan lebih dari satu kemungkinan nilai x, maka pengujian dianggap gagal. Jika berhasil, maka nilai skor bertambah q^2. Jika gagal, maka nilai skor bertambah 4m^2. Total skor adalah jumlah skor setiap kasus uji.
+
+Evaluasi dan perbaikan juga akan dilakukan pada Online Judge hingga perangkat lunak yang diuji mengeluarkan hasil dan performa yang sesuai dengan data uji pada Online Judge SPOJ.
 
 ### 3.4 Dokumentasi dan jadwal penelitian
 
