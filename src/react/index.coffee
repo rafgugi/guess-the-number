@@ -1,7 +1,7 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
-dom = React.createElement
 Main = require './components/Main'
+dom = React.createElement
 
 ReactDOM.render(
   dom Main

@@ -1,7 +1,10 @@
 React = require 'react'
-createReactClass = require('create-react-class')
+createReactClass = require 'create-react-class'
+combinatoric = require '../combinatoric'
+window.combinatoric = combinatoric
 dom = React.createElement
-{abs, min, max} = Math
+
+{abs, min, max, log2, ceil} = Math
 [No, Yes] = ['0', '1']
 lieLimit = 16 # limitation of lie by the program
 
@@ -17,6 +20,7 @@ Main = createReactClass
     qa: 1 # query start
     qb: 500 # query end
     qx: No # query answer
+    questionLeft: 0
 
   componentDidMount: ->
     # @handlePlayButton()
@@ -43,54 +47,82 @@ Main = createReactClass
   handlePlayButton: ->
     {range, maxLies} = @state
     if range isnt '' && maxLies isnt ''
+      maxLies = min(lieLimit, max(0, maxLies))
       @setState
         set: [
           q: [1, range, Yes]
           s: [[1, range, 0]]
           n: [range].concat(0 for i in [0..maxLies - 1])
+          w: 0
+
         ]
-        maxLies: min(lieLimit, max(0, maxLies))
+        maxLies: maxLies
+        questionLeft: ceil(log2(range)) * (maxLies * 2 + 1)
 
   handleSubmitButton: ->
     if not @queryValidator()
       return
     h = @generateHistory()
-    {set} = @state
+    {set, questionLeft} = @state
     set.push(h)
-    @setState set: set
+    @setState
+      set: set
+      questionLeft: questionLeft - 1
 
   queryValidator: ->
     {qa, qb, qx, range} = @state
     1 <= qa <= qb <= range && qx isnt ''
 
-  pusH: ({s, n}, a, b, x) ->
-    if x <= @state.maxLies
-      s.push([a, b, x])
-      n[x] += b - a + 1
+  # push a range of history
+  pusH: ({s, n}, a, b, sx, x, cy, cn) ->
+    truth = sx + x
+    lie = sx + !x
+    if truth <= @state.maxLies
+      s.push([a, b, truth])
+      n[truth] += b - a + 1
+      cy[truth] += b - a + 1
+    if lie <= @state.maxLies
+      cn[lie] += b - a + 1
 
+  # create a set of history
   generateHistory: ->
-    {set, qa, qb, qx, maxLies} = @state
-    s = []
-    n = (0 for i in [0..maxLies])
+    {set, qa, qb, qx, maxLies, questionLeft} = @state
+    s = [] # range set
+    n = (0 for i in [0..maxLies]) # state vector
+    c = [] # state vector from possible answer of judge
+    c[Yes] = n.slice(0) # state vector if answer is yes
+    c[No] = n.slice(0) # state vector if answer is no
     q = [qa, qb, qx]
-    h = {q, s, n}
+    h = {q, s, n, c}
     last = set[set.length - 1]
 
     for [sa, sb, sx] in last.s
       x = qx is Yes # correctness of range given
       if qb >= sa && qa <= sb
         if qa - 1 >= sa
-          @pusH(h, sa, qa - 1, sx + x) # A - U (left)
-        @pusH(h, max(sa, qa), min(sb, qb), sx + !x) # U
+          @pusH(h, sa, qa - 1, sx, x, c[Yes], c[No]) # A - U (left)
+        @pusH(h, max(sa, qa), min(sb, qb), sx, !x, c[Yes], c[No]) # U
         if qb + 1 <= sb
-          @pusH(h, qb + 1, sb, sx + x) # A - U (right)
+          @pusH(h, qb + 1, sb, sx, x, c[Yes], c[No]) # A - U (right)
       else
-        @pusH(h, sa, sb, sx + x) # A - U
+        @pusH(h, sa, sb, sx, x, c[Yes], c[No]) # A - U
+    h.w = @berlekamp(n, questionLeft, maxLies)
+    h.wy = @berlekamp(c[Yes], questionLeft, maxLies)
+    h.wn = @berlekamp(c[No], questionLeft, maxLies)
+    console.log h
     return h
+
+  # hitung berlekamp weight
+  berlekamp: (vector, questionLeft, maxLies) ->
+    weight = 0
+    for x, i in vector
+      weight += x * combinatoric.denominator(questionLeft, maxLies - i)
+    weight
 
   render: ->
     dom 'section', className: 'row',
       dom 'span', className: 'five columns',
+        # 
         dom 'div', className: 'row',
           dom 'div', className: 'five columns',
             dom 'label', {}, 'Range [1-n]'
@@ -189,28 +221,46 @@ Main = createReactClass
         if @state.set.length <= 0
           # Example
           dom 'div', key: i, className: 'history',
-            dom 'span', className: 'set color-muted',
-              "<query_start> - <query_end>: <query_answer>"
-            dom 'div', {},
+            # Query
+            dom 'samp', className: 'set',
+              "<query_start>-<query_end>:<query_answer>"
+            # Set
+            dom 'span', {},
+              dom 'br'
               dom 'span',
-                className: "set bg-color-0-muted",
+                className: "set bg-color-br-0-muted",
                 "<ch_start> - <ch_end> (<lie_ch>)"
               dom 'i', {}, ' '
-            dom 'small', className: 'color-muted', "[ lie_ch_count ]"
+            # Channel
+            dom 'small', {},
+              dom 'br'
+              dom 'span', {}, "[ lie_ch_count ]: (<berlekamp_weight>)"
+              dom 'br'
+              dom 'span', className: "color-br-0", "[ lie_ch_yes_count ]: (<yes_berlekamp_weight>)"
+              dom 'br'
+              dom 'span', className: "color-br-#{lieLimit}", "[ lie_ch_no_count ]: (<no_berlekamp_weight>)"
         else for h, i in @state.set
           dom 'div', key: i, className: 'history',
             # Query
-            dom 'span', className: 'set color-muted',
-              "#{h.q[0]} - #{h.q[1]}: #{if h.q[2] is Yes then 'Yes' else 'No'}"
+            dom 'samp', className: 'set',
+              "#{h.q[0]}-#{h.q[1]}:#{if h.q[2] is Yes then 'Yes' else 'No'}"
             # Set
             dom 'span', {},
               for set, j in h.s
                 dom 'span', key: j,
                   dom 'span',
-                    className: "set bg-color-#{(set[2] * 5) % 12}-muted",
+                    className: "set bg-color-br-#{ceil(set[2] * lieLimit / @state.maxLies)}-muted",
                     "#{set[0]} - #{set[1]} (#{set[2]})"
                   dom 'i', {}, ' '
-            # Number
-            dom 'small', className: 'color-muted', "[#{h.n.toString()}]"
+            # Channel
+            dom 'small', {},
+              dom 'br'
+              dom 'span', {}, "[#{h.n.toString()}]: (#{h.w})"
+              if h.w
+                dom 'span', {},
+                  dom 'i', {}, ' '
+                  dom 'span', className: "color-br-0", "[#{h.c[Yes].toString()}]: (#{h.wy})"
+                  dom 'i', {}, ' '
+                  dom 'span', className: "color-br-#{lieLimit}", "[#{h.c[No].toString()}]: (#{h.wn})"
 
 module.exports = Main

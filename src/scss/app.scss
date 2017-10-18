@@ -30,18 +30,37 @@ $colors-list:
   #a2b86c
   #5ca793
   ;
-@each $current-color in $colors-list {
-  $i: index($colors-list, $current-color) - 1;
+@each $color in $colors-list {
+  $i: index($colors-list, $color) - 1;
   .bg-color-#{$i} { 
-    background-color: $current-color;
+    background-color: $color;
   }
   .bg-color-#{$i}-muted {
-    background-color: ($current-color * 1 + #ffffff * 3) / 4;
+    background-color: ($color * 1 + #ffffff * 3) / 4;
   }
   .color-#{$i} { 
-    color: $current-color;
+    color: $color;
   }
   .color-#{$i}-muted {
-    color: ($current-color * 1 + #ffffff * 3) / 4;
+    color: ($color * 1 + #ffffff * 3) / 4;
+  }
+}
+
+$max-scatter: 16;
+$blue: #1395BA; // as start
+$red: #f16c20; // as end
+@for $i from 0 through $max-scatter {
+  $color: ($blue * ($max-scatter - $i) + $red * $i) / $max-scatter;
+  .bg-color-br-#{$i} {
+    background-color: $color;
+  }
+  .bg-color-br-#{$i}-muted {
+    background-color: ($color * 1 + #ffffff * 3) / 4;
+  }
+  .color-br-#{$i} { 
+    color: $color;
+  }
+  .color-br-#{$i}-muted {
+    color: ($color * 1 + #ffffff * 3) / 4;
   }
 }
