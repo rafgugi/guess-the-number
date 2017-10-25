@@ -47,8 +47,8 @@ $colors-list:
 }
 
 $max-scatter: 16;
-$blue: #1395BA; // as start
-$red: #f16c20; // as end
+$blue: #1363F0; // as start
+$red: #F74C3C; // as end
 @for $i from 0 through $max-scatter {
   $color: ($blue * ($max-scatter - $i) + $red * $i) / $max-scatter;
   .bg-color-br-#{$i} {

@@ -48,16 +48,13 @@ Main = createReactClass
     {range, maxLies} = @state
     if range isnt '' && maxLies isnt ''
       maxLies = min(lieLimit, max(0, maxLies))
-      @setState
-        set: [
-          q: [1, range, Yes]
-          s: [[1, range, 0]]
-          n: [range].concat(0 for i in [0..maxLies - 1])
-          w: 0
-
-        ]
-        maxLies: maxLies
-        questionLeft: ceil(log2(range)) * (maxLies * 2 + 1)
+      questionLeft = ceil(log2(range)) * (maxLies * 2 + 1)
+      q = [1, range, Yes]
+      s = [[1, range, 0]]
+      n = [range].concat(0 for i in [0..maxLies - 1])
+      w = @berlekamp(n, questionLeft, maxLies)
+      set = [{q, s, n, w}]
+      @setState {maxLies, questionLeft, set}
 
   handleSubmitButton: ->
     if not @queryValidator()
@@ -74,6 +71,15 @@ Main = createReactClass
     1 <= qa <= qb <= range && qx isnt ''
 
   # push a range of history
+  #
+  # @param array range set
+  # @param array channel bohong sekarang
+  # @param range awal
+  # @param range akhir
+  # @param channel asal
+  # @param apakah harus ganti channel?
+  # @param array channel bohong jika jawaban ya
+  # @param array channel bohong jika jawaban tidak
   pusH: ({s, n}, a, b, sx, x, cy, cn) ->
     truth = sx + x
     lie = sx + !x
@@ -87,16 +93,17 @@ Main = createReactClass
   # create a set of history
   generateHistory: ->
     {set, qa, qb, qx, maxLies, questionLeft} = @state
+
     s = [] # range set
     n = (0 for i in [0..maxLies]) # state vector
     c = [] # state vector from possible answer of judge
     c[Yes] = n.slice(0) # state vector if answer is yes
     c[No] = n.slice(0) # state vector if answer is no
+
     q = [qa, qb, qx]
     h = {q, s, n, c}
-    last = set[set.length - 1]
 
-    for [sa, sb, sx] in last.s
+    for [sa, sb, sx] in set[set.length - 1].s # history terakhir
       x = qx is Yes # correctness of range given
       if qb >= sa && qa <= sb
         if qa - 1 >= sa
@@ -113,6 +120,10 @@ Main = createReactClass
     return h
 
   # hitung berlekamp weight
+  #
+  # @param state vector
+  # @param berapa pertanyaan lagi yang boleh diajukan
+  # @param jumlah maksimal bohong
   berlekamp: (vector, questionLeft, maxLies) ->
     weight = 0
     for x, i in vector
@@ -122,9 +133,9 @@ Main = createReactClass
   render: ->
     dom 'section', className: 'row',
       dom 'span', className: 'five columns',
-        # 
+        # Initial game
         dom 'div', className: 'row',
-          dom 'div', className: 'five columns',
+          dom 'div', className: 'four columns',
             dom 'label', {}, 'Range [1-n]'
             dom 'input',
               type: 'text'
@@ -222,23 +233,34 @@ Main = createReactClass
           # Example
           dom 'div', key: i, className: 'history',
             # Query
-            dom 'samp', className: 'set',
+            dom 'samp',
+              className: 'set',
+              title: 'Query (start, end, and answer)'
               "<query_start>-<query_end>:<query_answer>"
             # Set
             dom 'span', {},
               dom 'br'
               dom 'span',
                 className: "set bg-color-br-0-muted",
+                title: 'Each range and its status'
                 "<ch_start> - <ch_end> (<lie_ch>)"
               dom 'i', {}, ' '
             # Channel
             dom 'small', {},
               dom 'br'
-              dom 'span', {}, "[ lie_ch_count ]: (<berlekamp_weight>)"
+              dom 'span',
+                title: 'Current channel vector',
+                "[ lie_ch_count ]:(<berlekamp_weight>)"
               dom 'br'
-              dom 'span', className: "color-br-0", "[ lie_ch_yes_count ]: (<yes_berlekamp_weight>)"
+              dom 'span',
+                className: "color-br-0"
+                title: 'Channel if answer is yes'
+                "[ lie_ch_yes_count ]:(<yes_berlekamp_weight>)"
               dom 'br'
-              dom 'span', className: "color-br-#{lieLimit}", "[ lie_ch_no_count ]: (<no_berlekamp_weight>)"
+              dom 'span',
+                className: "color-br-#{lieLimit}"
+                title: 'Channel if answer is no'
+                "[ lie_ch_no_count ]:(<no_berlekamp_weight>)"
         else for h, i in @state.set
           dom 'div', key: i, className: 'history',
             # Query
@@ -255,12 +277,12 @@ Main = createReactClass
             # Channel
             dom 'small', {},
               dom 'br'
-              dom 'span', {}, "[#{h.n.toString()}]: (#{h.w})"
-              if h.w
+              dom 'span', {}, "[#{h.n.toString()}]:(#{h.w})"
+              if h.c
                 dom 'span', {},
                   dom 'i', {}, ' '
-                  dom 'span', className: "color-br-0", "[#{h.c[Yes].toString()}]: (#{h.wy})"
+                  dom 'span', className: "color-br-0", "[#{h.c[Yes].toString()}]:(#{h.wy})"
                   dom 'i', {}, ' '
-                  dom 'span', className: "color-br-#{lieLimit}", "[#{h.c[No].toString()}]: (#{h.wn})"
+                  dom 'span', className: "color-br-#{lieLimit}", "[#{h.c[No].toString()}]:(#{h.wn})"
 
 module.exports = Main
