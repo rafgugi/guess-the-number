@@ -5,7 +5,7 @@ window.combinatoric = combinatoric
 dom = React.createElement
 
 {abs, min, max, log2, ceil} = Math
-[No, Yes] = ['0', '1']
+[Yes, No] = ['Yes', 'No']
 lieLimit = 16 # limitation of lie by the program
 
 Main = createReactClass
@@ -13,62 +13,101 @@ Main = createReactClass
 
   getInitialState: ->
     set: [] # truth set and lie set
+    playing: false
 
     # input values
     range: 1000
-    maxLies: 2 # maximal number of lies
+    maxLies: 4 # maximal number of lies
+    query: 'subset' # query type ('range' / 'subset')
     qa: 1 # query start
     qb: 500 # query end
-    qx: No # query answer
+    qx: Yes # query answer
     questionLeft: 0
 
-  componentDidMount: ->
-    # @handlePlayButton()
+    hasError: [] # inputs that have error
 
-  handleInputNumberChange: (event)->
+  componentDidMount: ->
+    @handlePlayButton()
+
+  handleInputNumberChange: (event) ->
     value = parseInt(event.target.value)
     name = event.target.name
 
     baru = []
-    if event.target.value is ''
-      baru[name] = ''
-    else if not isNaN(value)
+    if not isNaN(value)
       baru[name] = abs(value)
+    else
+      baru[name] = ''
     @setState baru
 
-  handleInputChange: (event)->
+  handleInputChange: (event) ->
     baru = []
     baru[event.target.name] = event.target.value
     @setState baru
 
   handleResetButton: ->
-    @setState set: []
+    @setState
+      playing: false
+      set: []
 
   handlePlayButton: ->
-    {range, maxLies} = @state
-    if range isnt '' && maxLies isnt ''
+    {range, maxLies, query} = @state
+    if range isnt '' && maxLies isnt '' && query isnt ''
+      playing = true
       maxLies = min(lieLimit, max(0, maxLies))
       questionLeft = ceil(log2(range)) * (maxLies * 2 + 1)
-      q = [1, range, Yes]
-      s = [[1, range, 0]]
-      n = [range].concat(0 for i in [0..maxLies - 1])
-      w = @berlekamp(n, questionLeft, maxLies)
-      set = [{q, s, n, w}]
-      @setState {maxLies, questionLeft, set}
+      if @state.query is 'range'
+        q = [1, range, Yes] # query
+        s = [[1, range, 0]] # range set
+        n = [range].concat(0 for i in [0..maxLies - 1]) # state
+        w = combinatoric.berlekamp(n, questionLeft, maxLies) # berlekamp
+        set = [{q, s, n, w}]
+      else if @state.query is 'subset'
+        q = (0 for i in [0..maxLies]) # query
+        n = [range].concat(0 for i in [0..maxLies - 1]) # state
+        w = combinatoric.berlekamp(n, questionLeft, maxLies) # berlekamp
+        set = [{q, n, w}]
+        stateInput = []
+        for i in [0..maxLies]
+          stateInput["q#{i}"] = n[i]
+        @setState stateInput
+
+      @setState {playing, maxLies, questionLeft, set}
 
   handleSubmitButton: ->
     if not @queryValidator()
       return
-    h = @generateHistory()
-    {set, questionLeft} = @state
+    {set, questionLeft, maxLies} = @state
+    if @state.query is 'range'
+      h = @generateHistory()
+    else if @state.query is 'subset'
+      h = @generateHistorySubset()
+      stateInput = []
+      for i in [0..maxLies]
+        stateInput["q#{i}"] = h.n[i]
+      @setState stateInput
+    console.log h
     set.push(h)
+
     @setState
       set: set
       questionLeft: questionLeft - 1
 
   queryValidator: ->
-    {qa, qb, qx, range} = @state
-    1 <= qa <= qb <= range && qx isnt ''
+    if @state.query is 'range'
+      {qa, qb, qx, range} = @state
+      1 <= qa <= qb <= range && qx isnt ''
+    else if @state.query is 'subset'
+      {qx, maxLies, set} = @state
+      if qx is '' then return false
+      last = set[set.length - 1]
+      hasError = []
+      for i in [0..maxLies]
+        if @state["q#{i}"] > last.n[i]
+          hasError.push i
+      @setState {hasError}
+      return hasError.length <= 0
+      
 
   # push a range of history
   #
@@ -90,7 +129,7 @@ Main = createReactClass
     if lie <= @state.maxLies
       cn[lie] += b - a + 1
 
-  # create a set of history
+  # create a set of history for range query
   generateHistory: ->
     {set, qa, qb, qx, maxLies, questionLeft} = @state
 
@@ -113,37 +152,52 @@ Main = createReactClass
           @pusH(h, qb + 1, sb, sx, x, c[Yes], c[No]) # A - U (right)
       else
         @pusH(h, sa, sb, sx, x, c[Yes], c[No]) # A - U
-    h.w = @berlekamp(n, questionLeft, maxLies)
-    h.wy = @berlekamp(c[Yes], questionLeft, maxLies)
-    h.wn = @berlekamp(c[No], questionLeft, maxLies)
-    console.log h
-    return h
+    h.w = combinatoric.berlekamp(n, questionLeft, maxLies)
+    h.wy = combinatoric.berlekamp(c[Yes], questionLeft, maxLies)
+    h.wn = combinatoric.berlekamp(c[No], questionLeft, maxLies)
+    h
 
-  # hitung berlekamp weight
-  #
-  # @param state vector
-  # @param berapa pertanyaan lagi yang boleh diajukan
-  # @param jumlah maksimal bohong
-  berlekamp: (vector, questionLeft, maxLies) ->
-    weight = 0
-    for x, i in vector
-      weight += x * combinatoric.denominator(questionLeft, maxLies - i)
-    weight
+  generateHistorySubset: ->
+    {set, qx, maxLies, questionLeft} = @state
+    last = set[set.length - 1].n
+    beforeY = 0
+    beforeN = 0
+    q = []
+    c = Yes: [], No: [] # state vector from possible answer of judge
+    for i in [0..maxLies]
+      q[i] = @state["q#{i}"]
+      # now
+      nowY = last[i] + beforeY
+      nowN = last[i] + beforeN
+      # lie
+      beforeY = nowY - q[i] - beforeY
+      beforeN = q[i]
+      # truth
+      c[Yes][i] = nowY - beforeY
+      c[No][i] = nowN - beforeN
+    n = if qx is Yes then c[Yes] else c[No]
+    h = {n, q, c}
+    h.w = combinatoric.berlekamp(n, questionLeft, maxLies)
+    h.wy = combinatoric.berlekamp(c[Yes], questionLeft, maxLies)
+    h.wn = combinatoric.berlekamp(c[No], questionLeft, maxLies)
+    h
 
   render: ->
+    {set, playing, range, maxLies, query, qa, qb, qx, questionLeft, hasError} = @state
+
     dom 'section', className: 'row',
       dom 'span', className: 'five columns',
         # Initial game
         dom 'div', className: 'row',
-          dom 'div', className: 'four columns',
+          dom 'div', className: 'three columns',
             dom 'label', {}, 'Range [1-n]'
             dom 'input',
               type: 'text'
               className: 'u-full-width'
               name: 'range'
               onChange: @handleInputNumberChange
-              value: @state.range
-              disabled: @state.set.length isnt 0
+              value: range
+              disabled: playing
           dom 'div', className: 'two columns',
             dom 'label', {}, 'Lie(s)'
             dom 'input',
@@ -151,11 +205,22 @@ Main = createReactClass
               className: 'u-full-width'
               name: 'maxLies'
               onChange: @handleInputNumberChange
-              value: @state.maxLies
-              disabled: @state.set.length isnt 0
+              value: maxLies
+              disabled: playing
+          dom 'div', className: 'three columns',
+            dom 'label', {}, 'Query'
+            dom 'select',
+              className: 'u-full-width'
+              name: 'query'
+              onChange: @handleInputChange
+              value: query
+              disabled: playing
+              dom 'option', value: '', disabled: true, ''
+              dom 'option', value: 'range', 'Range'
+              dom 'option', value: 'subset', 'Subset'
           dom 'div', className: 'four columns',
             dom 'label', className: 'u-invisible', 'i'
-            if @state.set.length is 0
+            if not playing
               dom 'button',
                 type: 'button'
                 className: 'button-primary'
@@ -169,27 +234,42 @@ Main = createReactClass
                 'Restart'
 
         # Query game
-        dom 'hr'
-        dom 'div', className: 'row',
-          dom 'div', className: 'three columns',
+        dom 'div',
+          className: "row #{'u-hide' if not playing}"
+          dom 'hr'
+
+          # Range query
+          dom 'div',
+            className: "three columns #{'u-hide' if query isnt 'range'}"
             dom 'label', {}, 'Start'
             dom 'input',
               type: 'text'
               className: 'u-full-width'
               name: 'qa'
               onChange: @handleInputNumberChange
-              value: @state.qa
-              disabled: @state.set.length is 0
-
-          dom 'div', className: 'three columns',
+              value: qa
+          dom 'div',
+            className: "three columns #{'u-hide' if query isnt 'range'}"
             dom 'label', {}, 'End'
             dom 'input',
               type: 'text'
               className: 'u-full-width'
               name: 'qb'
               onChange: @handleInputNumberChange
-              value: @state.qb
-              disabled: @state.set.length is 0
+              value: qb
+
+          # Subset query
+          for i in [0..maxLies]
+            dom 'div',
+              key: i
+              className: "two columns #{'u-hide' if query isnt 'subset'}"
+              dom 'label', {}, "#{i} lie#{if i > 1 then 's' else ''}"
+              dom 'input',
+                type: 'text'
+                className: "u-full-width #{if hasError.indexOf(i) > -1 then 'has-error'}"
+                name: "q#{i}"
+                onChange: @handleInputNumberChange
+                value: @state["q#{i}"] or 0
 
           dom 'div', className: 'two columns',
             dom 'label', {}, 'Answer'
@@ -197,39 +277,50 @@ Main = createReactClass
               className: 'u-full-width'
               name: 'qx'
               onChange: @handleInputChange
-              value: @state.qx
-              disabled: @state.set.length is 0
+              value: qx
               dom 'option', value: '', disabled: true, ''
-              dom 'option', value: 1, 'Yes'
-              dom 'option', value: 0, 'No'
+              dom 'option', value: Yes, 'Yes'
+              dom 'option', value: No, 'No'
 
           dom 'div', className: 'three columns',
             dom 'label', className: 'u-invisible', 'i'
             dom 'button',
               type: 'button'
-              className: 'button' + if @state.set.length isnt 0 then '-primary'
-              disabled: @state.set.length is 0
+              className: 'button' + if playing then '-primary'
               onClick: @handleSubmitButton
               'Submit'
 
-        dom 'hr'
-        dom 'span', {}, "Judge has chosen a number x in the range [1, n]. Guesser
-          has to find the number x using q queries range [a, b], then Judge has
-          to answer if the number x is inside range [a, b]."
-        dom 'br'
-        dom 'span', {}, "Firstly, define the range from 1 to n, then press start
-          button. You can always restart the game by pressing restart button.
-          Then each turn, Guesser give a query range [a, b], Judge then answer
-          the query whether the number is inside range [a, b] given by Guesser."
-        dom 'br'
-        dom 'small', {}, "Judge is allowed to lie #{@state.maxLies} times in
-          single game. Program will memorize all queries and answers to ensure
-          Judge doesn't lie more than #{@state.maxLies} times."
+        # Hints!
+        if query is 'range'
+          dom 'span', {},
+            dom 'hr'
+            dom 'span', {}, "Judge has chosen a number x in the range [1, n]. Guesser
+              has to find the number x using m queries range [a, b], then Judge has
+              to answer if the number x is inside range [a, b]."
+            dom 'br'
+            dom 'span', {}, "Firstly, define the range from 1 to n, then press start
+              button. You can always restart the game by pressing restart button.
+              Then each turn, Guesser give a query range [a, b], Judge then answer
+              the query whether the number is inside range [a, b] given by Guesser."
+            dom 'br'
+            dom 'small', {}, "Judge is allowed to lie #{maxLies} times in
+              single game. Program will memorize all queries and answers to ensure
+              Judge doesn't lie more than #{maxLies} times."
+        else if query is 'subset'
+          dom 'span', {},
+            dom 'hr'
+            dom 'span', {}, "Judge has chosen a number x in the range [1, n]. Guesser
+              has to find the number x using m queries subset Q={q1, q2, ...}, then Judge has
+              to answer if the number x is inside subset Q."
+            dom 'br'
+            dom 'small', {}, "Judge is allowed to lie #{maxLies} times in
+              single game. Program will memorize all queries and answers to ensure
+              Judge doesn't lie more than #{maxLies} times."
 
       # History of truth and lies sets
       dom 'span', className: 'six columns',
         dom 'label', {}, 'Question bar'
-        if @state.set.length <= 0
+        if not playing
           # Example
           dom 'div', key: i, className: 'history',
             # Query
@@ -261,28 +352,50 @@ Main = createReactClass
                 className: "color-br-#{lieLimit}"
                 title: 'Channel if answer is no'
                 "[ lie_ch_no_count ]:(<no_berlekamp_weight>)"
-        else for h, i in @state.set
-          dom 'div', key: i, className: 'history',
-            # Query
-            dom 'samp', className: 'set',
-              "#{h.q[0]}-#{h.q[1]}:#{if h.q[2] is Yes then 'Yes' else 'No'}"
-            # Set
-            dom 'span', {},
-              for set, j in h.s
-                dom 'span', key: j,
-                  dom 'span',
-                    className: "set bg-color-br-#{ceil(set[2] * lieLimit / @state.maxLies)}-muted",
-                    "#{set[0]} - #{set[1]} (#{set[2]})"
-                  dom 'i', {}, ' '
-            # Channel
-            dom 'small', {},
-              dom 'br'
-              dom 'span', {}, "[#{h.n.toString()}]:(#{h.w})"
-              if h.c
+        else if query is 'range'
+          for h, i in set
+            dom 'div', key: i, className: 'history',
+              # Query
+              dom 'samp', className: 'set',
+                "#{h.q[0]}-#{h.q[1]}:#{if h.q[2] is Yes then 'Yes' else 'No'}"
+              # Set
+              dom 'span', {},
+                for val, j in h.s
+                  dom 'span', key: j,
+                    dom 'span',
+                      className: "set bg-color-br-#{ceil(val[2] * lieLimit / maxLies)}-muted",
+                      "#{val[0]} - #{val[1]} (#{val[2]})"
+                    dom 'i', {}, ' '
+              # Channel
+              dom 'small', {},
+                dom 'br'
+                dom 'span', {}, "[#{h.n.toString()}]:(#{h.w})"
+                if h.c
+                  dom 'span', {},
+                    dom 'i', {}, ' '
+                    dom 'span', className: "color-br-0", "[#{h.c[Yes].toString()}]:(#{h.wy})"
+                    dom 'i', {}, ' '
+                    dom 'span', className: "color-br-#{lieLimit}", "[#{h.c[No].toString()}]:(#{h.wn})"
+        else if query is 'subset'
+          for h, i in set
+            dom 'div', key: i, className: 'history',
+              # Query
+              if h.q
                 dom 'span', {},
-                  dom 'i', {}, ' '
-                  dom 'span', className: "color-br-0", "[#{h.c[Yes].toString()}]:(#{h.wy})"
-                  dom 'i', {}, ' '
-                  dom 'span', className: "color-br-#{lieLimit}", "[#{h.c[No].toString()}]:(#{h.wn})"
+                  for val, j in h.q
+                    dom 'span', key: j,
+                      dom 'span',
+                        className: "set bg-color-br-#{ceil(j * lieLimit / maxLies)}-muted",
+                        "(#{j}):#{val}"
+                      dom 'i', {}, ' '
+              # Channel
+              dom 'small', {},
+                dom 'span', {}, "[#{h.n.toString()}]:(#{h.w})"
+                if h.c
+                  dom 'span', {},
+                    dom 'i', {}, ' '
+                    dom 'span', className: "color-br-0", "[#{h.c[Yes].toString()}]:(#{h.wy})"
+                    dom 'i', {}, ' '
+                    dom 'span', className: "color-br-#{lieLimit}", "[#{h.c[No].toString()}]:(#{h.wn})"
 
 module.exports = Main

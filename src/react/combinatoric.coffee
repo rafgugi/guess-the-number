@@ -16,4 +16,15 @@ class Combinatoric
       p += @c(m, i)
     p
 
+  # hitung berlekamp weight
+  #
+  # @param state vector
+  # @param berapa pertanyaan lagi yang boleh diajukan
+  # @param jumlah maksimal bohong
+  berlekamp: (vector, questionLeft, maxLies) ->
+    weight = 0
+    for x, i in vector
+      weight += x * @denominator(questionLeft, maxLies - i)
+    weight
+
 module.exports = new Combinatoric
