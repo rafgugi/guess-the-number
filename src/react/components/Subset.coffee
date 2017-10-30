@@ -1,15 +1,14 @@
 React = require 'react'
 createReactClass = require 'create-react-class'
 combinatoric = require '../combinatoric'
-window.combinatoric = combinatoric
 dom = React.createElement
 
 {abs, min, max, log2, ceil, round} = Math
 [Yes, No] = ['Yes', 'No']
 lieLimit = 16 # limitation of lie by the program
 
-Main = createReactClass
-  displayName: 'Main'
+Subset = createReactClass
+  displayName: 'Subset'
 
   getInitialState: ->
     set: [] # truth set and lie set
@@ -56,20 +55,21 @@ Main = createReactClass
   handleUndoButton: ->
     set = @state.set
     if set.length > 1
-      set.splice -1, 1
+      last = set.splice -1, 1
       @setState {set}
-      @setQueryInput set[set.length - 1].n
+      @setQueryInput last[0].q
 
   handlePlayButton: ->
     {range, maxLies} = @state
     if range isnt '' && maxLies isnt ''
       playing = true
-      maxLies = min(lieLimit, max(0, maxLies))
-      questionLeft = ceil(log2(range)) * (maxLies * 2 + 1)
+      maxLies = min lieLimit, max 0, maxLies
+      questionLeft = (ceil log2 range) * (maxLies * 2 + 1)
       q = (0 for i in [0..maxLies]) # query
       n = [range].concat(0 for i in [0..maxLies - 1]) # state
-      w = combinatoric.berlekamp(n, questionLeft, maxLies) # berlekamp
-      set = [{q, n, w}]
+      w = combinatoric.berlekamp n, questionLeft, maxLies # berlekamp
+      wp = 100
+      set = [{q, n, w, wp}]
       @setQueryInput n
 
       @setState {playing, maxLies, questionLeft, set}
@@ -113,7 +113,8 @@ Main = createReactClass
 
   generateHistory: ->
     {set, qx, maxLies, questionLeft} = @state
-    last = set[set.length - 1].n
+    lastSet = set[set.length - 1]
+    last = lastSet.n
     beforeY = 0
     beforeN = 0
     q = []
@@ -131,9 +132,12 @@ Main = createReactClass
       c[No][i] = nowN - beforeN
     n = if qx is Yes then c[Yes] else c[No]
     h = {n, q, c}
-    h.w = combinatoric.berlekamp(n, questionLeft, maxLies)
-    h.wy = combinatoric.berlekamp(c[Yes], questionLeft, maxLies)
-    h.wn = combinatoric.berlekamp(c[No], questionLeft, maxLies)
+    h.w = combinatoric.berlekamp n, questionLeft, maxLies
+    h.wy = combinatoric.berlekamp c[Yes], questionLeft, maxLies
+    h.wn = combinatoric.berlekamp c[No], questionLeft, maxLies
+    h.wp = round h.w / lastSet.w * 100
+    h.wpy = round h.wy / lastSet.w * 100
+    h.wpn = round h.wn / lastSet.w * 100
     h
 
   render: ->
@@ -248,7 +252,7 @@ Main = createReactClass
         dom 'label', {}, 'Question bar'
         if not playing
           # Example
-          dom 'div', key: i, className: 'history',
+          dom 'div', className: 'history',
             # Query
             dom 'span', {},
               dom 'span',
@@ -288,15 +292,16 @@ Main = createReactClass
                       "#{val}"
                     dom 'i', {}, ' '
               # Channel
-              dom 'small', {}, "[#{h.n.toString()}]:(#{h.w})"
+              dom 'small', {}, "[#{h.n.toString()}]:(#{h.w} #{h.wp}%)"
               if h.c
-                total = h.wy + h.wn
-                py = round(h.wy / total * 100)
-                pn = round(h.wn / total * 100)
                 dom 'small', {},
                   dom 'i', {}, ' '
-                  dom 'span', className: "color-br-0", "[#{h.c[Yes].toString()}]:(#{h.wy} #{py}%)"
+                  dom 'span',
+                    className: "color-br-0"
+                    "[#{h.c[Yes].toString()}]:(#{h.wy} #{h.wpy}%)"
                   dom 'i', {}, ' '
-                  dom 'span', className: "color-br-#{lieLimit}", "[#{h.c[No].toString()}]:(#{h.wn} #{pn}%)"
+                  dom 'span',
+                    className: "color-br-#{lieLimit}"
+                    "[#{h.c[No].toString()}]:(#{h.wn} #{h.wpn}%)"
 
-module.exports = Main
+module.exports = Subset

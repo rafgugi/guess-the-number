@@ -27,4 +27,5 @@ class Combinatoric
       weight += x * @denominator(questionLeft, maxLies - i)
     weight
 
-module.exports = new Combinatoric
+window.combinatoric = new Combinatoric
+module.exports = window.combinatoric

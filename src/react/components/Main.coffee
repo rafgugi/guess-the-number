@@ -11,10 +11,12 @@ Main = createReactClass
     dom 'section', className: 'row',
       dom 'span', className: 'five columns',
         # Initial game
-        dom 'div', className: 'row',
+        dom 'p', className: 'row',
           dom 'span', {}, 'Query type: '
           dom 'a', href: '#/range', 'Range'
           dom 'i', {}, ' '
           dom 'a', href: '#/subset', 'Subset'
+          dom 'i', {}, ' '
+          dom 'a', href: '#/workshop', 'Workshop'
 
 module.exports = Main

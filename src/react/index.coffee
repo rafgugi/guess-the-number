@@ -11,6 +11,7 @@ ReactDOM.render(
       dom Route, path: "/", component: require('./components/Main')
       dom Route, path: "/range", component: require('./components/Range')
       dom Route, path: "/subset", component: require('./components/Subset')
+      dom Route, path: "/workshop", component: require('./components/Workshop')
       # dom Redirect, from: "/", to: "/main"
   document.getElementsByTagName('main')[0]
 )
