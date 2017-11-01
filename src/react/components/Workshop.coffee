@@ -53,10 +53,10 @@ Workshop = createReactClass
       questionLeft = burstCount * (maxLies * 2 + 1)
 
       pow2 = round range / 2
-      burst = for i in [0...burstCount]
+      burst = for i in [0...burstCount] by 1
         flag = 1
         ans = ''
-        for j in [0...range]
+        for j in [0...range] by 1
           if j % pow2 is 0
             flag = !flag
           ans += if flag then '1' else '0'
@@ -66,7 +66,7 @@ Workshop = createReactClass
 
       q = '0' # query
       qx = '0' # query
-      n = [range].concat(0 for i in [0..maxLies - 1]) # state
+      n = [range].concat(0 for i in [0..maxLies - 1] by 1) # state
       s = (0 for i in [0...range] by 1) # what is x's channel now?
       w = combinatoric.berlekamp n, questionLeft, maxLies # berlekamp
       wp = 100
@@ -96,7 +96,7 @@ Workshop = createReactClass
     {set, maxLies, questionLeft} = @state
 
     s = before.s.slice 0
-    n = (0 for i in [0..maxLies]) # state vector
+    n = (0 for i in [0..maxLies] by 1) # state vector
     h = {q, s, n, qx}
 
     for x, i in q

@@ -54,7 +54,7 @@ Main = createReactClass
       questionLeft = ceil(log2(range)) * (maxLies * 2 + 1)
       q = [1, range, Yes] # query
       s = [[1, range, 0]] # range set
-      n = [range].concat(0 for i in [0..maxLies - 1]) # state
+      n = [range].concat(0 for i in [0..maxLies - 1] by 1) # state
       w = combinatoric.berlekamp n, questionLeft, maxLies # berlekamp
       wp = 100
       set = [{q, s, n, w, wp}]
@@ -103,7 +103,7 @@ Main = createReactClass
     {set, qa, qb, qx, maxLies, questionLeft} = @state
 
     s = [] # range set
-    n = (0 for i in [0..maxLies]) # state vector
+    n = (0 for i in [0..maxLies] by 1) # state vector
     c = [] # state vector from possible answer of judge
     c[Yes] = n.slice(0) # state vector if answer is yes
     c[No] = n.slice(0) # state vector if answer is no

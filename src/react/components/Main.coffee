@@ -17,6 +17,8 @@ Main = createReactClass
           dom 'i', {}, ' '
           dom 'a', href: '#/subset', 'Subset'
           dom 'i', {}, ' '
+          dom 'a', href: '#/state', 'State'
+          dom 'i', {}, ' '
           dom 'a', href: '#/workshop', 'Workshop'
 
 module.exports = Main
