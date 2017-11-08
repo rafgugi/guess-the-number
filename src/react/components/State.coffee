@@ -248,7 +248,7 @@ Subset = createReactClass
             Judge doesn't lie more than #{maxLies} times."
 
       # History of truth and lies sets
-      dom 'span', className: 'six columns',
+      dom 'span', className: 'seven columns question-bar',
         dom 'label', {}, 'Question bar'
         if not playing
           # Example

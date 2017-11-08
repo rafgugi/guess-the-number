@@ -1,19 +1,22 @@
 class Combinatoric
+
+  # permutator
   p: (m, n) ->
     p = 1
     while n--
       p *= m--
     return p
 
+  # combinator
   c: (m, n) ->
     if n > m then return 0
     else if n > m / 2 then return @c(m, m - n)
     else return @p(m, n) / @p(n, n)
 
-  denominator: (m, n) ->
+  denominator: (q, k) ->
     p = 0
-    for i in [0...n] by 1
-      p += @c(m, i)
+    for i in [0...k] by 1
+      p += @c(q, i)
     return p
 
   # hitung berlekamp weight

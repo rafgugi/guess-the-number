@@ -11,6 +11,11 @@ hr {
   background-color: #ededed;
 }
 
+.question-bar {
+  overflow-y: scroll;
+  max-height: 80vh;
+}
+
 .history {
   margin-bottom: 15px;
 
