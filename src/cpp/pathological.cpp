@@ -52,7 +52,8 @@ int main(int argc, char const *argv[]) {
     double pow2; // 2 ^ q
     double fk; // function fk
 
-    printf("Masukkan <n> <k> <q>,\nlalu sebanyak q, masukkan <query> <answer>\n");
+    printf("Masukkan <n> <k> <q>,\n");
+    printf("lalu sebanyak q, masukkan <query> <answer>\n");
     scanf("%d%d%d", &n, &k, &q);
     m = q;
 
@@ -73,6 +74,12 @@ int main(int argc, char const *argv[]) {
     printf("berlekamp weight = %lld\n", b);
     printf("2^%-2d             = %.0lf\n", q, pow2);
     printf("Fk*(q)           = %.2lf\n", fk);
+    printf("x: ");
+    for (int j = 0; j < k; ++j) {
+        printf("(%d) ", s[j]);
+    }
+    printf("\n");
+
     for (int i = 0; i < m; ++i) {
         printf("---------------------------------------------\n");
         scanf("%s %c", query, &answer);
