@@ -8,8 +8,7 @@ char **variation;
 long long counter = 0;
 
 // Print combinations of m 1's in a field of n 0/1's starting at s.
-void print_combinations(char *s, int n, int m)
-{
+void make_combinations(char *s, int n, int m) {
     /* I want only half variation of combinations */
     if (buf[0] == '1') {
         return;
@@ -30,10 +29,10 @@ void print_combinations(char *s, int n, int m)
     }
     // Append a 0 and recur to print the rest.
     *s = '0';
-    print_combinations(s + 1, n - 1, m);
+    make_combinations(s + 1, n - 1, m);
     // Now do the same with 1.
     *s = '1';
-    print_combinations(s + 1, n - 1, m - 1);
+    make_combinations(s + 1, n - 1, m - 1);
 }
 
 /* permutasi */
@@ -89,7 +88,6 @@ int main(int argc, char const *argv[]) {
     double fk; // function fk
 
     printf("Masukkan <n> <k> <q>,\n");
-    printf("lalu sebanyak q, masukkan <query> <answer>\n");
     scanf("%d%d%d", &n, &k, &q);
     m = q;
 
@@ -101,17 +99,13 @@ int main(int argc, char const *argv[]) {
     variation = (char**) malloc(sizeof(char**) * vary);
     buf = (char*) malloc(n + 1);
     int jumlah_c = n / 2;
-    print_combinations(buf, n, jumlah_c);
+    make_combinations(buf, n, jumlah_c);
     if (n % 2 == 1) {
         buf[0] = 0;
         jumlah_c = n / 2 + 1;
-        print_combinations(buf, n, jumlah_c);
+        make_combinations(buf, n, jumlah_c);
     }
-
-    /* Print the variation */
-    for (int i = 0; i < vary; ++i) {
-        puts(variation[i]);
-    }
+    printf("make %lld combinations (%lld)\n", vary, counter);
 
     /* initiate s */
     s[0] = n;
@@ -127,95 +121,107 @@ int main(int argc, char const *argv[]) {
     b = berlekamp(s, q, k);
     pow2 = pow(2, q);
     fk = pow2 / denominator(q, k);
-    printf("berlekamp weight = %lld\n", b);
-    printf("2^%-2d             = %.0lf\n", q, pow2);
-    printf("Fk*(q)           = %.2lf\n", fk);
-    printf("x: ");
+    printf("q\tquery\tanswer\tvector\tberlekamp\tdelta(x,a)\t2^q\tFk*(q)\n");
+    printf("%d\t-\t-\t", q);
+    printf("{");
     for (int j = 0; j < k; ++j) {
-        printf("(%d) ", s[j]);
+        printf("%d, ", s[j]);
     }
-    printf("\n");
+    printf("%d}\t", s[k]);
+    /* berlekamp weight */
+    printf("%lld\t0\t", b);
+    /* 2^%-2d */
+    printf("%.0lf\t", pow2);
+    /* Fk*(q)*/
+    printf("%.2lf\n", fk);
 
     for (int i = 0; i < m; ++i) {
-        printf("---------------------------------------------\n");
+        q--;
 
         /* Brute force query */
-        answer = 1;
+        answer = '1';
         old_b = b;
         long long temp_b = b;
         for (int v = 0; v < vary; ++v) {
-            puts(variation[v]);
-
             /* init the vector */
-            printf("init the vector\n");
             for (int j = 0; j <= k; ++j) {
                 s[j] = 0;
             }
 
             /* make a vector state */
-            printf("make a vector state\n");
-            printf(" . ");
-            printf("%d", n);
             for (int j = 0; j < n; ++j) {
-                printf(".");
-                int lie = (query[j] != answer);
-                printf("%d\n", lie);
-                printf("%d\n", channel[j]);
+                int lie = (variation[v][j] != answer);
                 if (channel[j] + lie <= k) {
                     s[channel[j] + lie]++;
                 }
             }
 
             /* compare the berlekamp */
-            printf("compare the berlekamp\n");
             b = berlekamp(s, q, k);
-            long long selisih = abs(2 * b - old_b);
-            if (selisih < temp_b) {
+            long long selisih = 2 * b - old_b;
+            if (abs(selisih) < abs(temp_b)) {
                 temp_b = selisih;
                 query = variation[v];
             }
+
+            /* klo selisihnya 0 pasti go */
             if (temp_b == 0) {
                 break;
             }
             //*/
         }
 
-        printf("(%d) query & answer: %s %c\n", q, query, answer);
-        q--;
+        if (temp_b < 0) {
+            answer = '0';
+        }
 
-        /* process the channel */
+        printf("%d\t'%s\t%c\t", q, query, answer);
+
+        /* init the vector */
+        // printf("init the vector\n");
+        for (int j = 0; j <= k; ++j) {
+            s[j] = 0;
+        }
+
+        /* make a vector state */
+        // printf("make a vector state\n");
         for (int j = 0; j < n; ++j) {
             int lie = (query[j] != answer);
-            if (lie) {
-                s[channel[j]]--;
-                channel[j]++;
-                if (channel[j] <= k) {
-                    s[channel[j]]++;
-                }
+            channel[j] += lie;
+            if (channel[j] <= k) {
+                s[channel[j]]++;
             }
         }
 
-        old_b = b;
+        printf("{");
+        int vector_counter = 0;
+        for (int j = 0; j < k; ++j) {
+            printf("%d, ", s[j]);
+            vector_counter += s[j];
+        }
+        printf("%d}\t", s[k]);
+        vector_counter += s[k];
+
         b = berlekamp(s, q, k);
         pow2 = pow(2, q);
         fk = pow2 / denominator(q, k);
-        printf("berlekamp weight = %lld\n", b);
-        printf("2^%-2d             = %.0lf\n", q, pow2);
-        printf("Delta(x,a)       = %lld\n", 2 * b - old_b);
-        printf("Fk*(q)           = %.2lf\n", fk);
+        printf("%lld\t", b);
+        printf("%lld\t", 2 * b - old_b);
+        printf("%.0lf\t", pow2);
+        printf("%.2lf\t", fk);
 
-        printf("x: ");
-        for (int j = 0; j < k; ++j) {
-            printf("(%d) ", s[j]);
-        }
+        // printf("status kebohongan setiap angka:\n  ");
+        // for (int j = 0; j < n; ++j) {
+        //     printf("%d:(%d) ", j+1, channel[j]);
+        // }
         printf("\n");
 
-        printf("status kebohongan setiap angka:\n  ");
-        for (int j = 0; j < n; ++j) {
-            printf("%d:(%d) ", j+1, channel[j]);
+        old_b = b;
+        if (vector_counter <= 1) {
+            break;
         }
-        printf("\n");
     }
+    printf("done in %d rounds.\n", m - q);
 
     return 0;
 }
