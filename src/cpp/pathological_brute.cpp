@@ -87,9 +87,14 @@ int main(int argc, char const *argv[]) {
     double pow2; // 2 ^ q
     double fk; // function fk
 
+    int isBrute = 1;
+    int v; // how many turn to brute force?
+
     printf("Masukkan <n> <k> <q>,\n");
     scanf("%d%d%d", &n, &k, &q);
+    printf("n\t%d\nk\t%d\nq\t%d\n", n, k, q);
     m = q;
+    query = (char*) malloc(sizeof(char) * n);
 
     /* initiate the variation */
     long long vary = c(n, n / 2) / 2;
@@ -121,7 +126,7 @@ int main(int argc, char const *argv[]) {
     b = berlekamp(s, q, k);
     pow2 = pow(2, q);
     fk = pow2 / denominator(q, k);
-    printf("q\tquery\tanswer\tvector\tberlekamp\tdelta(x,a)\t2^q\tFk*(q)\n");
+    printf("q\tquery\tanswer\tvector\tberlekamp\tdelta(x,a)\t2^q\tFk*(q)\tbrute\n");
     printf("%d\t-\t-\t", q);
     printf("{");
     for (int j = 0; j < k; ++j) {
@@ -138,41 +143,55 @@ int main(int argc, char const *argv[]) {
     for (int i = 0; i < m; ++i) {
         q--;
 
-        /* Brute force query */
-        answer = '1';
-        old_b = b;
-        long long temp_b = b;
-        for (int v = 0; v < vary; ++v) {
-            /* init the vector */
-            for (int j = 0; j <= k; ++j) {
-                s[j] = 0;
-            }
-
-            /* make a vector state */
-            for (int j = 0; j < n; ++j) {
-                int lie = (variation[v][j] != answer);
-                if (channel[j] + lie <= k) {
-                    s[channel[j] + lie]++;
-                }
-            }
-
-            /* compare the berlekamp */
-            b = berlekamp(s, q, k);
-            long long selisih = 2 * b - old_b;
-            if (abs(selisih) < abs(temp_b)) {
-                temp_b = selisih;
-                query = variation[v];
-            }
-
-            /* klo selisihnya 0 pasti go */
-            if (temp_b == 0) {
-                break;
-            }
-            //*/
+        if (isBrute) {
+            fflush(stdin);
+            scanf("%d\n", &isBrute);
         }
 
-        if (temp_b < 0) {
-            answer = '0';
+        if (isBrute) {
+            /* Brute force query */
+            query = NULL; // no longer needed to malloc
+            answer = '1';
+            old_b = b;
+            long long temp_b = b;
+            for (v = 0; v < vary; ++v) {
+                /* init the vector */
+                for (int j = 0; j <= k; ++j) {
+                    s[j] = 0;
+                }
+
+                /* make a vector state */
+                for (int j = 0; j < n; ++j) {
+                    int lie = (variation[v][j] != answer);
+                    if (channel[j] + lie <= k) {
+                        s[channel[j] + lie]++;
+                    }
+                }
+
+                /* compare the berlekamp */
+                b = berlekamp(s, q, k);
+                long long selisih = 2 * b - old_b;
+                if (abs(selisih) < abs(temp_b)) {
+                    temp_b = selisih;
+                    query = variation[v];
+                }
+
+                /* klo selisihnya 0 pasti go */
+                if (temp_b == 0) {
+                    break;
+                }
+                //*/
+            }
+
+            if (temp_b < 0) {
+                answer = '0';
+            }
+            /* end of bruteforce */
+            //*/
+        } else {
+            v = -1;
+            fflush(stdin);
+            scanf("%s %c", query, &answer);
         }
 
         printf("%d\t'%s\t%c\t", q, query, answer);
@@ -209,6 +228,7 @@ int main(int argc, char const *argv[]) {
         printf("%lld\t", 2 * b - old_b);
         printf("%.0lf\t", pow2);
         printf("%.2lf\t", fk);
+        printf("%d\t", v);
 
         // printf("status kebohongan setiap angka:\n  ");
         // for (int j = 0; j < n; ++j) {

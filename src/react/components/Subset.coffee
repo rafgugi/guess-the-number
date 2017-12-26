@@ -26,6 +26,7 @@ Subset = createReactClass
     @setState
       set: [{"q":"0","qx":"0","n":[16,0,0,0,0,0,0],"s":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"w":46290624,"wp":100,"questionLeft":52,"fk":1556634752.5997477},{"q":"0000000011111111","s":[1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0],"n":[8,8,0,0,0,0,0],"qx":"1","questionLeft":51,"c":{"0":[8,8,0,0,0,0,0],"1":[8,8,0,0,0,0,0]},"w":23145312,"wp":50,"fk":859100951.6896828,"wn":23145312,"wpn":50,"wy":23145312,"wpy":50},{"q":"0000111100001111","s":[2,2,2,2,1,1,1,1,1,1,1,1,0,0,0,0],"n":[4,8,4,0,0,0,0],"qx":"1","questionLeft":50,"c":{"0":[4,8,4,0,0,0,0],"1":[4,8,4,0,0,0,0]},"w":11572656,"wp":50,"fk":475076080.8910553,"wn":11572656,"wpn":50,"wy":11572656,"wpy":50},{"q":"0011001100110011","s":[3,3,2,2,2,2,1,1,2,2,1,1,1,1,0,0],"n":[2,6,6,2,0,0,0],"qx":"1","questionLeft":49,"c":{"0":[2,6,6,2,0,0,0],"1":[2,6,6,2,0,0,0]},"w":5786328,"wp":50,"fk":263256322.8853737,"wn":5786328,"wpn":50,"wy":5786328,"wpy":50},{"q":"0101010101010101","s":[4,3,3,2,3,2,2,1,3,2,2,1,2,1,1,0],"n":[1,4,6,4,1,0,0],"qx":"1","questionLeft":48,"c":{"0":[1,4,6,4,1,0,0],"1":[1,4,6,4,1,0,0]},"w":2893164,"wp":50,"fk":146193654.84461117,"wn":2893164,"wpn":50,"wy":2893164,"wpy":50}]
       questionLeft: 48
+
   handleInputNumberChange: (event) ->
     value = parseInt(event.target.value)
     name = event.target.name
@@ -56,12 +57,11 @@ Subset = createReactClass
       @setState {set, q, qx, questionLeft}
 
   handlePlayButton: ->
-    {range, maxLies} = @state
+    {range, maxLies, questionLeft} = @state
     if range isnt '' && maxLies isnt ''
       playing = true
       maxLies = min lieLimit, max 0, maxLies
       burstCount = ceil log2 range
-      questionLeft = burstCount * (maxLies * 2 + 1)
 
       q = '0' # query
       qx = '0' # query
@@ -138,7 +138,7 @@ Subset = createReactClass
     h
 
   render: ->
-    {set, playing, range, maxLies, qx, q} = @state
+    {set, playing, range, maxLies, qx, q, questionLeft} = @state
 
     dom 'section', className: 'row',
       dom 'span', className: 'five columns',
@@ -161,6 +161,15 @@ Subset = createReactClass
               name: 'maxLies'
               onChange: @handleInputNumberChange
               value: maxLies
+              disabled: playing
+          dom 'div', className: 'two columns',
+            dom 'label', {}, 'Turns'
+            dom 'input',
+              type: 'text'
+              className: 'u-full-width'
+              name: 'questionLeft'
+              onChange: @handleInputNumberChange
+              value: questionLeft
               disabled: playing
           dom 'div', className: 'four columns',
             dom 'label', className: 'u-invisible', 'i'
