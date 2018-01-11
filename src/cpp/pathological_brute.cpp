@@ -87,7 +87,7 @@ int main(int argc, char const *argv[]) {
     double pow2; // 2 ^ q
     double fk; // function fk
 
-    int isBrute = 1;
+    int isBrute = 0;
     int v; // how many turn to brute force?
 
     printf("Masukkan <n> <k> <q>,\n");
@@ -126,7 +126,7 @@ int main(int argc, char const *argv[]) {
     b = berlekamp(s, q, k);
     pow2 = pow(2, q);
     fk = pow2 / denominator(q, k);
-    printf("q\tquery\tanswer\tvector\tberlekamp\tdelta(x,a)\t2^q\tFk*(q)\tbrute\n");
+    printf("q\tquery\tanswer\tvector\tberlekamp\tdelta(x,a)\t2^q\tFk*(q)\tbrute\tisBrute\n");
     printf("%d\t-\t-\t", q);
     printf("{");
     for (int j = 0; j < k; ++j) {
@@ -143,9 +143,8 @@ int main(int argc, char const *argv[]) {
     for (int i = 0; i < m; ++i) {
         q--;
 
-        if (isBrute) {
-            fflush(stdin);
-            scanf("%d\n", &isBrute);
+        if (!isBrute) {
+            scanf("%d", &isBrute);
         }
 
         if (isBrute) {
@@ -190,8 +189,7 @@ int main(int argc, char const *argv[]) {
             //*/
         } else {
             v = -1;
-            fflush(stdin);
-            scanf("%s %c", query, &answer);
+            scanf("%s %c\n", query, &answer);
         }
 
         printf("%d\t'%s\t%c\t", q, query, answer);
@@ -229,6 +227,7 @@ int main(int argc, char const *argv[]) {
         printf("%.0lf\t", pow2);
         printf("%.2lf\t", fk);
         printf("%d\t", v);
+        printf("%d\t", isBrute);
 
         // printf("status kebohongan setiap angka:\n  ");
         // for (int j = 0; j < n; ++j) {
