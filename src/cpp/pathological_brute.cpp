@@ -89,6 +89,7 @@ int main(int argc, char const *argv[]) {
 
     int isBrute = 0;
     int v; // how many turn to brute force?
+    int same_b_counter; // how many query has the same berlekamp value
 
     printf("Masukkan <n> <k> <q>,\n");
     scanf("%d%d%d", &n, &k, &q);
@@ -123,10 +124,11 @@ int main(int argc, char const *argv[]) {
         channel[0] = 0;
     }
 
-    b = berlekamp(s, q, k);
+    old_b = b = berlekamp(s, q, k);
     pow2 = pow(2, q);
     fk = pow2 / denominator(q, k);
-    printf("q\tquery\tanswer\tvector\tberlekamp\tdelta(x,a)\t2^q\tFk*(q)\tbrute\tisBrute\n");
+    printf("q\tquery\tanswer\tvector\tberlekamp\tdelta(x,a)\t");
+    printf("2^q\tFk*(q)\tisBrute\tsame berlekamp\n");
     printf("%d\t-\t-\t", q);
     printf("{");
     for (int j = 0; j < k; ++j) {
@@ -134,7 +136,7 @@ int main(int argc, char const *argv[]) {
     }
     printf("%d}\t", s[k]);
     /* berlekamp weight */
-    printf("%lld\t0\t", b);
+    printf("%lld\t-\t", b);
     /* 2^%-2d */
     printf("%.0lf\t", pow2);
     /* Fk*(q)*/
@@ -147,6 +149,7 @@ int main(int argc, char const *argv[]) {
             scanf("%d", &isBrute);
         }
 
+        same_b_counter = 0;
         if (isBrute) {
             /* Brute force query */
             query = NULL; // no longer needed to malloc
@@ -173,6 +176,9 @@ int main(int argc, char const *argv[]) {
                 if (abs(selisih) < abs(temp_b)) {
                     temp_b = selisih;
                     query = variation[v];
+                    same_b_counter = 1;
+                } else if (abs(selisih) == abs(temp_b)) {
+                    same_b_counter++;
                 }
 
                 /* klo selisihnya 0 pasti go */
@@ -226,8 +232,8 @@ int main(int argc, char const *argv[]) {
         printf("%lld\t", 2 * b - old_b);
         printf("%.0lf\t", pow2);
         printf("%.2lf\t", fk);
-        printf("%d\t", v);
         printf("%d\t", isBrute);
+        printf("%d\t", same_b_counter);
 
         // printf("status kebohongan setiap angka:\n  ");
         // for (int j = 0; j < n; ++j) {
