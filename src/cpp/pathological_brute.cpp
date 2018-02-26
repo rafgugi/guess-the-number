@@ -74,13 +74,36 @@ long long berlekamp(int vector[], int question_left, int max_lies) {
     return weight;
 }
 
+int is_equal(int vector1[], int vector2[], int n) {
+    for (int i = 0; i < n; ++i) {
+        if (vector1[i] != vector2[i]) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+void copy_vector(int src[], int dst[], int n) {
+    for (int i = 0; i < n; ++i) {
+        dst[i] = src[i];
+    }
+}
+
+void print_vector(int vector[], int k) {
+    printf("{");
+    for (int i = 0; i < k; ++i) {
+        printf("%d,", vector[i]);
+    }
+    printf("%d}", vector[k]);
+}
+
 int main(int argc, char const *argv[]) {
     int n, k, m; // a test case
 
     int s[17]; // set channel of lies
     int temp_s[17]; // temporary set channel of lies
     int channel[4096]; // what is x channel now?
-    char* query; // query
+    char *query; // query
     char answer; // answer of query
     int q;
     long long b, old_b; // berlekamp weight
@@ -90,6 +113,10 @@ int main(int argc, char const *argv[]) {
     int isBrute = 0;
     int v; // how many turn to brute force?
     int same_b_counter; // how many query has the same berlekamp value
+    char **same_b_query;
+
+    int **possible_vector;
+    int possible_vector_counter;
 
     printf("Masukkan <n> <k> <q>,\n");
     scanf("%d%d%d", &n, &k, &q);
@@ -104,12 +131,23 @@ int main(int argc, char const *argv[]) {
     }
     variation = (char**) malloc(sizeof(char**) * vary);
     buf = (char*) malloc(n + 1);
+
+    /* prepare same b query */
+    same_b_query = (char**) malloc(sizeof(char**) * vary);
+
+    /* prepare possible vector */
+    possible_vector_counter = c(k + n, k);
+    possible_vector = (int**) malloc(sizeof(int**) * possible_vector_counter);
+    for (int i = 0; i < possible_vector_counter; ++i) {
+        possible_vector[i] = (int*) malloc(sizeof(int*) * k + 1);
+    }
+
     int jumlah_c = n / 2;
     make_combinations(buf, n, jumlah_c);
     if (n % 2 == 1) {
         buf[0] = 0;
         jumlah_c = n / 2 + 1;
-        make_combinations(buf, n, jumlah_c);
+        make_combinations(buf, n, jumlah_c); // ditambah jumlah c yang + 1
     }
     printf("make %lld combinations (%lld)\n", vary, counter);
 
@@ -130,11 +168,8 @@ int main(int argc, char const *argv[]) {
     printf("q\tquery\tanswer\tvector\tberlekamp\tdelta(x,a)\t");
     printf("2^q\tFk*(q)\tisBrute\tsame berlekamp\n");
     printf("%d\t-\t-\t", q);
-    printf("{");
-    for (int j = 0; j < k; ++j) {
-        printf("%d, ", s[j]);
-    }
-    printf("%d}\t", s[k]);
+    print_vector(s, k);
+    printf("\t");
     /* berlekamp weight */
     printf("%lld\t-\t", b);
     /* 2^%-2d */
@@ -142,6 +177,7 @@ int main(int argc, char const *argv[]) {
     /* Fk*(q)*/
     printf("%.2lf\n", fk);
 
+    // start the game
     for (int i = 0; i < m; ++i) {
         q--;
 
@@ -150,6 +186,7 @@ int main(int argc, char const *argv[]) {
         }
 
         same_b_counter = 0;
+        possible_vector_counter = 0;
         if (isBrute) {
             /* Brute force query */
             query = NULL; // no longer needed to malloc
@@ -176,12 +213,31 @@ int main(int argc, char const *argv[]) {
                 if (abs(selisih) < abs(temp_b)) {
                     temp_b = selisih;
                     query = variation[v];
+
+                    same_b_query[0] = variation[v];
                     same_b_counter = 1;
+
+                    copy_vector(s, possible_vector[0], k);
+                    possible_vector_counter = 1;
                 } else if (abs(selisih) == abs(temp_b)) {
+                    same_b_query[same_b_counter] = variation[v];
                     same_b_counter++;
+
+                    int sudah_ada = 0;
+                    for (int j = 0; j < possible_vector_counter; ++j) {
+                        if (is_equal(s, possible_vector[j], k)) {
+                            sudah_ada = 1;
+                            break;
+                        }
+                    }
+                    if (!sudah_ada) {
+                        copy_vector(s, possible_vector[possible_vector_counter], k);
+                        possible_vector_counter++;
+                    } else {
+                    }
                 }
 
-                /* klo selisihnya 0 pasti go */
+                /* klo selisihnya 0 pasti go *
                 if (temp_b == 0) {
                     break;
                 }
@@ -213,17 +269,16 @@ int main(int argc, char const *argv[]) {
             channel[j] += lie;
             if (channel[j] <= k) {
                 s[channel[j]]++;
+                //
             }
         }
 
-        printf("{");
         int vector_counter = 0;
-        for (int j = 0; j < k; ++j) {
-            printf("%d, ", s[j]);
+        for (int j = 0; j <= k; ++j) {
             vector_counter += s[j];
         }
-        printf("%d}\t", s[k]);
-        vector_counter += s[k];
+        print_vector(s, k);
+        printf("\t");
 
         b = berlekamp(s, q, k);
         pow2 = pow(2, q);
@@ -234,6 +289,22 @@ int main(int argc, char const *argv[]) {
         printf("%.2lf\t", fk);
         printf("%d\t", isBrute);
         printf("%d\t", same_b_counter);
+
+        /*
+        if (same_b_counter == vary) {
+            printf("[all]");
+        } else {
+            printf("[%s", same_b_query[0]);
+            for (int j = 1; j < same_b_counter; ++j) {
+                printf(",%s", same_b_query[j]);
+            }
+            printf("]");
+        }
+        //*/
+
+        for (int j = 0; j < possible_vector_counter; ++j) {
+            print_vector(possible_vector[j], k);
+        }
 
         // printf("status kebohongan setiap angka:\n  ");
         // for (int j = 0; j < n; ++j) {
