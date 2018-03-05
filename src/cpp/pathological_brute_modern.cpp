@@ -74,6 +74,15 @@ long long berlekamp(int vector[], int question_left, int max_lies) {
     return weight;
 }
 
+int ch(int vector[], int max_lies) {
+    int q = 0;
+    long long b, p;
+    while ((b = berlekamp(vector, q, max_lies)) > (p = pow(2, q))) {
+        q++;
+    }
+    return q;
+}
+
 int is_equal(int vector1[], int vector2[], int n) {
     for (int i = 0; i < n; ++i) {
         if (vector1[i] != vector2[i]) {
@@ -117,6 +126,7 @@ int main(int argc, char const *argv[])
     int isBrute = 0;
     int v = -1; // how many turn to brute force?
     int same_b_counter; // how many query has the same berlekamp value
+    int cha = 0; // character of a vector, min possible query
 
     cout << "Masukkan <n> <k> <q>,\n";
     cin >> n >> k >> q;
@@ -156,13 +166,15 @@ int main(int argc, char const *argv[])
         channel[0] = 0;
     }
 
+    old_b = b = berlekamp(s, q, k);
+    cha = ch(s, k);
     cout << "q\tquery\tanswer\tvector\tberlekamp\tdelta(x,a)\t"
-         << "2^q\tFk*(q)\tisBrute\tsame berlekamp\n"
+         << "2^q\tch\tisBrute\tsame berlekamp\n"
          << q << "\t-\t-\t";
     print_vector(s, k);
     cout << "\t" << b << "\t-\t"
          << pow2 << "\t"
-         << fk << endl;
+         << cha << endl;
 
     // start the game
     for (int i = 0; i < m; ++i) {
@@ -269,10 +281,11 @@ int main(int argc, char const *argv[])
         b = berlekamp(s, q, k);
         pow2 = pow(2, q);
         fk = pow2 / denominator(q, k);
+        cha = ch(s, k);
         cout << b << "\t";
         cout << 2 * b - old_b << "\t";
         cout << pow2 << "\t";
-        cout << fk << "\t";
+        cout << cha << "\t";
         cout << isBrute << "\t";
         cout << same_b_counter << "\t";
 
