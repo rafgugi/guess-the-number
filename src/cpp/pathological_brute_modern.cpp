@@ -117,7 +117,7 @@ int main(int argc, char const *argv[])
     int q;
     long long b, old_b; // berlekamp weight
     double pow2; // 2 ^ q
-    double fk; // function fk
+    double prcnt; // b / old_b * 100%
 
     string query;
     vector <string*> same_b_query;
@@ -169,11 +169,10 @@ int main(int argc, char const *argv[])
     old_b = b = berlekamp(s, q, k);
     cha = ch(s, k);
     cout << "q\tquery\tanswer\tvector\tberlekamp\tdelta(x,a)\t"
-         << "2^q\tch\tisBrute\tsame berlekamp\n"
+         << "percent\tch\tisBrute\tsame berlekamp\n"
          << q << "\t-\t-\t";
     print_vector(s, k);
-    cout << "\t" << b << "\t-\t"
-         << pow2 << "\t"
+    cout << "\t" << b << "\t-\t-\t"
          << cha << endl;
 
     // start the game
@@ -190,10 +189,10 @@ int main(int argc, char const *argv[])
             cin >> query >> answer;
         } else {
             /* Brute force query */
-            // query[0] = 0; // no longer needed to malloc
             answer = '1';
             old_b = b;
-            long long temp_b = b;
+            long long temp_b = b; // awal awal diisi b, karena pasti selisih
+                                  // b (temp_b) lebih kecil daripada b
             for (v = 0; v < vary; ++v) {
                 /* init the vector */
                 for (int j = 0; j <= k; ++j) {
@@ -279,12 +278,11 @@ int main(int argc, char const *argv[])
         cout << "\t";
 
         b = berlekamp(s, q, k);
-        pow2 = pow(2, q);
-        fk = pow2 / denominator(q, k);
         cha = ch(s, k);
+        prcnt = b * 100.0 / old_b;
         cout << b << "\t";
-        cout << 2 * b - old_b << "\t";
-        cout << pow2 << "\t";
+        cout << abs(2 * b - old_b) << "\t"; // selisih
+        cout << prcnt << "\t";
         cout << cha << "\t";
         cout << isBrute << "\t";
         cout << same_b_counter << "\t";
