@@ -9,7 +9,7 @@ string buf;
 vector <string> variation;
 long long counter;
 
-// Print combinations of m 1's in a field of n 0/1's starting at s.
+// Make combinations of m 1's in a field of n 0/1's starting at s.
 void make_combinations(string s, int n, int m, int cur) {
     /* I want only half variation of combinations, so I ensure 
      * the first char is always 0 */
@@ -130,7 +130,6 @@ int main(int argc, char const *argv[])
 
     cout << "Masukkan <n> <k> <q>,\n";
     cin >> n >> k >> q;
-    // scanf("%d%d%d", &n, &k, &q);
     cout << "n\t" << n << "\nk\t" << k << "\nq\t" << q << "\n";
 
     m = q;
