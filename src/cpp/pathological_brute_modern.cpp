@@ -83,8 +83,8 @@ int ch(int vector[], int max_lies) {
     return q;
 }
 
-int is_equal(int vector1[], int vector2[], int n) {
-    for (int i = 0; i < n; ++i) {
+int is_equal(int vector1[], int vector2[], int k) {
+    for (int i = 0; i <= k; ++i) {
         if (vector1[i] != vector2[i]) {
             return 0;
         }
@@ -92,15 +92,15 @@ int is_equal(int vector1[], int vector2[], int n) {
     return 1;
 }
 
-void copy_vector(int src[], int dst[], int n) {
-    for (int i = 0; i < n; ++i) {
+void copy_vector(int src[], int dst[], int k) {
+    for (int i = 0; i <= k; ++i) {
         dst[i] = src[i];
     }
 }
 
 void print_vector(int vector[], int k) {
     cout << "{";
-    for (int i = 0; i < k; ++i) {
+    for (int i = 0; i <= k; ++i) {
         cout << vector[i] << ",";
     }
     cout << vector[k] << "}";
