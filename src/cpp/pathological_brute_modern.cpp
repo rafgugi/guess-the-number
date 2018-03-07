@@ -24,7 +24,7 @@ void make_combinations(string s, int n, int m, int cur) {
         return;
     }
     // Cut if there are more 1's than positions left or negative numbers.
-    if (m > n || m < 0 || n < 0){
+    if (m > n || m < 0 || n < 0) {
         return;
     }
     // Append a 0 and recur to print the rest.
@@ -99,11 +99,19 @@ void copy_vector(int src[], int dst[], int k) {
 }
 
 void print_vector(int vector[], int k) {
-    cout << "{";
-    for (int i = 0; i <= k; ++i) {
+    cout << "[";
+    for (int i = 0; i < k; ++i) { // ini sampe sebelum k aja
         cout << vector[i] << ",";
     }
-    cout << vector[k] << "}";
+    cout << vector[k] << "]"; // diprint lagi kok
+}
+
+int sum_vector(int vector[], int k) {
+    int sum = 0;
+    for (int i = 0; i <= k; ++i) {
+        sum += vector[i];
+    }
+    return sum;
 }
 
 int main(int argc, char const *argv[])
@@ -171,6 +179,7 @@ int main(int argc, char const *argv[])
          << "percent\tch\tisBrute\tsame berlekamp\n"
          << q << "\t-\t-\t";
     print_vector(s, k);
+    cout << sum_vector(s, k);
     cout << "\t" << b << "\t-\t-\t"
          << cha << endl;
 
@@ -274,6 +283,7 @@ int main(int argc, char const *argv[])
             vector_counter += s[j];
         }
         print_vector(s, k);
+        cout << sum_vector(s, k);
         cout << "\t";
 
         b = berlekamp(s, q, k);

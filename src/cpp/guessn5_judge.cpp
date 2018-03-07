@@ -19,7 +19,7 @@ void make_binary(string s, int n, int cur) {
         return;
     }
     // Base
-    if (n < 0){
+    if (n < 0) {
         return;
     }
     // Append a 0 and recur to print the rest.
@@ -95,10 +95,18 @@ void copy_vector(int src[], int dst[], int k) {
 
 void print_vector(int vector[], int k) {
     cout << "{";
-    for (int i = 0; i <= k; ++i) {
+    for (int i = 0; i < k; ++i) {
         cout << vector[i] << ",";
     }
     cout << vector[k] << "}";
+}
+
+int sum_vector(int vector[], int k) {
+    int sum = 0;
+    for (int i = 0; i <= k; ++i) {
+        sum += vector[i];
+    }
+    return sum;
 }
 
 int main(int argc, char const *argv[])
@@ -120,6 +128,9 @@ int main(int argc, char const *argv[])
     int same_b_counter; // how many query has the same berlekamp value
     int cha = 0; // character of a vector, min possible query
 
+    vector <string*> win_set;
+    vector <string*> lose_set;
+
     cout << "Masukkan <n> <k> <q>,\n";
     cin >> n >> k >> q;
     cout << "n\t" << n << "\nk\t" << k << "\nq\t" << q << "\n";
@@ -132,4 +143,42 @@ int main(int argc, char const *argv[])
     }
 
     make_binary(buf, q, 0);
+    for (int i = 0; i < variation.size(); ++i) {
+        /* reset channel  and vector */
+        for (int l = 0; l < n; ++l) {
+            channel[l] = 0;
+        }
+        for (int l = 0; l <= n; ++l) {
+            s[l] = 0;
+        }
+
+        /* process the query */
+        for (int j = 0; j < q; ++j) {
+            for (int l = 0; l < n; ++l) {
+                channel[l] += (queries[j][l] != variation[i]);
+            }
+        }
+        for (int l = 0; l < n; ++l) {
+            if (channel[l] <= k) {
+                s[channel[l]]++;
+            }
+        }
+
+        /* check if win or lose */
+        if (sum_vector(s, k) <= 1) {
+            win_set.push_back(variation[i]);
+        } else {
+            lose_set.push_back(variation[i]);
+        }
+    }
+
+    cout << "win set:" << endl;
+    for (int i = 0; i < win_set.size(); ++i) {
+        cout << win_set[i] << endl;
+    }
+
+    cout << "lose set:" << endl;
+    for (int i = 0; i < lose_set.size(); ++i) {
+        cout << lose_set[i] << endl;
+    }
 }
