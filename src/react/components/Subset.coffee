@@ -12,20 +12,23 @@ Subset = createReactClass
   getInitialState: ->
     set: [] # truth set and lie set
     playing: false
-    questionLeft: 0
+    questionLeft: 30
     qx: '1'
     q: '0000000011111111'
+    quickQuery: ''
+    isAdvance: false
 
     # input values
     range: 16
-    maxLies: 6 # maximal number of lies
+    maxLies: 8 # maximal number of lies
 
   componentWillMount: ->
-    # only for debugging
+    # ### only for debugging
     @handlePlayButton()
     @setState
-      set: [{"q":"0","qx":"0","n":[16,0,0,0,0,0,0],"s":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"w":46290624,"wp":100,"questionLeft":52,"fk":1556634752.5997477},{"q":"0000000011111111","s":[1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0],"n":[8,8,0,0,0,0,0],"qx":"1","questionLeft":51,"c":{"0":[8,8,0,0,0,0,0],"1":[8,8,0,0,0,0,0]},"w":23145312,"wp":50,"fk":859100951.6896828,"wn":23145312,"wpn":50,"wy":23145312,"wpy":50},{"q":"0000111100001111","s":[2,2,2,2,1,1,1,1,1,1,1,1,0,0,0,0],"n":[4,8,4,0,0,0,0],"qx":"1","questionLeft":50,"c":{"0":[4,8,4,0,0,0,0],"1":[4,8,4,0,0,0,0]},"w":11572656,"wp":50,"fk":475076080.8910553,"wn":11572656,"wpn":50,"wy":11572656,"wpy":50},{"q":"0011001100110011","s":[3,3,2,2,2,2,1,1,2,2,1,1,1,1,0,0],"n":[2,6,6,2,0,0,0],"qx":"1","questionLeft":49,"c":{"0":[2,6,6,2,0,0,0],"1":[2,6,6,2,0,0,0]},"w":5786328,"wp":50,"fk":263256322.8853737,"wn":5786328,"wpn":50,"wy":5786328,"wpy":50},{"q":"0101010101010101","s":[4,3,3,2,3,2,2,1,3,2,2,1,2,1,1,0],"n":[1,4,6,4,1,0,0],"qx":"1","questionLeft":48,"c":{"0":[1,4,6,4,1,0,0],"1":[1,4,6,4,1,0,0]},"w":2893164,"wp":50,"fk":146193654.84461117,"wn":2893164,"wpn":50,"wy":2893164,"wpy":50}]
-      questionLeft: 48
+      set: [{"q":"0","qx":"0","n":[16,0,0,0,0,0,0,0,0],"s":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"w":44864192,"wp":100,"questionLeft":30,"fk":382.93053810040755},{"q":"0000000011111111","s":[1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0],"n":[8,8,0,0,0,0,0,0,0],"qx":"1","questionLeft":29,"c":{"0":[8,8,0,0,0,0,0,0,0],"1":[8,8,0,0,0,0,0,0,0]},"w":22432096,"wp":50,"fk":246.00068548512735,"wn":22432096,"wpn":50,"wy":22432096,"wpy":50},{"q":"0000111100001111","s":[2,2,2,2,1,1,1,1,1,1,1,1,0,0,0,0],"n":[4,8,4,0,0,0,0,0,0],"qx":"1","questionLeft":28,"c":{"0":[4,8,4,0,0,0,0,0,0],"1":[4,8,4,0,0,0,0,0,0]},"w":11216048,"wp":50,"fk":159.47753410431685,"wn":11216048,"wpn":50,"wy":11216048,"wpy":50},{"q":"0011001100110011","s":[3,3,2,2,2,2,1,1,2,2,1,1,1,1,0,0],"n":[2,6,6,2,0,0,0,0,0],"qx":"1","questionLeft":27,"c":{"0":[2,6,6,2,0,0,0,0,0],"1":[2,6,6,2,0,0,0,0,0]},"w":5608024,"wp":50,"fk":104.39889734479132,"wn":5608024,"wpn":50,"wy":5608024,"wpy":50},{"q":"0101010101010101","s":[4,3,3,2,3,2,2,1,3,2,2,1,2,1,1,0],"n":[1,4,6,4,1,0,0,0,0],"qx":"1","questionLeft":26,"c":{"0":[1,4,6,4,1,0,0,0,0],"1":[1,4,6,4,1,0,0,0,0]},"w":2804012,"wp":50,"fk":69.06250411644602,"wn":2804012,"wpn":50,"wy":2804012,"wpy":50}]
+      questionLeft: 26
+    # ###
 
   handleInputNumberChange: (event) ->
     value = parseInt(event.target.value)
@@ -75,9 +78,9 @@ Subset = createReactClass
       @setState {playing, maxLies, questionLeft, set}
 
   handleSubmitButton: ->
-    if not @queryValidator()
+    {set, questionLeft, maxLies, qx, q, range} = @state
+    if not @queryValidator qx, q, range
       return
-    {set, questionLeft, maxLies, qx, q} = @state
     last = set[set.length - 1]
     h = @generateHistory q, qx, last
     set.push h
@@ -88,8 +91,15 @@ Subset = createReactClass
     console.log 'set', set, JSON.stringify set
     console.log 'questionLeft', questionLeft - 1
 
-  queryValidator: ->
-    {qx, q, range} = @state
+  handleAdvancedChange: ->
+    @setState
+      isAdvance: !@state.isAdvance
+
+  handleQuickButton: ->
+    {quickQuery} = @state
+    console.log quickQuery
+
+  queryValidator: (qx, q, range) ->
     if q.length isnt range
       console.log "query harus berjumlah #{range} (#{q.length})"
       return false
@@ -117,10 +127,10 @@ Subset = createReactClass
       if s[i] <= maxLies
         n[s[i]]++
     h.w = combinatoric.berlekamp n, questionLeft, maxLies
-    h.wp = round h.w / before.w * 100
+    h.wp = (round h.w * 10000 / before.w) / 100
     h.fk = (pow 2, questionLeft) / (combinatoric.denominator questionLeft, maxLies)
     balasB = combinatoric.berlekamp balasN, questionLeft, maxLies
-    balasP = round balasB / before.w * 100 
+    balasP = (round balasB * 10000 / before.w) / 100
     if qx is '1'
       c[0] = balasN
       h.wn = balasB
@@ -138,7 +148,7 @@ Subset = createReactClass
     h
 
   render: ->
-    {set, playing, range, maxLies, qx, q, questionLeft} = @state
+    {set, playing, range, maxLies, qx, q, questionLeft, quickQuery, isAdvance} = @state
 
     dom 'section', className: 'row',
       dom 'span', className: 'five columns',
@@ -211,6 +221,7 @@ Subset = createReactClass
               onChange: @handleInputChange
               value: qx
 
+          # Buttons
           dom 'div', className: 'nine columns',
             dom 'label', className: 'u-invisible', 'i'
             dom 'button',
@@ -224,6 +235,31 @@ Subset = createReactClass
               className: 'button-primary'
               onClick: @handleSubmitButton
               'Submit'
+
+          # Advance
+          dom 'div', className: 'twelve columns',
+            dom 'hr'
+            dom 'label', {},
+              dom 'input',
+                type: 'checkbox'
+                value: isAdvance
+                onChange: @handleAdvancedChange
+              dom 'span', className: 'label-body', 'Advanced mode (not yet implemented)'
+          if isAdvance
+            dom 'div', {},
+              dom 'div', className: 'twelve columns',
+                dom 'label', {}, 'Quick query'
+                dom 'textarea',
+                  className: 'u-full-width'
+                  name: 'quickQuery'
+                  onChange: @handleInputChange
+                  value: quickQuery
+              dom 'div', className: 'nine columns',
+                dom 'button',
+                  type: 'button'
+                  className: 'button-primary'
+                  onClick: @handleQuickButton
+                  'Quick'
 
         # Hints!
         dom 'span', {},
@@ -260,17 +296,7 @@ Subset = createReactClass
               dom 'br'
               dom 'span',
                 title: 'Current channel vector',
-                "[ lie_ch_count ]:(<berlekamp_weight>)"
-              dom 'br'
-              dom 'span',
-                className: "color-br-0"
-                title: 'Channel if answer is yes'
-                "[ lie_ch_yes_count ]:(<yes_berlekamp_weight>)"
-              dom 'br'
-              dom 'span',
-                className: "color-br-#{lieLimit}"
-                title: 'Channel if answer is no'
-                "[ lie_ch_no_count ]:(<no_berlekamp_weight>)"
+                "[ lie_ch_count ]:(<berlekamp_weight> <percentage_against_other_answer>)"
         else
           for h, i in set
             dom 'div', key: i, className: 'history',
@@ -296,15 +322,5 @@ Subset = createReactClass
               dom 'small', {},
                 dom 'br'
                 dom 'span', {}, "[#{h.n.toString()}]:(#{h.w} #{h.wp}%)"
-              if h.c
-                dom 'small', {},
-                  dom 'i', {}, ' '
-                  dom 'span',
-                    className: "color-br-0"
-                    "[#{h.c[1].toString()}]:(#{h.wy} #{h.wpy}%)"
-                  dom 'i', {}, ' '
-                  dom 'span',
-                    className: "color-br-#{lieLimit}"
-                    "[#{h.c[0].toString()}]:(#{h.wn} #{h.wpn}%)"
 
 module.exports = Subset
