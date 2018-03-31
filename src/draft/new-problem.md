@@ -12,6 +12,14 @@ Single integer `t` test case, followed by `t` lines of two integer `M` and `d`
 ### Output
 Single integer `n`, followed by `M` codewords, each codeword has length `n`. Every two different codewords must have minimal Hamming distance `d`. Remember, you must find the lowest `n` such that binary code `(n, M, d)` exists.
 
+### Constrains
+```
+1 <= t <= 10
+2 <= M <= 4096
+1 <= d <= 3
+d is always an odd number
+```
+
 ### Example input
 ```
 2
