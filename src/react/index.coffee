@@ -13,6 +13,7 @@ ReactDOM.render(
       dom Route, path: "/subset", component: require('./components/Subset')
       dom Route, path: "/state", component: require('./components/State')
       dom Route, path: "/workshop", component: require('./components/Workshop')
+      dom Route, path: "/hamming", component: require('./components/Hamming')
       # dom Redirect, from: "/", to: "/main"
   document.getElementsByTagName('main')[0]
 )

@@ -34,9 +34,13 @@ class Combinatoric
     q = 0
     b = 0
     p = 0
-    while (b = @berlekamp(vector, q, maxLies)) > (p = Math.pow(2, q))
-      q++
+    while 1
+      b = @berlekamp(vector, q, maxLies)
+      p = Math.pow(2, q)
       console.log q, b, p, b > p
+      if b <= p then break
+      q++
+    return q
 
 window.combinatoric = new Combinatoric
 module.exports = window.combinatoric

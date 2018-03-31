@@ -16,12 +16,26 @@ hr {
   max-height: 80vh;
 }
 
+.scrollx {
+  overflow-x: scroll;
+  max-width: 100vh;
+}
+
 .history {
   margin-bottom: 15px;
 
   .set {
     padding: 2px 4px;
     border-radius: 5px;    
+  }
+}
+
+.table.no-padding {
+  tr {
+    padding: 1px;
+    td {
+      padding: 1px;
+    }
   }
 }
 
