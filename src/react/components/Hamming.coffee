@@ -46,13 +46,16 @@ Hamming = createReactClass
       playing: false
       codewords: []
 
-  # handleUndoButton: ->
-  #   {set} = @state
-  #   if set.length > 1
-  #     questionLeft++
-  #     last = (set.splice -1, 1)[0]
-  #     {q, qx} = last
-  #     @setState {set, q, qx}
+  handleUndoButton: ->
+    {codewords, distanceMatrix, range} = @state
+    if codewords[0].length > 0
+      for i in [0...range] by 1
+        del = codewords[i].slice(-1)
+        codewords[i] = codewords[i].slice(0, -1)
+        for j in [i+1...range] by 1
+          ans = del isnt codewords[j].slice(-1)
+          distanceMatrix[i][j] -= ans
+    @setState {codewords, distanceMatrix}
 
   handlePlayButton: ->
     {range, maxLies} = @state
@@ -65,13 +68,14 @@ Hamming = createReactClass
       for i in [0...range] by 1
         codewords[i] = ''
         distanceMatrix[i] = []
+        distanceMatrix[i][i] = 0
         for j in [i+1...range] by 1
           distanceMatrix[i][j] = 0
 
       @setState {playing, maxLies, codewords, distanceMatrix}
 
   handleSubmitButton: ->
-    {codewords, distanceMatrix, maxLies, q, range} = @state
+    {codewords, distanceMatrix, q, range} = @state
     if not @queryValidator q, range
       return
     queries = q.split '\n'
@@ -82,9 +86,7 @@ Hamming = createReactClass
         for j in [i+1...range] by 1
           ans = query[i] isnt query[j]
           distanceMatrix[i][j] += ans
-    @setState
-      codewords: codewords
-      distanceMatrix: distanceMatrix
+    @setState {codewords, distanceMatrix}
 
   queryValidator: (q, range) ->
     queries = q.split '\n'
@@ -187,27 +189,26 @@ Hamming = createReactClass
           dom 'label', {}, 'Codewords'
           dom 'div', className: 'scrollx',
             dom 'table', className: 'table no-padding',
-              for code, i in codewords
-                dom 'tr', key: i,
-                  dom 'td', {}, "#{i+1}: "
-                  dom 'td'
-                  dom 'td'
-                  dom 'td', {}, dom 'samp', {}, code
+              dom 'tbody', {},
+                for code, i in codewords
+                  dom 'tr', key: i,
+                    dom 'td', {}, "#{i+1}: "
+                    dom 'td'
+                    dom 'td'
+                    dom 'td', {}, dom 'samp', {}, code
           dom 'br'
           dom 'label', {}, 'Distance matrix'
           dom 'div', className: 'scrollx',
-            dom 'table', className: 'table',
-              dom 'tr', {},
-                dom 'td', {}, ''
-                for i in [0...range] by 1
-                  dom 'td', key: i, i + 1
-              for dist, i in distanceMatrix
-                dom 'tr', key: i,
-                  dom 'td', {}, i + 1
-                  for d, j in dist
-                    if i is j
-                      dom 'td', key: j, 'X'
-                    else
+            dom 'table', className: 'table distance-matrix',
+              dom 'tbody', {},
+                dom 'tr', {},
+                  dom 'td', {}, 'X'
+                  for i in [0...range] by 1
+                    dom 'td', key: i, dom 'strong', {}, i + 1
+                for dist, i in distanceMatrix
+                  dom 'tr', key: i,
+                    dom 'td', {}, dom 'strong', {}, i + 1
+                    for d, j in dist
                       dom 'td', key: j, d
 
 module.exports = Hamming
