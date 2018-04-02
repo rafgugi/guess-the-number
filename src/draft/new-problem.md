@@ -16,7 +16,7 @@ Single integer `n`, followed by `M` codewords, each codeword has length `n`. Eve
 ```
 1 <= t <= 10
 2 <= M <= 4096
-1 <= d <= 3
+1 <= d <= 33
 d is always an odd number
 ```
 
