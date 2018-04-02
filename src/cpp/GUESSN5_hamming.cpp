@@ -24,7 +24,7 @@ int main(int argc, char const *argv[]) {
         queries.clear();
         //*/
         // scanf("%d%d%d", &n, &w, &m);
-        cin >> M >> e >> q;
+        cin >> M >> e;
 
         for (int i = 0; i < M; ++i) {
             for (int j = i+1; j < M; ++j) {
@@ -102,11 +102,11 @@ int main(int argc, char const *argv[]) {
                             counter[s[i]]++;
                         }
                     }
-                    if (counter['0'] > M/2 || counter['1'] > M/2) {
+                    if (counter['0'] > M/2 || counter['1'] > M/2) { // ini harusnya pake >=, tapi jadinya loop forever
                         break;
                     }
                 }
-                if (counter['0'] > M/2 || counter['1'] > M/2) {
+                if (counter['0'] > M/2 || counter['1'] > M/2) { // ini harusnya pake >=, tapi jadinya loop forever
                     break;
                 }
             }

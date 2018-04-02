@@ -73,11 +73,34 @@ Pada uji kasus yang ketiga penanya tidak memberikan solusi. Penanya mendapatkan 
 
 Pada uji kasus yang keempat penanya memberikan _query_ yang lebih sedikit dari jumlah _query_ maksimal yang diperbolehkan. Dari semua kemungkinan jawaban penjawab, pasti hanya ada satu jawaban nilai x, jadi solusi penanya berhasil dan mendapatkan skor 15^5=255. Dari semua uji kasus, total skor penanya adalah 36 + 256 + 4624 + 225 = 5141.
 
-### 2.2 Solusi pada permasalahan ULAM secara umum
+### 2.2 Teori pengkodean
 
-Pada permasalahan RBU, penjawab menentukan sebuah angka x dimana x ∈ Sn, lalu penanya akan menanyakan _query_ untuk membantu mencari nilai x. Pada kenyataannya, penjawab tidak benar-benar memilih sebuah angka x, namun mempersiapkan n angka dengan state keboongan dari setiap angka. State kebohongan setiap angka dapat digambarkan dengan _bipartite graph channel_ untuk status kebohongan, Ci adalah status kebohongan dari bilangan i ∈ Sn, bernilai antara rentang [0,e] Ahlswede et all(2008).
+Tujuan utama dari teori pengkodean (_coding theory_) adalah bagaimana mengirimkan pesan pada channel yang berisik **[1]**. Misal jika ada delapan macam kata pesan yang akan dikirim, maka kita akan merepresentasikan pesan tersebut menjadi bitstring dengan panjang 3. Namun jika pesan tersebut dikirm langsung melewati channel yang berisik, bisa jadi 1 bit akan tertukar, misal `001` menjadi `011`. Jika terjadi seperti itu, maka sebuah kata dapat tertukar menjadi kata yang lain.
 
-Setiap _query_ Qi={q1,q2,...,qj}, dengan jawaban penjawab adalah "ya" maka set angka yang dianggap benar pada _query_ tersebut adalah Qt=Qi sedangkan jika jawaban penjawab adalah "tidak" maka set angka yang dianggap benar pada _query_ tersebut adalah Qt=Sn-Qi. Semua angka yang dianggap salah yaitu Sn-Qt={t1,t2,...,tk} akan dipindahkan ke state _channel_ setelahnya Ctk=Ctk+1. Jika Ctk > e, maka angka tk akan dikeluarkan dari _channel_, sehingga nilai x pasti bukan tk karena melampaui jumlah bohong maksimal.
+Jarak Hamming dari bitstring `x` dan `y` dengan panjang `n` didefinisikan dengan `dH(x,y) = |{i∈{1,...,n} | xi≠yi}|`. Sebagai contohnya `dH(0000,1111)= 4` dan `dH(00110,00101)= 2`. `dH(x,y)` juga dapat dikatakan jumlah minimal untuk mentransformasi dari `x` ke `y`. Contoh `x=00110` dan `y=00101` memiliki perbedaan pada 2 bit terakhir dengan jarak Hamming 2, dapat dikatakan `x+00011 = y`.
+
+Bobot dari bitstring `x` didefinisikan dengan `wt(x)`, yaitu jumlah digit pada x yang bukan `0`. Sebagai contohnya, `wt(00101) = 2` dan `wt(11111) = 5`. Jika dihubungkan dengan jarak Hamming, jika `x+e = y` maka `dH(x,y) = wt(e)`.
+
+Kita tahu bahwa jika kode biner sepanjang `n` digunakan untuk membuat `2^n` bitstring tidak akan dapat mendeteksi eror. Ide awal dari pengkodean adalah dengan menggunakan repetisi kode, misal repetisi kode sebanyak 3. Setiap bit `0` dan `1` akan dikirim sebagai `000` dan `111`. Dengan asumsi hanya 1 maksimal error, maka jika diterima `110` akan otomatis diartikan sebagai `1`, dan seterusnya.
+
+Kode biner adalah sejumlah `M` bitstring biner dengan panjang masing-masing bitstring adalah `n`. Mari kita ambil contoh `M=8` dan `n=6` pada kode biner berikut:
+
+> `000000 010101`  
+> `001011 011110`  
+> `100110 110011`  
+> `101101 111000`.
+
+Properti penting lain pada kode biner di atas adalah setiap bitstring yang berbeda memiliki jarak Hamming minimal 3. Parameter pada kode ini adalah `(6,8,3)2`, yaitu kode biner yang ditunjukkan pada angka 2, panjang bitstring 6, berisi 8 bitstring, dengan jarak Hamming minimal 3. Bitstring pada kode biner dapat disebut kata code (_codeword_).
+
+Jarak antara dua kata kode yang berbeda adalah 3, berarti dari setiap kata kode, terdapat sejumlah bitstring selain kata kode berjarak 1. Kita bisa asumsikan ada `M` bola yang tidak saling bersinggungan atau berpotongan, dengan radius bola `(d-1) / 2` seperti pada **Gambar XXX**.
+
+Dengan kode biner `(6,8,3)2`, pengirim dan penerima menyepakati hanya kata kode yang akan dikirim dan diterima. Dengan asumsi hanya ada satu bit yang dapat error, pesan error tetap dapat dikembalikan ke bentuk semula. Misal `111100` akan menjadi `111000`, `000011` akan menjadi `001011`, dan seterusnya. Notasi umum kode biner adalah `(n,M,d)2`.
+
+### 2.3 Solusi umum pada permasalahan ULAM interaktif
+
+Pada permasalahan RBU, penjawab menentukan sebuah angka `x` dimana `x ∈ Sn`, lalu penanya akan menanyakan _query_ untuk membantu mencari nilai `x`. Pada kenyataannya, penjawab tidak benar-benar memilih sebuah angka `x`, namun mempersiapkan `n` angka dengan state keboongan dari setiap angka. State kebohongan setiap angka dapat digambarkan dengan _bipartite graph channel_ untuk status kebohongan, `Ci` adalah status kebohongan dari bilangan `i ∈ Sn`, bernilai antara rentang `[0,e]` Ahlswede et all(2008).
+
+Setiap _query_ `Qi={q1,q2,...,qj}`, dengan jawaban penjawab adalah "ya" maka set angka yang dianggap benar pada _query_ tersebut adalah `Qt=Qi` sedangkan jika jawaban penjawab adalah "tidak" maka set angka yang dianggap benar pada _query_ tersebut adalah `Qt=Sn-Qi`. Semua angka yang dianggap salah yaitu `Sn-Qt={t1,t2,...,tk}` akan dipindahkan ke state _channel_ setelahnya `Ctk=Ctk+1`. Jika `Ctk > e`, maka angka `tk` akan dikeluarkan dari _channel_, sehingga nilai `x` pasti bukan `tk` karena melampaui jumlah bohong maksimal.
 
 ## BAB 3 Analisis dan perancangan
 
@@ -94,7 +117,7 @@ Pada permasalahan pencarian Ulam non interaktif, penjawab tidak diperbolehkan me
 | q3 | 0 | 1 | 0 | 1 | 0 | 1 | 0 | 1
 | jawab | NNN | NNY | NYN | NYY | YNN | YNY | YYN | YYY
 
-Misalnya jika n=8 dan e=2, maka jumlah qb untuk pencarian biner adalah tiga yaitu 00001111, 00110011 dan 01010101 seperti pada **Tabel XXX**. Dari tiga _query_ tersebut, semua jawaban penjawab mulai dari "NNN" sampai "YYY" dapat mewakili semua nilai x dalam Sn={1,2,...,8} sehingga nilai qb=3. Lalu masing-masing _query_ diulang sebanyak qe=e\*2+1=5 kali. Maka total dari q=qb\*qe=9.
+Misalnya jika n=8 dan e=2, maka jumlah qb untuk pencarian biner adalah tiga yaitu `00001111`, `00110011` dan `01010101` seperti pada **Tabel XXX**. Dari tiga _query_ tersebut, semua jawaban penjawab mulai dari "NNN" sampai "YYY" dapat mewakili semua nilai x dalam Sn={1,2,...,8} sehingga nilai qb=3. Lalu masing-masing _query_ diulang sebanyak qe=e\*2+1=5 kali. Maka total dari q=qb\*qe=9.
 
 ### 3.2 Implementasi algoritma
 
