@@ -68,7 +68,7 @@ Hamming = createReactClass
       for i in [0...range] by 1
         codewords[i] = ''
         distanceMatrix[i] = []
-        distanceMatrix[i][i] = 0
+        distanceMatrix[i][i] = 'X'
         for j in [i+1...range] by 1
           distanceMatrix[i][j] = 0
 

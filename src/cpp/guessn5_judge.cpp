@@ -14,7 +14,7 @@ void make_binary(string s, int n, int cur) {
     // If there is nothing left to append, we are done. Print the buffer.
     if (n == 0) {
         variation.push_back(s);
-        cout << s << endl;
+        // cout << s << endl;
         counter++;
         return;
     }
@@ -155,7 +155,7 @@ int main(int argc, char const *argv[])
         /* process the query */
         for (int j = 0; j < q; ++j) {
             for (int l = 0; l < n; ++l) {
-                channel[l] += (queries[j][l] != variation[i]);
+                channel[l] += (queries[j][l] != variation[i][l]);
             }
         }
         for (int l = 0; l < n; ++l) {
@@ -166,19 +166,19 @@ int main(int argc, char const *argv[])
 
         /* check if win or lose */
         if (sum_vector(s, k) <= 1) {
-            win_set.push_back(variation[i]);
+            win_set.push_back(&variation[i]);
         } else {
-            lose_set.push_back(variation[i]);
+            lose_set.push_back(&variation[i]);
         }
-    }
-
-    cout << "win set:" << endl;
-    for (int i = 0; i < win_set.size(); ++i) {
-        cout << win_set[i] << endl;
     }
 
     cout << "lose set:" << endl;
     for (int i = 0; i < lose_set.size(); ++i) {
-        cout << lose_set[i] << endl;
+        cout << *lose_set[i] << endl;
+    }
+
+    cout << "win set:" << endl;
+    for (int i = 0; i < win_set.size(); ++i) {
+        cout << *win_set[i] << endl;
     }
 }
