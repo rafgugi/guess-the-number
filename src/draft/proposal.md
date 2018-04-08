@@ -55,11 +55,9 @@ Penelitian tentang permasalahan Ulam selama ini hanya membahas tentang _query_ y
 
 Penjawab menentukan sebuah bilangan x pada rentang Sn=[1,n]. Penanya harus mencari nilai x dengan memberikan maksimal m _query_ khusus apakah "x ∈ Q?", lalu penjawab menjawab "ya" atau "tidak" pada setiap _query_ yang ditanyakan. Permasalahan utama adalah penjawab dapat berbohong sampai e kali. Selain itu, penjawab hanya boleh menjawab _query_ penanya setelah penanya selesai menanyakan semua _query_-nya. Tujuan dari RBU adalah mencari jumlah _query_ minimal untuk dapat menentukan nilai x.
 
-Bentuk dari _query_ adalah string s1s2s3...sn dimana si bernilai '0' atau '1'. Jawaban dari penjawab adalah "Ya" jika sx='1' atau "Tidak" jika sx='0' dengan asumsi penjawab menjawab jujur.
+Bentuk dari _query_ adalah string `s1s2s3...sn` dimana si bernilai '0' atau '1'. Jawaban dari penjawab adalah "Ya" jika `sx='1'` atau "Tidak" jika `sx='0'` dengan asumsi penjawab menjawab jujur.
 
-Batasan dari permasalahan ini adalah jumlah kasus percobaan tidak lebih dari 2^7. Jumlah maksimal bohong antara 2<=e<=2^4. Jumlah n antara 2<=n<=2^12. Jumlah maksimal _query_ adalah (2w+1) * [log2(n)].
-
-Tugas sesungguhnya dari permasalahan ini adalah bukan untuk mencari nilai x, tapi hanya menyiapkan _query_ yang dapat memeungkinkan untuk mendapatkan nilai x dari semua kemungkinan jawaban dari penjawab. Penjawab tidak akan menjawab _query_ yang diberikan penanya. Jika penjawab menemukan ada suatu set jawaban yang menyebabkan lebih dari satu kemungkinan nilai x, maka pengujian dianggap gagal.
+Tugas sesungguhnya dari permasalahan ini adalah bukan untuk mencari nilai `x`, tapi hanya menyiapkan _query_ yang dapat memeungkinkan untuk mendapatkan nilai `x` dari semua kemungkinan jawaban dari penjawab. Penjawab tidak akan menjawab _query_ yang diberikan penanya. Jika penjawab menemukan ada suatu set jawaban yang menyebabkan lebih dari satu kemungkinan nilai `x`, maka pengujian dianggap gagal.
 
 ![Alt text](example.png "Example")
 
@@ -79,6 +77,8 @@ Tujuan utama dari teori pengkodean (_coding theory_) adalah bagaimana mengirimka
 
 Kita tahu bahwa jika kode biner sepanjang `n` digunakan untuk membuat `2^n` bitstring tidak akan dapat mendeteksi eror. Ide yang paling mungkin adalah pengirim dan penerima menyetujui sebuah metode enkripsi bitstring menjadi bitstring yang lebih panjang dan dapat mendeteksi maksimal sebanyak `e` error.
 
+Jarak Hamming dari bitstring `x` dan `y` dengan panjang `n` didefinisikan dengan `dH(x,y) = |{i∈{1,...,n} | xi≠yi}|` **[2]**. Sebagai contohnya `dH(0000,1111)= 4` dan `dH(00110,00101)= 2`. `dH(x,y)` juga dapat dikatakan jumlah minimal untuk mentransformasi dari `x` ke `y`. Contoh `x=00110` dan `y=00101` memiliki perbedaan pada 2 bit terakhir dengan jarak Hamming 2, dapat dikatakan `x+00011 = y`.
+
 Kode biner (_binary code_) adalah sejumlah `M` bitstring biner dengan panjang masing-masing bitstring adalah `n` dan jarak Hamming pada masing masing bitstring adalah `d`. Mari kita ambil contoh `M=8`, `n=6`, dan `d=3` pada **Kode sumber XXX**. Parameter pada kode ini adalah `(6,8,3)2`, yaitu kode biner yang ditunjukkan pada angka 2, panjang bitstring 6, berisi 8 bitstring, dengan jarak Hamming minimal 3. Bitstring pada kode biner selanjutnya disebut kata kode (_codeword_).
 
 > `000000 100110`  
@@ -88,21 +88,25 @@ Kode biner (_binary code_) adalah sejumlah `M` bitstring biner dengan panjang ma
 
 > Kode sumber XXX Kode biner `(6,8,3)2`.
 
-Jarak Hamming dari bitstring `x` dan `y` dengan panjang `n` didefinisikan dengan `dH(x,y) = |{i∈{1,...,n} | xi≠yi}|` **[2]**. Sebagai contohnya `dH(0000,1111)= 4` dan `dH(00110,00101)= 2`. `dH(x,y)` juga dapat dikatakan jumlah minimal untuk mentransformasi dari `x` ke `y`. Contoh `x=00110` dan `y=00101` memiliki perbedaan pada 2 bit terakhir dengan jarak Hamming 2, dapat dikatakan `x+00011 = y`.
-
-Jarak Hamming antara setiap dua kata kode yang berbeda adalah 3, berarti dari setiap kata kode, terdapat sejumlah bitstring selain kata kode berjarak 1. Kita bisa asumsikan ada `M` bola yang tidak saling bersinggungan atau berpotongan, dengan radius bola `e=(d-1)/2` seperti pada **Gambar XXX**. Dari ilustrasi bola-bola tersebut dapat disimpulkan bahwa jika dikirimkan sebuah kata kode, bitstring setelah terjadi maksimal `e` pertukaran bit, hasil akan tetap hanya dekat dengan satu kata kode saja. **Duh intinya aku pingin ngasih  tau kenapa kok `d=2*e+1`. Apa sudah cukup ya?**
+Dengan kode biner `(6,8,3)2`, pengirim dan penerima menyepakati hanya kata kode yang akan dikirim dan diterima. Dengan asumsi hanya ada satu bit yang dapat error, pesan error tetap dapat dikembalikan ke bentuk semula. Misal `111100` akan menjadi `111000`, `000011` akan menjadi `001011`, dan seterusnya. Jarak Hamming antara setiap dua kata kode yang berbeda adalah 3, berarti dari setiap kata kode, terdapat sejumlah bitstring selain kata kode berjarak 1.
 
 ![Alt text](codewordsball.png "Codeword balls")
 
 > Gambar XXX bola codeword yang tidak saling overlap
 
-Dengan kode biner `(6,8,3)2`, pengirim dan penerima menyepakati hanya kata kode yang akan dikirim dan diterima. Dengan asumsi hanya ada satu bit yang dapat error, pesan error tetap dapat dikembalikan ke bentuk semula. Misal `111100` akan menjadi `111000`, `000011` akan menjadi `001011`, dan seterusnya. Notasi umum kode biner adalah `(n,M,d)2`.
+Notasi umum kode biner adalah `(n,M,d)2`. Kita bisa asumsikan ada `M` bola yang tidak saling bersinggungan atau berpotongan, dengan radius bola `e=(d-1)/2` seperti pada **Gambar XXX**. Dari ilustrasi bola-bola tersebut dapat disimpulkan bahwa jika dikirimkan sebuah kata kode, bitstring setelah terjadi maksimal `e` pertukaran bit, hasil akan tetap hanya dekat dengan satu kata kode saja. **Duh intinya aku pingin ngasih  tau kenapa kok `d=2*e+1`. Apa sudah cukup ya?**
 
-### 2.3 Solusi umum pada permasalahan ULAM interaktif
+### 2.3 Kode biner untuk solusi ulam non-interaktif
 
-Pada permasalahan RBU, penjawab menentukan sebuah angka `x` dimana `x ∈ Sn`, lalu penanya akan menanyakan _query_ untuk membantu mencari nilai `x`. Pada kenyataannya, penjawab tidak benar-benar memilih sebuah angka `x`, namun mempersiapkan `n` angka dengan state keboongan dari setiap angka. State kebohongan setiap angka dapat digambarkan dengan _bipartite graph channel_ untuk status kebohongan, `Ci` adalah status kebohongan dari bilangan `i ∈ Sn`, bernilai antara rentang `[0,e]` Ahlswede et all(2008).
+Given matrix `L` with size `nxM` contains `n` queries `Q={q1,q2,...,qn} | qi={s1,s2,...,sM} | si={0,1}`. Given vector `z = {z1,z2,...,zn} | zi={0,1}` an answer to each query, where `0` means 'no' and `1` means 'yes'. If `zi=0` then inverse all `s` in `qi`. Transpose matrix `L`, become `L'`. Then the answer of Ulam game is the index of a row `r` which has `wt(r) > n-e`.
 
-Setiap _query_ `Qi={q1,q2,...,qj}`, dengan jawaban penjawab adalah "ya" maka set angka yang dianggap benar pada _query_ tersebut adalah `Qt=Qi` sedangkan jika jawaban penjawab adalah "tidak" maka set angka yang dianggap benar pada _query_ tersebut adalah `Qt=Sn-Qi`. Semua angka yang dianggap salah yaitu `Sn-Qt={t1,t2,...,tk}` akan dipindahkan ke state _channel_ setelahnya `Ctk=Ctk+1`. Jika `Ctk > e`, maka angka `tk` akan dikeluarkan dari _channel_, sehingga nilai `x` pasti bukan `tk` karena melampaui jumlah bohong maksimal.
+Untuk meyakinkan bahwa setelah seluruh jawaban `z` diberikan dan diaplikasikan ke matrix `L` dan tidak pasti hanya ada 1 baris yang memiliki nilai `1` antara `n-e <= wt(r) <= n`, adalah dengan memastikan bahwa jarak Hamming setiap row yang berbeda pada `L'` adalah minimal `2*e+1`.
+
+**Given integer n, M, dan d. Pembuktian bahwa jika ada `(n,M,d)2` kode biner, maka operasi inverse untuk satu kolom pada `(n,M,d)2` akan tetap menjadi `(n,M,d)2`.**
+
+**Given integer n, M, dan d. Matrix `L'` is a `(n,M,d)2` binary code. Pasti ada satu kolom dalam `L'` yang bobotnya antara `n-e <= w(c) <= n`.**
+
+and can be transposed to `(n,M,d)2` binary code
 
 ## BAB 3 Analisis dan perancangan
 
