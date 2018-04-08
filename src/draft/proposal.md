@@ -96,17 +96,17 @@ Dengan kode biner `(6,8,3)2`, pengirim dan penerima menyepakati hanya kata kode 
 
 Notasi umum kode biner adalah `(n,M,d)2`. Kita bisa asumsikan ada `M` bola yang tidak saling bersinggungan atau berpotongan, dengan radius bola `e=(d-1)/2` seperti pada **Gambar XXX**. Dari ilustrasi bola-bola tersebut dapat disimpulkan bahwa jika dikirimkan sebuah kata kode, bitstring setelah terjadi maksimal `e` pertukaran bit, hasil akan tetap hanya dekat dengan satu kata kode saja. **Duh intinya aku pingin ngasih  tau kenapa kok `d=2*e+1`. Apa sudah cukup ya?**
 
-### 2.3 Kode biner untuk solusi ulam non-interaktif
+### 2.3 Kode biner untuk solusi permasalahan pencarian Ulam non-interaktif
 
 Given matrix `L` with size `nxM` contains `n` queries `Q={q1,q2,...,qn} | qi={s1,s2,...,sM} | si={0,1}`. Given vector `z = {z1,z2,...,zn} | zi={0,1}` an answer to each query, where `0` means 'no' and `1` means 'yes'. If `zi=0` then inverse all `s` in `qi`. Transpose matrix `L`, become `L'`. Then the answer of Ulam game is the index of a row `r` which has `wt(r) > n-e`.
 
 Untuk meyakinkan bahwa setelah seluruh jawaban `z` diberikan dan diaplikasikan ke matrix `L` dan tidak pasti hanya ada 1 baris yang memiliki nilai `1` antara `n-e <= wt(r) <= n`, adalah dengan memastikan bahwa jarak Hamming setiap row yang berbeda pada `L'` adalah minimal `2*e+1`.
 
-**Given integer n, M, dan d. Pembuktian bahwa jika ada `(n,M,d)2` kode biner, maka operasi inverse untuk satu kolom pada `(n,M,d)2` akan tetap menjadi `(n,M,d)2`.**
+**Given integer n, M, dan d. Buktikan bahwa jika `L'` adalah kode biner `(n,M,d)2` yang valid, maka operasi inverse untuk satu kolom pada `(n,M,d)2` akan tetap menjadi kode biner `(n,M,d)2` yang valid.**
 
-**Given integer n, M, dan d. Matrix `L'` is a `(n,M,d)2` binary code. Pasti ada satu kolom dalam `L'` yang bobotnya antara `n-e <= w(c) <= n`.**
+Penanya memenangkan game jika `L'` memiliki at most satu row dengan `wt(x) >= n-e`. Jika hanya ada satu row, maka row tersebut adalah jawaban permainan. Jika tidak ada satu row pun, maka penjawab melakukan kecurangan, melakukan bohong untuk semua angka lebih dari batas yang ditetapkan.
 
-and can be transposed to `(n,M,d)2` binary code
+Jika ada satu codeword dengan `wt(x) = n`, maka tidak akan ada codeword lain yang weightnya antara `n-d+1 <= wt(x) <= n`. Jika ada satu codeword dengan `wt(x)=n-b | 0<=b<=e`, maka tidak akan ada codeword lain yang weightnya antara blablabal. **Prove this!**
 
 ## BAB 3 Analisis dan perancangan
 
