@@ -29,7 +29,7 @@ Salah satu variasi permasalahan RBU yang diangkat dalam penelitian ini adalah pe
 Penelitian tentang permasalahan Ulam selama ini hanya membahas tentang _query_ yang interaktif dari penanya dan penjawab, baik dengan jumlah maksimal bohong satu, dua, tiga, dan lebih dari tiga. Namun belum ada jurnal ilmiah yang membahas permasalahan Ulam dengan _query_ non-interaktif dengan jumlah bohong lebih dari dua. Kontribusi dari penelitian ini adalah menggunakan metode pencarian biner non-interaktif untuk menyelesaikan permasalahan Ulam.
 
 
-## 1.6 Batasan masalah
+## Batasan masalah
 
 1. Implementasi algoritma menggunakan bahasa pemrograman C++.
 2. Batas maksimum kasus uji adalah 2^7.
@@ -38,6 +38,8 @@ Penelitian tentang permasalahan Ulam selama ini hanya membahas tentang _query_ y
 
 
 ## Related work
+
+_-- belum dirumuskan --_
 
 
 ## Problem formulation
