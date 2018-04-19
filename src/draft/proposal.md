@@ -20,7 +20,7 @@ One of the RBU problem variations raised in this research is the RBU search with
 
 Dalam perkembangan dunia teknologi informasi selama beberapa dekade terakhir, teknologi informasi seringkali dijadikan solusi bagi permasalahan-permasalahan yang pernah ada, yang sebelumnya diselesaikan secara manual oleh manusia. Contoh permasalahan yang pernah ada adalah salah satu permasalahan klasik pencarian Rényi–Berlekamp–Ulam, atau dapat disingkat menjadi RBU. Permasalahan ini dapat diilustrasikan dengan adanya dua pemain yang disebut penanya dan penjawab. Diberikan range pertanyaan Sn = {1,2,...,n}. Penjawab menentukan sebuah bilangan x ∈ Sn. Penanya harus menemukan nilai x dengan memberikan beberapa _query_ khusus apakah "x ∈ Q?", dimana Q adalah _subset_ dari Sn, lalu penjawab menjawab "ya" atau "tidak". Permasalahan utama adalah penjawab dapat berbohong sampai e kali. Tujuan dari RBU adalah mencari jumlah _query_ minimal untuk dapat menentukan nilai x. Permasalahan ini adalah turunan dari kerangka kerja pencarian adaptif biner.
 
-Sudah ada beberapa variasi pada permasalahan RBU. Pelc (1987) menyelesaikan permasalahan RBU dengan _query_ rentang [a,b] dan dengan maksimal jumlah bohong adalah satu. Mundici et all (1997) dan Min et all (2016) menyelesaikan permasalahan RBU dengan _query_ rentang [a,b] dan dengan maksimal jumlah bohong dua. Ahlswede (2008) mengilustrasikan permasalah RBU dengan maksimal bobot bohong adalah e, dengan menggunakan _bipartite graph_ untuk menyimpan channel kebohongan dan memberikan batasan asimtotik yang ketat untuk jumlah _query_ yang dibutuhkan untuk memecahkan masalah ini.
+Sudah ada beberapa variasi pada permasalahan RBU. Pelc (1987) menyelesaikan permasalahan RBU dengan _query_ rentang [a,b] dan dengan maksimal jumlah bohong adalah satu. Mundici et all (1997) dan Min et all (2016) menyelesaikan permasalahan RBU dengan _query_ rentang [a,b] dan dengan maksimal jumlah bohong dua. Ahlswede (2008) mengilustrasikan permasalah RBU dengan maksimal bobot bohong adalah e, dengan menggunakan _bipartite graph_ untuk menyimpan kanal kebohongan dan memberikan batasan asimtotik yang ketat untuk jumlah _query_ yang dibutuhkan untuk memecahkan masalah ini.
 
 Salah satu variasi permasalahan RBU yang diangkat dalam penelitian ini adalah pencarian Ulam dengan m _query_ _subset_ Qi={q1,q2,...,qj} dimana qj ∈ Sn, maksimal bohong adalah e, dan penjawab hanya boleh menjawab _query_ penanya setelah penanya selesai menanyakan semua _query_-nya. Minimal jumlah _query_ yang dapat ditanyakan penanya adalah (2e + 1) * log2(n). Belum ada penelitian yang menyelesaikan permasalahan ini. Oleh karena itu penelitian ini bertujuan untuk memberikan solusi pada permasalahan ini.
 
@@ -98,7 +98,9 @@ Notasi umum kode biner adalah `(n,M,d)2`. Kita bisa asumsikan ada `M` bola yang 
 
 ### 2.3 Kode biner untuk solusi permasalahan pencarian Ulam non-interaktif
 
-Given matrix `L` with size `nxM` contains `n` queries `Q={q1,q2,...,qn} | qi={s1,s2,...,sM} | si={0,1}`. Given vector `z = {z1,z2,...,zn} | zi={0,1}` an answer to each query, where `0` means 'no' and `1` means 'yes'. If `zi=0` then inverse all `s` in `qi`. Transpose matrix `L`, become `L'`. Then the answer of Ulam game is the index of a row `r` which has `wt(r) > n-e`.
+<!-- Given matrix `L` with size `nxM` contains `n` queries `Q={q1,q2,...,qn} | qi={s1,s2,...,sM} | si={0,1}`. Given vector `z = {z1,z2,...,zn} | zi={0,1}` an answer to each query, where `0` means 'no' and `1` means 'yes'. If `zi=0` then inverse all `s` in `qi`. Transpose matrix `L`, become `L'`. Then the answer of Ulam game is the index of a row `r` which has `wt(r) > n-e`. -->
+
+Diberikan sebuah matriks `L` berukuran `nxM` berisi `n` query `Q={q1,q2,...,qn} | qi={s1,s2,...,sM} | si={0,1}`. Diberikan sebuah vektor `z = {z1,z2,...,zn} | zi={0,1}` berisi jawaban dari seluruh query secara berurutan, `zi` adalah jawaban dari `qi`, dimana `0` berarti 'tidak' dan `1` berarti 'ya'. Jika `zi=0` maka balik seluruh `s` pada `qi`, `1` menjadi `0` dan sebaliknya. Matriks `L'` berukuran `Mxn` adalah hasil transpose dari matriks `L`. Maka jawaban dari permainan Ulam non-interaktif adalah index dari baris `r` pada `L'` yang memiliki bobot `wt(r) > n-e`.
 
 Untuk meyakinkan bahwa setelah seluruh jawaban `z` diberikan dan diaplikasikan ke matrix `L` dan tidak pasti hanya ada 1 baris yang memiliki nilai `1` antara `n-e <= wt(r) <= n`, adalah dengan memastikan bahwa jarak Hamming setiap row yang berbeda pada `L'` adalah minimal `2*e+1`.
 
@@ -106,7 +108,7 @@ Untuk meyakinkan bahwa setelah seluruh jawaban `z` diberikan dan diaplikasikan k
 
 Penanya memenangkan game jika `L'` memiliki at most satu row dengan `wt(x) >= n-e`. Jika hanya ada satu row, maka row tersebut adalah jawaban permainan. Jika tidak ada satu row pun, maka penjawab melakukan kecurangan, melakukan bohong untuk semua angka lebih dari batas yang ditetapkan.
 
-Jika ada satu codeword dengan `wt(x) = n`, maka tidak akan ada codeword lain yang weightnya antara `n-d+1 <= wt(x) <= n`. Jika ada satu codeword dengan `wt(x)=n-b | 0<=b<=e`, maka tidak akan ada codeword lain yang weightnya antara blablabal. **Prove this!**
+Jika ada satu codeword dengan `wt(x) = n`, maka tidak akan ada codeword lain yang weightnya antara `n-d+1 <= wt(x) <= n`. Jika ada satu codeword dengan `wt(x)=n-i | 0<=i<=e`, maka tidak akan ada codeword lain yang weightnya antara blablabal. **Prove this!**
 
 ## BAB 3 Analisis dan perancangan
 

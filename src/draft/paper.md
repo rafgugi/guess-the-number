@@ -4,7 +4,7 @@ Dalam perkembangan dunia teknologi informasi selama beberapa dekade terakhir, te
 
 Sudah ada beberapa variasi pada permasalahan RBU. Pelc menyelesaikan permasalahan RBU dengan _query_ rentang [a,b] dan dengan maksimal jumlah bohong adalah satu. Mundici et all dan Min et all menyelesaikan permasalahan RBU dengan _query_ rentang [a,b] dan dengan maksimal jumlah bohong dua. Ahlswede mengilustrasikan permasalah RBU dengan maksimal bobot bohong adalah e dengan _graph_ _bipartite_.
 
-Salah satu variasi permasalahan RBU yang diangkat dalam penelitian ini adalah pencarian Ulam dengan m _query_ _subset_ Qi={q1,q2,...,qj} dimana qj ∈ Sn, maksimal bohong adalah e, dan penjawab hanya boleh menjawab _query_ penanya setelah penanya selesai menanyakan semua _query_-nya. Permasalahan ini dapat diselesaikan dengan pencarian biner non-interaktif.
+Salah satu variasi permasalahan RBU yang diangkat dalam penelitian ini adalah pencarian Ulam dengan n _query_ _subset_ Qi={q1,q2,...,qn} dimana qj ∈ Sm, maksimal bohong adalah e, dan penjawab hanya boleh menjawab _query_ penanya setelah penanya selesai menanyakan semua _query_-nya. Permasalahan ini dapat diselesaikan dengan kode biner dari teori pengkodean.
 
 
 ## Abstract - Development of Non-Interactive Searching Algorithm for Solving Ulam's Searching Problem with Many Lies
@@ -13,28 +13,20 @@ In the development of the world of information technology over the last few deca
 
 There have been several variations on RBU issues. Pelc solved the RBU problem with query range [a, b] and with a maximum number of lies is one. Mundici et all and Min et all solved the RBU problem with query range [a, b] and with a maximum of two lies. Ahlswede illustrated the RBU problem with maximum lie weight is e with bipartite graph.
 
-One of the RBU problem variations raised in this research is the RBU search with m query subset Qi = {q1, q2, ..., qh} where qj ∈ Sn, max lie is e, and responder can only answer all queries after the asker has finished asking all queries. This problem can be solved by non-interactive binary search.
+One of the RBU problem variations raised in this research is the RBU search with m query subset Qi = {q1, q2, ..., qh} where qj ∈ Sm, max lie is e, and responder can only answer all queries after the asker has finished asking all queries. This problem can be solved by generating binary code.
 
 
 ## Background
 
-Dalam perkembangan dunia teknologi informasi selama beberapa dekade terakhir, teknologi informasi seringkali dijadikan solusi bagi permasalahan-permasalahan yang pernah ada, yang sebelumnya diselesaikan secara manual oleh manusia. Contoh permasalahan yang pernah ada adalah salah satu permasalahan klasik pencarian Rényi–Berlekamp–Ulam, atau dapat disingkat menjadi RBU. Permasalahan ini dapat diilustrasikan dengan adanya dua pemain yang disebut penanya dan penjawab. Diberikan range pertanyaan `Sm = {1,2,...,n}`. Penjawab menentukan sebuah bilangan `x ∈ Sn`. Penanya harus menemukan nilai `x` dengan memberikan beberapa _query_ khusus apakah "`x ∈ Q?`", dimana `Q` adalah _subset_ dari `Sn`, lalu penjawab menjawab "ya" atau "tidak". Permasalahan utama adalah penjawab dapat berbohong sampai `e` kali. Tujuan dari RBU adalah mencari jumlah _query_ minimal untuk dapat menentukan nilai `x`. 
+Dalam perkembangan dunia teknologi informasi selama beberapa dekade terakhir, teknologi informasi seringkali dijadikan solusi bagi permasalahan-permasalahan yang pernah ada, yang sebelumnya diselesaikan secara manual oleh manusia. Contoh permasalahan yang pernah ada adalah salah satu permasalahan klasik pencarian Rényi–Berlekamp–Ulam, atau dapat disingkat menjadi RBU. Permasalahan ini dapat diilustrasikan dengan adanya dua pemain yang disebut penanya dan penjawab. Diberikan range pertanyaan `Sm = {1,2,...,m}`. Penjawab menentukan sebuah bilangan `x ∈ Sm`. Penanya harus menemukan nilai `x` dengan memberikan beberapa _query_ khusus apakah "`x ∈ Q?`", dimana `Q` adalah _subset_ dari `Sm`, lalu penjawab menjawab "ya" atau "tidak". Permasalahan utama adalah penjawab dapat berbohong sampai `e` kali. Tujuan dari RBU adalah mencari jumlah _query_ minimal untuk dapat menentukan nilai `x`. 
 
 <!-- Permasalahan ini adalah turunan dari kerangka kerja pencarian adaptif biner **Need citation**. -->
 
 Sudah ada beberapa variasi pada permasalahan RBU. Pelc (1987) menyelesaikan permasalahan RBU dengan _query_ rentang [a,b] dan dengan maksimal jumlah bohong adalah satu. Mundici et all (1997) dan Min et all (2016) menyelesaikan permasalahan RBU dengan _query_ rentang [a,b] dan dengan maksimal jumlah bohong dua. Ahlswede (2008) mengilustrasikan permasalah RBU dengan maksimal bobot bohong adalah e, dengan menggunakan _bipartite graph_ untuk menyimpan kanal kebohongan dan memberikan batasan asimtotik yang ketat untuk jumlah _query_ yang dibutuhkan untuk memecahkan masalah ini.
 
-Salah satu variasi permasalahan RBU yang diangkat dalam penelitian ini adalah pencarian Ulam dengan `m` _query_ _subset_ `{q1,q2,...,qm} | qj ∈ Sn`, maksimal bohong adalah `e`, dan penjawab hanya boleh menjawab _query_ penanya setelah penanya selesai menanyakan semua _query_-nya. Belum ada penelitian yang menyelesaikan permasalahan ini. Oleh karena itu penelitian ini bertujuan untuk memberikan solusi pada permasalahan ini.
+Salah satu variasi permasalahan RBU yang diangkat dalam penelitian ini adalah pencarian Ulam dengan `m` _query_ _subset_ `{q1,q2,...,qm} | qj ∈ Sm`, maksimal bohong adalah `e`, dan penjawab hanya boleh menjawab _query_ penanya setelah penanya selesai menanyakan semua _query_-nya. Belum ada penelitian yang menyelesaikan permasalahan ini. Oleh karena itu penelitian ini bertujuan untuk memberikan solusi pada permasalahan ini.
 
 Penelitian tentang permasalahan Ulam selama ini hanya membahas tentang _query_ yang interaktif dari penanya dan penjawab, baik dengan jumlah maksimal bohong satu, dua, tiga, dan lebih dari tiga. Namun belum ada jurnal ilmiah yang membahas permasalahan Ulam dengan _query_ non-interaktif dengan jumlah bohong lebih dari dua. Kontribusi dari penelitian ini adalah menggunakan metode pencarian biner non-interaktif untuk menyelesaikan permasalahan Ulam.
-
-
-## Batasan masalah
-
-1. Implementasi algoritma menggunakan bahasa pemrograman C++.
-2. Batas maksimum kasus uji adalah 2^7.
-3. Interval bilangan yang yang dicari berada pada [1,n], dengan n maksimum 2^12.
-4. Dataset yang digunakan adalah dataset pada permasalahan SPOJ GUESSN5.
 
 
 ## Related work
@@ -44,7 +36,7 @@ _-- belum dirumuskan --_
 
 ## Problem formulation
 
-Penjawab menentukan sebuah bilangan x pada rentang Sn=[1,n]. Penanya harus mencari nilai x dengan memberikan maksimal m _query_ khusus apakah "`x ∈ Q?`", lalu penjawab menjawab "ya" atau "tidak" pada setiap _query_ yang ditanyakan. Permasalahan utama adalah penjawab dapat berbohong sampai e kali. Selain itu, penjawab hanya boleh menjawab _query_ penanya setelah penanya selesai menanyakan semua _query_-nya. Tujuan dari RBU adalah mencari jumlah _query_ minimal untuk dapat menentukan nilai x.
+Penjawab menentukan sebuah bilangan x pada rentang Sm=[1,n]. Penanya harus mencari nilai x dengan memberikan maksimal m _query_ khusus apakah "`x ∈ Q?`", lalu penjawab menjawab "ya" atau "tidak" pada setiap _query_ yang ditanyakan. Permasalahan utama adalah penjawab dapat berbohong sampai e kali. Selain itu, penjawab hanya boleh menjawab _query_ penanya setelah penanya selesai menanyakan semua _query_-nya. Tujuan dari RBU adalah mencari jumlah _query_ minimal untuk dapat menentukan nilai x.
 
 Bentuk dari _query_ adalah string `s1s2s3...sn` dimana si bernilai '0' atau '1'. Jawaban dari penjawab adalah "Ya" jika `sx='1'` atau "Tidak" jika `sx='0'` dengan asumsi penjawab menjawab jujur.
 
@@ -61,6 +53,12 @@ Pada uji kasus yang kedua penjawab mencoba memberikan solusi namun jawabannya sa
 Pada uji kasus yang ketiga penanya tidak memberikan solusi.
 
 Pada uji kasus yang keempat penanya memberikan _query_ yang lebih sedikit dari jumlah _query_ maksimal yang diperbolehkan. Dari semua kemungkinan jawaban penjawab, pasti hanya ada satu jawaban nilai x, jadi solusi penanya berhasil.
+
+Batasan dari masalah ini dapat dirumuskan sebagai berikut:
+1. Implementasi algoritma menggunakan bahasa pemrograman C++.
+2. Batas maksimum kasus uji adalah 2^7.
+3. Interval bilangan yang yang dicari berada pada [1,n], dengan n maksimum 2^12.
+4. Dataset yang digunakan adalah dataset pada permasalahan SPOJ GUESSN5.
 
 
 ## Backround from coding theory
