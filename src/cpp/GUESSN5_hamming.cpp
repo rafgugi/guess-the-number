@@ -16,6 +16,7 @@ int main(int argc, char const *argv[]) {
     vector <string> queries;
     map <int, int> distances[4096];
     map <char, int> counter;
+    int max_query;
 
     // scanf("%d", &t);
     cin >> t;
@@ -25,6 +26,8 @@ int main(int argc, char const *argv[]) {
         //*/
         // scanf("%d%d%d", &n, &w, &m);
         cin >> M >> e;
+
+        max_query = (2*e + 1) * M;
 
         for (int i = 0; i < M; ++i) {
             for (int j = i+1; j < M; ++j) {
@@ -48,43 +51,63 @@ int main(int argc, char const *argv[]) {
         if (queries.empty()) {
             s = "";
             for (int i = 0; i < M; ++i) {
-                s += '0' + (i >= M/2);
+                // s += '0' + (i >= M/2);
+                s += '0' + (i % 2);
             }
             queries.push_back(s);
         }
 
+        char ready = 1; // the first query always ready
+
         while (1) {
             /* update the distance based on query */
-            max = -1;
-            min = 1000;
-            for (int i = 0; i < M; ++i) {
-                for (int j = i+1; j < M; ++j) {
-                    distances[i][j] += (s[i] != s[j]);
-                    if (distances[i][j] < min) {
-                        min = distances[i][j];
-                    }
-                    if (distances[i][j] > max) {
-                        max = distances[i][j];
+            if (ready) {
+                max = -1;
+                min = 1000;
+                for (int i = 0; i < M; ++i) {
+                    for (int j = i+1; j < M; ++j) {
+                        distances[i][j] += (s[i] != s[j]);
+                        if (distances[i][j] < min) {
+                            min = distances[i][j];
+                        }
+                        if (distances[i][j] > max) {
+                            max = distances[i][j];
+                        }
                     }
                 }
+                cout << s << endl;
+                queries.push_back(s);
+
+                /* reset the query */
+                s = "0";
+                for (int i = 1; i < M; ++i) {
+                    s += "x";
+                }
+            } else { // kalau masih perlu dipancing biar x nya bisa diisi
+                cout << s << " => ";
+                for (int i = 0; i < M; ++i) {
+                    if (s[i] == 'x') {
+                        s[i] = '0' + (i % 2);
+                        break;
+                    }
+                }
+                cout << s << endl;
             }
-            cout << s << endl;
-            queries.push_back(s);
 
             if (min >= 2*e + 1) {
                 break;
             }
+            if (queries.size() >= max_query) {
+                break;
+            }
 
             /* generate query */
-            s = "0";
-            for (int i = 1; i < M; ++i) {
-                s += "x";
-            }
+            ready = 0;
             counter['0'] = 1;
             counter['1'] = 0;
             for (int i = 0; i < M; ++i) {
                 for (int j = i+1; j < M; ++j) {
-                    cout << s << endl;
+                    // cout << s << endl;
                     if (distances[i][j] == min) { // brarti dibedain
                         if (s[i] != 'x') {
                             s[j] = s[i] == '0' ? '1' : '0';
@@ -112,12 +135,15 @@ int main(int argc, char const *argv[]) {
             }
 
             /* Fill the rest x with the loser */
-            cout << s << ": ";
-            char filler = counter['0'] > counter['1'] ? '1' : '0';
-            for (int i = 0; i < M; ++i) {
-                if (s[i] == 'x') {
-                    s[i] = filler;
+            if (counter['0'] > M/2 || counter['1'] > M/2) {
+                cout << s << ": ";
+                char filler = counter['0'] > counter['1'] ? '1' : '0';
+                for (int i = 0; i < M; ++i) {
+                    if (s[i] == 'x') {
+                        s[i] = filler;
+                    }
                 }
+                ready = 1;
             }
         }
 

@@ -167,18 +167,24 @@ int main(int argc, char const *argv[])
         /* check if win or lose */
         if (sum_vector(s, k) <= 1) {
             win_set.push_back(&variation[i]);
+            cout << variation[i] << " WIN: ";
+            print_vector(s, k);
+            cout << endl;
         } else {
             lose_set.push_back(&variation[i]);
+            cout << variation[i] << " LOSE: ";
+            print_vector(s, k);
+            cout << endl;
         }
     }
 
     cout << "lose set:" << endl;
     for (int i = 0; i < lose_set.size(); ++i) {
-        cout << *lose_set[i] << endl;
+        // cout << *lose_set[i] << endl;
     }
 
     cout << "win set:" << endl;
     for (int i = 0; i < win_set.size(); ++i) {
-        cout << *win_set[i] << endl;
+        // cout << *win_set[i] << endl;
     }
 }

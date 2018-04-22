@@ -59,7 +59,7 @@ Bentuk dari _query_ adalah string `s1s2s3...sn` dimana si bernilai '0' atau '1'.
 
 Tugas sesungguhnya dari permasalahan ini adalah bukan untuk mencari nilai `x`, tapi hanya menyiapkan _query_ yang dapat memeungkinkan untuk mendapatkan nilai `x` dari semua kemungkinan jawaban dari penjawab. Penjawab tidak akan menjawab _query_ yang diberikan penanya. Jika penjawab menemukan ada suatu set jawaban yang menyebabkan lebih dari satu kemungkinan nilai `x`, maka pengujian dianggap gagal.
 
-![Alt text](example.png "Example")
+![Alt text](../img/example.png "Example")
 
 > Gambar XXX Contoh uji kasus permasalahan
 
@@ -90,7 +90,7 @@ Kode biner (_binary code_) adalah sejumlah `M` bitstring biner dengan panjang ma
 
 Dengan kode biner `(6,8,3)2`, pengirim dan penerima menyepakati hanya kata kode yang akan dikirim dan diterima. Dengan asumsi hanya ada satu bit yang dapat error, pesan error tetap dapat dikembalikan ke bentuk semula. Misal `111100` akan menjadi `111000`, `000011` akan menjadi `001011`, dan seterusnya. Jarak Hamming antara setiap dua kata kode yang berbeda adalah 3, berarti dari setiap kata kode, terdapat sejumlah bitstring selain kata kode berjarak 1.
 
-![Alt text](codewordsball.png "Codeword balls")
+![Alt text](../img/codewordsball.png "Codeword balls")
 
 > Gambar XXX bola codeword yang tidak saling overlap
 
