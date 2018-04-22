@@ -1,8 +1,10 @@
 \documentclass[conference,compsoc]{IEEEtran}
 
 \usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
 \usepackage{amssymb}
 \usepackage{amsthm}
+\usepackage{amsmath}
 \usepackage{caption}
 \usepackage{cite}
 \usepackage{fancyvrb}
@@ -41,7 +43,7 @@
 \author{\IEEEauthorblockN{Risyanggi Azmi Faizin\IEEEauthorrefmark{1},
 Rully Sulaiman\IEEEauthorrefmark{2},
 Hari Ginardi\IEEEauthorrefmark{3} and
-Michał Miodek\IEEEauthorrefmark{4}}
+Micha\l{} Miodek\IEEEauthorrefmark{4}}
 \IEEEauthorblockA{\IEEEauthorrefmark{1}Informatics Engineering\\
 Institut Teknologi Sepupuh Nopember,
 Indonesia\\ Email: risyanggi@gmail.com}
@@ -61,45 +63,35 @@ Poland\\ Email: miodziu@gmail.com}}
 % As a general rule, do not put math, special symbols or citations
 % in the abstract
 \begin{abstract}
-Pada permasalahan permainan klasik pencarian Ulam dan Rényi, penanya harus mengajukan beberapa pertanyaan iya dan tidak untuk mencari sebuah nilai antara range $[1,m]$ yang hanya diketahui penjawab, namun penjawab diperbolehkan berbohong. Sudah ada solusi dari beberapa variasi pada permasalahan pencarian Ulam dan Rényi, yaitu pada jenis query antara rentang atau subset dan jumlah maksimal bohong antara satu, dua, tiga, dan seterusnya. Namun belum ada solusi yang sempurna untuk query yang non-interaktif yaitu penjawab hanya boleh menjawab query penanya setelah penanya selesai menanyakan semua querynya. Pada paper ini akan dijelaskan solusi sempurna untuk permainan Ulam dan Rényi non-interaktif dengan maksimal kebohongan jamak menggunakan kode biner dengan jarak Hamming.
+Pada permasalahan permainan klasik pencarian Ulam dan Rényi, penanya harus mengajukan beberapa pertanyaan iya dan tidak untuk mencari sebuah nilai dalam range pencarian yang sudah disepakati, namun penjawab diperbolehkan berbohong. Sudah ada solusi dari beberapa variasi pada permasalahan pencarian Ulam dan Rényi, yaitu pada jenis query antara rentang atau subset dan jumlah maksimal bohong antara satu, dua, tiga, dan seterusnya. Namun belum ada solusi yang sempurna untuk query yang non-interaktif yaitu penjawab hanya boleh menjawab query penanya setelah penanya selesai menanyakan semua querynya. Pada paper ini akan dijelaskan solusi sempurna untuk permainan Ulam dan Rényi non-interaktif dengan maksimal kebohongan jamak menggunakan kode biner dengan jarak Hamming.
 \end{abstract}
 
 % no keywords
 
 
-% For peer review papers, you can put extra information on the cover
-% page as needed:
-% \ifCLASSOPTIONpeerreview
-% \begin{center} \bfseries EDICS Category: 3-BBND \end{center}
-% \fi
-%
-% For peerreview papers, this IEEEtran command inserts a page break and
-% creates the second title. It will be ignored for other modes.
 \IEEEpeerreviewmaketitle
 
 
 \section{Introduction}
-
 \subsection{Background}
 
-Dalam perkembangan dunia teknologi informasi selama beberapa dekade terakhir, teknologi informasi seringkali dijadikan solusi bagi permasalahan-permasalahan yang pernah ada, yang sebelumnya diselesaikan secara manual oleh manusia. Contoh permasalahan yang pernah ada adalah salah satu permasalahan klasik pencarian Rényi–Berlekamp–Ulam, atau dapat disingkat menjadi RBU. Permasalahan ini dapat diilustrasikan dengan adanya dua pemain yang disebut penanya dan penjawab. Diberikan range pertanyaan $Sm = {1,2,...,m}$. Penjawab menentukan sebuah bilangan $x \in Sm$. Penanya harus menemukan nilai $x$ dengan memberikan beberapa query khusus apakah "$x \in Q$?", dimana $Q$ adalah subset dari $Sm$, lalu penjawab menjawab "ya" atau "tidak". Permasalahan utama adalah penjawab dapat berbohong sampai $e$ kali. Tujuan dari RBU adalah mencari jumlah query minimal untuk dapat menentukan nilai $x$. 
+Dalam perkembangan dunia teknologi informasi selama beberapa dekade terakhir, teknologi informasi seringkali dijadikan solusi bagi permasalahan-permasalahan yang pernah ada, yang sebelumnya diselesaikan secara manual oleh manusia. Contoh permasalahan yang pernah ada adalah salah satu permasalahan klasik pencarian Ulam dan Rényi. Permasalahan ini dapat diilustrasikan dengan adanya dua pemain yang disebut penanya dan penjawab. Diberikan range pertanyaan $S_M = {1,2,...,M}$, penjawab menentukan sebuah bilangan $x \in S_M$. Penanya harus menemukan nilai $x$ dengan memberikan beberapa query berupa pertanyaan iya dan tidak, apakah "$x \in Q$?", dimana $Q$ adalah subset dari $S_M$, lalu penjawab menjawab "ya" atau "tidak". Permasalahan utama adalah penjawab dapat berbohong sampai $e$ kali. Tujuan dari permainan ini adalah mencari jumlah query minimal untuk dapat menentukan nilai $x$.
 
-Sudah ada beberapa variasi pada permasalahan RBU. Pelc (1987) menyelesaikan permasalahan RBU dengan query rentang $[a,b]$ dan dengan maksimal jumlah bohong adalah satu. Mundici et all (1997) dan Min et all (2016) menyelesaikan permasalahan RBU dengan query rentang $[a,b]$ dan dengan maksimal jumlah bohong dua. Ahlswede (2008) mengilustrasikan permasalah RBU dengan maksimal bobot bohong adalah $e$, dengan menggunakan \textit{bipartite graph} untuk menyimpan kanal kebohongan dan memberikan batasan asimtotik yang ketat untuk jumlah query yang dibutuhkan untuk memecahkan masalah ini.
-
-Salah satu variasi permasalahan RBU yang diangkat dalam penelitian ini adalah pencarian Ulam dengan $m$ query subset ${q_1,q_2,...,q_m} | q_i \in Sm$, maksimal bohong adalah $e$, dan penjawab hanya boleh menjawab query penanya setelah penanya selesai menanyakan semua query-nya. Belum ada penelitian yang menyelesaikan permasalahan ini. Oleh karena itu penelitian ini bertujuan untuk memberikan solusi pada permasalahan ini.
+Salah satu variasi permasalahan RBU yang diangkat dalam penelitian ini adalah pencarian Ulam dengan $n$ query subset ${q_1,q_2,...,q_n} | q_i \in S_M$, maksimal bohong adalah $e$, dan penjawab hanya boleh menjawab query penanya setelah penanya selesai menanyakan semua query-nya. Belum ada penelitian yang menyelesaikan permasalahan ini. Oleh karena itu penelitian ini bertujuan untuk memberikan solusi pada permasalahan ini.
 
 Penelitian tentang permasalahan Ulam selama ini hanya membahas tentang query yang interaktif dari penanya dan penjawab, baik dengan jumlah maksimal bohong satu, dua, tiga, dan lebih dari tiga. Namun belum ada jurnal ilmiah yang membahas permasalahan Ulam dengan query non-interaktif dengan jumlah bohong lebih dari dua. Kontribusi dari penelitian ini adalah menggunakan metode pencarian biner non-interaktif untuk menyelesaikan permasalahan Ulam.
 
 % You must have at least 2 lines in the paragraph with the drop letter
 % (should never be an issue)
 
-\subsection{Related work}
-Subsection text here.
 
+\subsection{Related work}
+
+Sudah ada beberapa variasi pada permasalahan RBU. Pelc (1987) menyelesaikan permasalahan RBU dengan query rentang $[a,b]$ dan dengan maksimal jumlah bohong adalah satu. Mundici et all (1997) dan Min et all (2016) menyelesaikan permasalahan RBU dengan query rentang $[a,b]$ dan dengan maksimal jumlah bohong dua. Ahlswede (2008) mengilustrasikan permasalah RBU dengan maksimal bobot bohong adalah $e$, dengan menggunakan \textit{bipartite graph} untuk menyimpan kanal kebohongan dan memberikan batasan asimtotik yang ketat untuk jumlah query yang dibutuhkan untuk memecahkan masalah ini.
 
 \section{Problem formulation}
 
-Penjawab menentukan sebuah bilangan $x$ pada rentang $Sm=[1,n]$. Penanya harus mencari nilai $x$ dengan memberikan maksimal m query khusus apakah "$x \in Q$?", lalu penjawab menjawab "ya" atau "tidak" pada setiap query yang ditanyakan. Permasalahan utama adalah penjawab dapat berbohong sampai $e$ kali. Selain itu, penjawab hanya boleh menjawab query penanya setelah penanya selesai menanyakan semua query-nya. Tujuan dari RBU adalah mencari jumlah query minimal untuk dapat menentukan nilai $x$.
+Penjawab menentukan sebuah bilangan $x$ pada rentang $S_M=[1,M]$. Penanya harus mencari nilai $x$ dengan memberikan maksimal $n$ query khusus apakah "$x \in Q$?", lalu penjawab menjawab "ya" atau "tidak" pada setiap query yang ditanyakan. Permasalahan utama adalah penjawab dapat berbohong sampai $e$ kali. Selain itu, penjawab hanya boleh menjawab query penanya setelah penanya selesai menanyakan semua query-nya. Tujuan dari RBU adalah mencari jumlah query minimal untuk dapat menentukan nilai $x$.
 
 Bentuk dari query adalah string $s_1s_2s_3...s_n$ dimana si bernilai '0' atau '1'. Jawaban dari penjawab adalah "Ya" jika $s_x=1$ atau "Tidak" jika $s_x=0$ dengan asumsi penjawab menjawab jujur.
 
@@ -147,10 +139,19 @@ wt(x) = |\{i \in {1,...,n} \mid x_i \neq 0\}|
 
 Bobot dari bitstring $x$ didefinisikan dengan $wt(x)$, yaitu jumlah digit pada $x$ yang bukan $0$ seperti pada persamaan \ref{eq:wt}. Sebagai contohnya, $wt(00101) = 2$ dan $wt(11111) = 5$. Jika dihubungkan dengan jarak Hamming, jika $x+e = y$ maka $d_H(x,y) = wt(x+y)$.
 
-Terdapat sebuah sifat pada jarak Hamming yang bernama segitiga pertidaksamaan (\textit{triangle inequality}), yaitu $d_H(x,y) <= d_H(x,z) + d_H(y,z)$ untuk semua $x$, $y$, dan $z$. Dari segitiga pertidaksamaan tersebut, misalkan $z$ adalah string biner yang berisi semua $0$, maka didapatkan $d_H(x,y) <= wt(x) + wt(y)$.
+Terdapat sebuah sifat pada jarak Hamming yang bernama segitiga pertidaksamaan (\textit{triangle inequality}), yaitu 
 
-Kode biner (\textit{binary code}) adalah sejumlah $M$ bitstring biner dengan panjang masing-masing bitstring adalah $n$ dan jarak Hamming pada masing masing bitstring adalah $d$. Mari kita ambil contoh $M=8$, $n=6$, dan $d=3$ pada **Kode sumber 1**. Parameter pada kode ini adalah $(6,8,3)2$, yaitu kode biner yang ditunjukkan pada angka 2, panjang bitstring 6, berisi 8 bitstring, dengan jarak Hamming minimal 3. Bitstring pada kode biner selanjutnya disebut kata kode (\textit{codeword}).
+\begin{equation*}
+d_H(x,y) \le d_H(x,z) + d_H(y,z)
+\end{equation*}
 
+untuk semua $x$, $y$, dan $z$. Dari segitiga pertidaksamaan tersebut, misalkan $z$ adalah $\vec{0}$ string biner yang berisi semua $0$, maka didapatkan 
+
+\begin{equation}
+d_H(x,y) \le wt(x) + wt(y)
+\end{equation}
+
+Kode biner (\textit{binary code}) adalah sejumlah $M$ bitstring biner dengan panjang masing-masing bitstring adalah $n$ dan jarak Hamming pada masing masing bitstring adalah $d$. Mari kita ambil contoh $M=8$, $n=6$, dan $d=3$ pada gambar \ref{fig:binarycode683}. Parameter pada kode ini adalah $(6,8,3)2$, yaitu kode biner yang ditunjukkan pada angka 2, panjang bitstring 6, berisi 8 bitstring, dengan jarak Hamming minimal 3. Bitstring pada kode biner selanjutnya disebut kata kode (\textit{codeword}).
 
 \begin{figure}
 \centering
@@ -163,7 +164,6 @@ Kode biner (\textit{binary code}) adalah sejumlah $M$ bitstring biner dengan pan
 \caption{Kode biner $(6,8,3)2$}
 \label{fig:binarycode683}
 \end{figure}
-
 
 Dengan kode biner $(6,8,3)2$ pada gambar \ref{fig:binarycode683}, pengirim dan penerima menyepakati hanya kata kode yang akan dikirim dan diterima. Dengan asumsi hanya ada satu bit yang dapat error, pesan error tetap dapat dikembalikan ke bentuk semula. Misal $111100$ menjadi $111000$, $000011$ menjadi $001011$, dan seterusnya. Jarak Hamming antara setiap dua kata kode yang berbeda adalah 3, berarti dari setiap kata kode, terdapat sejumlah bitstring selain kata kode berjarak 1.
 
@@ -179,7 +179,7 @@ Notasi umum kode biner adalah $(n,M,d)2$. Kita bisa asumsikan ada $M$ bola yang 
 
 \section{Solusi permainan Ulam non-interaktif}
 
-Diberikan sebuah matriks $L$ berukuran $n \times M$ berisi $n$ query $Q\in{q_1,q_2,...,q_n} \mid qi\in{s_1,s_2,...,s_M} \mid s_i\in{0,1}$. Diberikan sebuah vektor $z \in {z_1,z_2,...,z_n} \mid z_i\in{0,1}$ berisi jawaban dari seluruh query secara berurutan, $z_i$ adalah jawaban dari $qi$, dimana $0$ berarti 'tidak' dan $1$ berarti 'ya'. Karena jika jawaban $0$ berarti query harus ditambah dengan 1 dan jika jawaban $1$ berarti query ditambah dengan 0 (diabaikan), maka kita memiliki $z'$ yaitu inverse dari $z$. 
+Diberikan sebuah matriks $L$ berukuran $n \times M$ berisi $n$ query $Q \in \{q_1,q_2,...,q_n\} \mid q_i \in \{s_1,s_2,...,s_M\} \mid s_i \in {0,1}$. Diberikan sebuah vektor $z \in \{z_1,z_2,...,z_n\} \mid z_i \in \{0,1\}$ berisi jawaban dari seluruh query secara berurutan, $z_i$ adalah jawaban dari $q_i$, dimana $0$ berarti 'tidak' dan $1$ berarti 'ya'. Karena jika jawaban $0$ berarti query harus ditambah dengan 1 dan jika jawaban $1$ berarti query ditambah dengan 0 (diabaikan), maka kita memiliki $z'$ yaitu inverse dari $z$. 
 
 Matriks $L'$ berukuran $M \times n$ adalah hasil transpose dari matriks $L$. Tambahkan seluruh baris pada $L'$ dengan $z'$. Maka jawaban dari permainan Ulam non-interaktif adalah index dari baris $r$ pada $L'$ yang memiliki bobot $wt(r) > n-e$.
 
@@ -193,18 +193,22 @@ Diketahui integer $n$, $M$, dan $d$. Buktikan bahwa jika $L'$ adalah kode biner 
 
 \begin{proof}
 (1) Jika $wt(c) = 0$ maka
-\[d_H(c,x_i) >= d \mid c != x_i \mid x_i \in L'\]
-\[wt(c + x_i) \ge d\]
-\[wt(x_i) \ge d\]
+\begin{align*}
+d_H(c,x_i) &\ge d \mid c \neq x_i \mid x_i \in L' \\
+wt(c + x_i) &\ge d \\
+wt(x_i) &\ge d
+\end{align*}
 
 (2) Jika $wt(c) = e$ maka
-\[d_H(c,x_i) \ge d \mid c != x_i \mid x_i ∈ L'\]
-\[wt(c+x_i) \ge d\]
-\[wt(c) + wt(x_i) \ge wt(c+x_i) \ge d\]
-\[wt(c) + wt(x_i) \ge d\]
-\[e + wt(x_i) \ge d\]
-\[wt(x_i) \ge d - (d-1)/2\]
-\[wt(x_i) \ge (d+1)/2\]
+\begin{align*}
+d_H(c,x_i) &\ge d \mid c \neq x_i \mid x_i \in L' \\
+wt(c+x_i) &\ge d \\
+wt(c) + wt(x_i) \ge wt(c+x_i) &\ge d \\
+wt(c) + wt(x_i) &\ge d \\
+e + wt(x_i) &\ge d \\
+wt(x_i) &\ge d - (d-1)/2 \\
+wt(x_i) &\ge (d+1)/2
+\end{align*}
 
 Jadi jika ada codeword $c \mid 0 \le wt(c) \le e$ maka $wt(x_i) > e \mid x_i \neq c$.
 \end{proof}
@@ -217,35 +221,16 @@ Diketahui integer $n$, $M$, dan $d$. Buktikan bahwa jika $L'$ adalah kode biner 
 
 \begin{proof}
 Jika $d_H(x_i,y_i) \ge d \mid i \neq j \mid x_i,y_i \in L'$ maka
-\[d_H(x_i+z,y_i+z) \ge d\]
-\[wt(x_i+y_i+z+z) \ge d\]
-\[wt(x_i+y_i) \ge d\]
-\[d_H(x_i,y_i) \ge d\]
+\begin{align*}
+d_H(x_i+z,y_i+z) &\ge d \\
+wt(x_i+y_i+z+z) &\ge d \\
+wt(x_i+y_i) &\ge d \\
+d_H(x_i,y_i) &\ge d \\
+\end{align*}
 Jadi jika $d_H(x_i,y_i) \ge d$ maka $d_H(x_i+z,y_i+z) \ge d$.
 \end{proof}
 
-% trigger a \newpage just before the given reference
-% number - used to balance the columns on the last page
-% adjust value as needed - may need to be readjusted if
-% the document is modified later
-%\IEEEtriggeratref{8}
-% The "triggered" command can be changed if desired:
-%\IEEEtriggercmd{\enlargethispage{-5in}}
 
-% references section
-
-% can use a bibliography generated by BibTeX as a .bbl file
-% BibTeX documentation can be easily obtained at:
-% http://mirror.ctan.org/biblio/bibtex/contrib/doc/
-% The IEEEtran BibTeX style support page is at:
-% http://www.michaelshell.org/tex/ieeetran/bibtex/
-%\bibliographystyle{IEEEtran}
-% argument is your BibTeX string definitions and bibliography database(s)
-%\bibliography{IEEEabrv,../bib/paper}
-%
-% <OR> manually copy in the resultant .bbl file
-% set second argument of \begin to the number of references
-% (used to reserve space for the reference number labels box)
 \begin{thebibliography}{3}
 
 \bibitem{IEEEhowto:kopka}
@@ -254,9 +239,4 @@ H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
 
 \end{thebibliography}
 
-
-
-% that's all folks
 \end{document}
-
-
