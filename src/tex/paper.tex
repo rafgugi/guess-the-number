@@ -25,21 +25,13 @@
 \captionsetup[figure]{name=Gambar. , labelsep=period, font=footnotesize, justification=justified}
 \captionsetup[lstlisting]{labelsep=period, font=footnotesize}
 
-
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
 
 
 \begin{document}
-
 \title{Perfect Queries for Non-interactive\\Ulam Searching Game with Many Lies}
 
-
-% for over three affiliations, or if they all won't fit within the width
-% of the page (and note that there is less available width in this regard for
-% compsoc conferences compared to traditional conferences), use this
-% alternative format:
-% 
 \author{\IEEEauthorblockN{Risyanggi Azmi Faizin\IEEEauthorrefmark{1},
 Rully Sulaiman\IEEEauthorrefmark{2},
 Hari Ginardi\IEEEauthorrefmark{3} and
@@ -56,8 +48,6 @@ Indonesia\\ Email: risyanggi@gmail.com}
 \IEEEauthorblockA{\IEEEauthorrefmark{4}University of Warsaw\\
 Poland\\ Email: miodziu@gmail.com}}
 
-
-% make the title area
 \maketitle
 
 % As a general rule, do not put math, special symbols or citations
@@ -65,33 +55,27 @@ Poland\\ Email: miodziu@gmail.com}}
 \begin{abstract}
 Pada permasalahan permainan klasik pencarian Ulam dan Rényi, penanya harus mengajukan beberapa pertanyaan iya dan tidak untuk mencari sebuah nilai dalam range pencarian yang sudah disepakati, namun penjawab diperbolehkan berbohong. Sudah ada solusi dari beberapa variasi pada permasalahan pencarian Ulam dan Rényi, yaitu pada jenis query antara rentang atau subset dan jumlah maksimal bohong antara satu, dua, tiga, dan seterusnya. Namun belum ada solusi yang sempurna untuk query yang non-interaktif yaitu penjawab hanya boleh menjawab query penanya setelah penanya selesai menanyakan semua querynya. Pada paper ini akan dijelaskan solusi sempurna untuk permainan Ulam dan Rényi non-interaktif dengan maksimal kebohongan jamak menggunakan kode biner dengan jarak Hamming.
 \end{abstract}
-
 % no keywords
-
 
 \IEEEpeerreviewmaketitle
 
-
 \section{Introduction}
-\subsection{Background}
 
-Dalam perkembangan dunia teknologi informasi selama beberapa dekade terakhir, teknologi informasi seringkali dijadikan solusi bagi permasalahan-permasalahan yang pernah ada, yang sebelumnya diselesaikan secara manual oleh manusia. Contoh permasalahan yang pernah ada adalah salah satu permasalahan klasik pencarian Ulam dan Rényi. Permasalahan ini dapat diilustrasikan dengan adanya dua pemain yang disebut penanya dan penjawab. Diberikan range pertanyaan $S_M = {1,2,...,M}$, penjawab menentukan sebuah bilangan $x \in S_M$. Penanya harus menemukan nilai $x$ dengan memberikan beberapa query berupa pertanyaan iya dan tidak, apakah "$x \in Q$?", dimana $Q$ adalah subset dari $S_M$, lalu penjawab menjawab "ya" atau "tidak". Permasalahan utama adalah penjawab dapat berbohong sampai $e$ kali. Tujuan dari permainan ini adalah mencari jumlah query minimal untuk dapat menentukan nilai $x$.
+Dalam perkembangan dunia teknologi informasi selama beberapa dekade terakhir, teknologi informasi seringkali dijadikan solusi bagi permasalahan-permasalahan yang pernah ada, yang sebelumnya diselesaikan secara manual oleh manusia. Contoh permasalahan yang pernah ada adalah salah satu permasalahan klasik pencarian Ulam dan Rényi. Permasalahan ini dapat diilustrasikan dengan adanya dua pemain yang disebut penanya dan penjawab. Diberikan range pertanyaan $S_M = {0,...,M-1}$, penjawab menentukan sebuah bilangan $x \in S_M$. Penanya harus menemukan nilai $x$ dengan memberikan beberapa query berupa pertanyaan iya dan tidak, apakah "$x \in Q$?", dimana $Q$ adalah subset dari $S_M$, lalu penjawab menjawab "ya" atau "tidak". Permasalahan utama adalah penjawab dapat berbohong sampai $e$ kali. Masalah dari permainan ini adalah mencari jumlah query minimal untuk dapat menentukan nilai $x$.
+
+% Penelitian tentang permasalahan Ulam selama ini hanya membahas tentang query yang interaktif dari penanya dan penjawab, baik dengan jumlah maksimal bohong satu, dua, tiga, dan lebih dari tiga. Namun belum ada jurnal ilmiah yang membahas permasalahan Ulam dengan query non-interaktif dengan jumlah bohong lebih dari dua. Kontribusi dari penelitian ini adalah menggunakan metode pencarian biner non-interaktif untuk menyelesaikan permasalahan Ulam.
+
+Pada permasalahan pencarian Ulam, penanya dan penjawab harus menyepakati beberapa peraturan sebelum bermain. Peraturan tersebut meliputi batasan ruang pencarian, batasan bagaimana penjawab diperbolehkan berbohong, format pertanyaan, dan bagaimana interaksi antara penjawab dan penanya \cite{Pelc2002}. Pertama penanya dan penjawab harus menyepakati batas ruang pencarian $S_M$, yaitu $M$ angka, penjawab hanya boleh menentukan angka $x$ diantara dalam set $\{0,...,M-1\}$.
+
+Pada aturan format pertanyaan, terdapat beberapa variasi. Yang pertama adalah pertanyaan komparasi, bentuk pertanyaannya adalah "Apakah $x<a$?" dimana $a \in S_M$. \textit{Tambahkan referensi}. Lalu ada pertanyaan interval dan bi-interval, bentuk pertanyaannya adalah "Apakah $x$ ada dalam interval $[a,b]$?" dan "Apakah $x$ ada dalam interval $[a,b] \cup [c,d]$?". \textit{Tambahkan referensi, mungkin dari john}.
+
+% Sudah ada beberapa variasi pada permasalahan RBU. Pelc (1987) menyelesaikan permasalahan RBU dengan query rentang $[a,b]$ dan dengan maksimal jumlah bohong adalah satu. Mundici et all (1997) dan Min et all (2016) menyelesaikan permasalahan RBU dengan query rentang $[a,b]$ dan dengan maksimal jumlah bohong dua. Ahlswede (2008) mengilustrasikan permasalah RBU dengan maksimal bobot bohong adalah $e$, dengan menggunakan \textit{bipartite graph} untuk menyimpan kanal kebohongan dan memberikan batasan asimtotik yang ketat untuk jumlah query yang dibutuhkan untuk memecahkan masalah ini.
 
 Salah satu variasi permasalahan RBU yang diangkat dalam penelitian ini adalah pencarian Ulam dengan $n$ query subset ${q_1,q_2,...,q_n} | q_i \in S_M$, maksimal bohong adalah $e$, dan penjawab hanya boleh menjawab query penanya setelah penanya selesai menanyakan semua query-nya. Belum ada penelitian yang menyelesaikan permasalahan ini. Oleh karena itu penelitian ini bertujuan untuk memberikan solusi pada permasalahan ini.
 
-Penelitian tentang permasalahan Ulam selama ini hanya membahas tentang query yang interaktif dari penanya dan penjawab, baik dengan jumlah maksimal bohong satu, dua, tiga, dan lebih dari tiga. Namun belum ada jurnal ilmiah yang membahas permasalahan Ulam dengan query non-interaktif dengan jumlah bohong lebih dari dua. Kontribusi dari penelitian ini adalah menggunakan metode pencarian biner non-interaktif untuk menyelesaikan permasalahan Ulam.
-
-% You must have at least 2 lines in the paragraph with the drop letter
-% (should never be an issue)
-
-
-\subsection{Related work}
-
-Sudah ada beberapa variasi pada permasalahan RBU. Pelc (1987) menyelesaikan permasalahan RBU dengan query rentang $[a,b]$ dan dengan maksimal jumlah bohong adalah satu. Mundici et all (1997) dan Min et all (2016) menyelesaikan permasalahan RBU dengan query rentang $[a,b]$ dan dengan maksimal jumlah bohong dua. Ahlswede (2008) mengilustrasikan permasalah RBU dengan maksimal bobot bohong adalah $e$, dengan menggunakan \textit{bipartite graph} untuk menyimpan kanal kebohongan dan memberikan batasan asimtotik yang ketat untuk jumlah query yang dibutuhkan untuk memecahkan masalah ini.
-
 \section{Problem formulation}
 
-Penjawab menentukan sebuah bilangan $x$ pada rentang $S_M=[1,M]$. Penanya harus mencari nilai $x$ dengan memberikan maksimal $n$ query khusus apakah "$x \in Q$?", lalu penjawab menjawab "ya" atau "tidak" pada setiap query yang ditanyakan. Permasalahan utama adalah penjawab dapat berbohong sampai $e$ kali. Selain itu, penjawab hanya boleh menjawab query penanya setelah penanya selesai menanyakan semua query-nya. Tujuan dari RBU adalah mencari jumlah query minimal untuk dapat menentukan nilai $x$.
+Penjawab menentukan sebuah bilangan $x$ pada rentang $S_M=[0,M-1]$. Penanya harus mencari nilai $x$ dengan memberikan maksimal $n$ query khusus apakah "$x \in Q$?", lalu penjawab menjawab "ya" atau "tidak" pada setiap query yang ditanyakan. Permasalahan utama adalah penjawab dapat berbohong sampai $e$ kali. Selain itu, penjawab hanya boleh menjawab query penanya setelah penanya selesai menanyakan semua query-nya. Tujuan dari RBU adalah mencari jumlah query minimal untuk dapat menentukan nilai $x$.
 
 Bentuk dari query adalah string $s_1s_2s_3...s_n$ dimana si bernilai '0' atau '1'. Jawaban dari penjawab adalah "Ya" jika $s_x=1$ atau "Tidak" jika $s_x=0$ dengan asumsi penjawab menjawab jujur.
 
@@ -139,19 +123,19 @@ wt(x) = |\{i \in {1,...,n} \mid x_i \neq 0\}|
 
 Bobot dari bitstring $x$ didefinisikan dengan $wt(x)$, yaitu jumlah digit pada $x$ yang bukan $0$ seperti pada persamaan \ref{eq:wt}. Sebagai contohnya, $wt(00101) = 2$ dan $wt(11111) = 5$. Jika dihubungkan dengan jarak Hamming, jika $x+e = y$ maka $d_H(x,y) = wt(x+y)$.
 
-Terdapat sebuah sifat pada jarak Hamming yang bernama segitiga pertidaksamaan (\textit{triangle inequality}), yaitu 
-
-\begin{equation*}
-d_H(x,y) \le d_H(x,z) + d_H(y,z)
-\end{equation*}
-
-untuk semua $x$, $y$, dan $z$. Dari segitiga pertidaksamaan tersebut, misalkan $z$ adalah $\vec{0}$ string biner yang berisi semua $0$, maka didapatkan 
-
 \begin{equation}
-d_H(x,y) \le wt(x) + wt(y)
+d_H(x,y) \le d_H(x,z) + d_H(y,z)
+\label{eq:dh_unequal}
 \end{equation}
 
-Kode biner (\textit{binary code}) adalah sejumlah $M$ bitstring biner dengan panjang masing-masing bitstring adalah $n$ dan jarak Hamming pada masing masing bitstring adalah $d$. Mari kita ambil contoh $M=8$, $n=6$, dan $d=3$ pada gambar \ref{fig:binarycode683}. Parameter pada kode ini adalah $(6,8,3)2$, yaitu kode biner yang ditunjukkan pada angka 2, panjang bitstring 6, berisi 8 bitstring, dengan jarak Hamming minimal 3. Bitstring pada kode biner selanjutnya disebut kata kode (\textit{codeword}).
+\begin{equation}
+wt(x+y) \le wt(x) + wt(y)
+\label{eq:wt_unequal}
+\end{equation}
+
+Terdapat sebuah sifat pada jarak Hamming yang bernama segitiga pertidaksamaan (\textit{triangle inequality}), seperti pada Persamaan \ref{eq:dh_unequal}. Dari Persamaan \ref{eq:dh_unequal}, misalkan $z$ adalah $\vec{0}$ yaitu string biner yang berisi semua $0$, maka didapatkan Persamaan \ref{eq:wt_unequal}.
+
+Kode biner (\textit{binary code}) adalah sejumlah $M$ bitstring biner dengan panjang masing-masing bitstring adalah $n$ dan jarak Hamming pada masing masing bitstring adalah $d$. Mari kita ambil contoh $M=8$, $n=6$, dan $d=3$ pada Gambar \ref{fig:binarycode683}. Parameter pada kode ini adalah $(6,8,3)2$, yaitu kode biner yang ditunjukkan pada angka 2, panjang bitstring 6, berisi 8 bitstring, dengan jarak Hamming minimal 3. Bitstring pada kode biner selanjutnya disebut kata kode (\textit{codeword}).
 
 \begin{figure}
 \centering
@@ -165,7 +149,7 @@ Kode biner (\textit{binary code}) adalah sejumlah $M$ bitstring biner dengan pan
 \label{fig:binarycode683}
 \end{figure}
 
-Dengan kode biner $(6,8,3)2$ pada gambar \ref{fig:binarycode683}, pengirim dan penerima menyepakati hanya kata kode yang akan dikirim dan diterima. Dengan asumsi hanya ada satu bit yang dapat error, pesan error tetap dapat dikembalikan ke bentuk semula. Misal $111100$ menjadi $111000$, $000011$ menjadi $001011$, dan seterusnya. Jarak Hamming antara setiap dua kata kode yang berbeda adalah 3, berarti dari setiap kata kode, terdapat sejumlah bitstring selain kata kode berjarak 1.
+Dengan kode biner $(6,8,3)2$ pada Gambar \ref{fig:binarycode683}, pengirim dan penerima menyepakati hanya kata kode yang akan dikirim dan diterima. Dengan asumsi hanya ada satu bit yang dapat error, pesan error tetap dapat dikembalikan ke bentuk semula. Misal $111100$ menjadi $111000$, $000011$ menjadi $001011$, dan seterusnya. Jarak Hamming antara setiap dua kata kode yang berbeda adalah 3, berarti dari setiap kata kode, terdapat sejumlah bitstring selain kata kode berjarak 1.
 
 \begin{figure}
 \centering
@@ -174,7 +158,7 @@ Dengan kode biner $(6,8,3)2$ pada gambar \ref{fig:binarycode683}, pengirim dan p
 \label{fig:codewordsball}
 \end{figure}
 
-Notasi umum kode biner adalah $(n,M,d)2$. Kita bisa asumsikan ada $M$ bola yang tidak saling bersinggungan atau berpotongan, dengan radius bola $e=(d-1)/2$ seperti pada gambar \ref{fig:codewordsball}. Dari ilustrasi bola-bola tersebut dapat disimpulkan bahwa jika dikirimkan sebuah kata kode, bitstring setelah terjadi maksimal $e$ pertukaran bit, hasil tetap hanya dekat dengan satu kata kode saja.
+Notasi umum kode biner adalah $(n,M,d)2$. Kita bisa asumsikan ada $M$ bola yang tidak saling bersinggungan atau berpotongan, dengan radius bola $e=(d-1)/2$ seperti pada Gambar \ref{fig:codewordsball}. Dari ilustrasi bola-bola tersebut dapat disimpulkan bahwa jika dikirimkan sebuah kata kode, bitstring setelah terjadi maksimal $e$ pertukaran bit, hasil tetap hanya dekat dengan satu kata kode saja.
 
 
 \section{Solusi permainan Ulam non-interaktif}
@@ -231,12 +215,7 @@ Jadi jika $d_H(x_i,y_i) \ge d$ maka $d_H(x_i+z,y_i+z) \ge d$.
 \end{proof}
 
 
-\begin{thebibliography}{3}
-
-\bibitem{IEEEhowto:kopka}
-H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
-  0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
-
-\end{thebibliography}
+\bibliographystyle{plain}
+\bibliography{holy}
 
 \end{document}
