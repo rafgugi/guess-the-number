@@ -14,13 +14,13 @@
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{exmp}{Example}[section]
 \newtheorem{lemma}[theorem]{Lemma}
 
 \setcounter{table}{0}
 \renewcommand{\thetable}{\arabic{table}}
 \renewcommand{\thefigure}{\arabic{figure}}
 
-\usepackage{caption}
 \captionsetup[table]{labelsep=period, font=footnotesize, justification=centering}
 \captionsetup[figure]{name=Gambar. , labelsep=period, font=footnotesize, justification=justified}
 \captionsetup[lstlisting]{labelsep=period, font=footnotesize}
@@ -28,6 +28,7 @@
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
 
+\bibliographystyle{acm}
 
 \begin{document}
 \title{Perfect Queries for Non-interactive\\Ulam Searching Game with Many Lies}
@@ -73,75 +74,114 @@ Pada aturan format pertanyaan, terdapat beberapa variasi. Yang pertama adalah pe
 
 Pada aturan interaksi antara penjawab dan penanya, terdapat tiga macam variasi yaitu interaktif, batch, dan non-interaktif. Aturan yang paling umum digunakan adalah interaktif, yaitu penjawab harus menjawab setiap pertanyaan yang diajukan penanya sebelum penanya menanyakan pertanyaan selanjutnya. Pada aturan batch, penanya dan penjawab menyepakati berapa jumlah batch. Lalu pada setiap batch, penanya memberikan beberapa pertanyaan, lalu penjawab memberikan jawaban sejumlah pertanyaan yang diberikan oleh penanya \cite{Cicalese2000}. Aturan yang terakhir adalah non-interaktif, yaitu penjawab harus menjawab semua pertanyaan penanya sekaligus \cite{Macula1997}.
 
-% Sudah ada beberapa variasi pada permasalahan RBU. Pelc (1987) menyelesaikan permasalahan RBU dengan query rentang $[a,b]$ dan dengan maksimal jumlah bohong adalah satu. Mundici et all (1997) dan Min et all (2016) menyelesaikan permasalahan RBU dengan query rentang $[a,b]$ dan dengan maksimal jumlah bohong dua. Ahlswede (2008) mengilustrasikan permasalah RBU dengan maksimal bobot bohong adalah $e$, dengan menggunakan \textit{bipartite graph} untuk menyimpan kanal kebohongan dan memberikan batasan asimtotik yang ketat untuk jumlah query yang dibutuhkan untuk memecahkan masalah ini.
+% Sudah ada beberapa variasi pada permasalahan Ulam dan Rényi. Pelc (1987) menyelesaikan permasalahan Ulam dan Rényi dengan query rentang $[a,b]$ dan dengan maksimal jumlah bohong adalah satu. Mundici et all (1997) dan Min et all (2016) menyelesaikan permasalahan Ulam dan Rényi dengan query rentang $[a,b]$ dan dengan maksimal jumlah bohong dua. Ahlswede (2008) mengilustrasikan permasalah Ulam dan Rényi dengan maksimal bobot bohong adalah $e$, dengan menggunakan \textit{bipartite graph} untuk menyimpan kanal kebohongan dan memberikan batasan asimtotik yang ketat untuk jumlah query yang dibutuhkan untuk memecahkan masalah ini.
 
-Salah satu variasi permasalahan RBU yang diangkat dalam penelitian ini adalah pencarian Ulam dengan $n$ query subset ${q_1,q_2,...,q_n} | q_i \in S_M$, maksimal bohong adalah $e$, dan penjawab hanya boleh menjawab query penanya setelah penanya selesai menanyakan semua query-nya. Belum ada penelitian yang menyelesaikan permasalahan ini. Oleh karena itu penelitian ini bertujuan untuk memberikan solusi pada permasalahan ini.
+Salah satu variasi permasalahan Ulam dan Rényi yang diangkat dalam penelitian ini adalah pencarian Ulam dengan $n$ query subset ${q_1,q_2,...,q_n} | q_i \in S_M$, maksimal bohong adalah $e$, dan penjawab hanya boleh menjawab query penanya setelah penanya selesai menanyakan semua query-nya. Belum ada penelitian yang menyelesaikan permasalahan ini. Oleh karena itu penelitian ini bertujuan untuk memberikan solusi pada permasalahan ini.
 
 \section{Problem formulation}
 
-Penjawab menentukan sebuah bilangan $x$ pada rentang $S_M=[0,M-1]$. Penanya harus mencari nilai $x$ dengan memberikan maksimal $n$ query khusus apakah "$x \in Q$?", lalu penjawab menjawab "ya" atau "tidak" pada setiap query yang ditanyakan. Permasalahan utama adalah penjawab dapat berbohong sampai $e$ kali. Selain itu, penjawab hanya boleh menjawab query penanya setelah penanya selesai menanyakan semua query-nya. Tujuan dari RBU adalah mencari jumlah query minimal untuk dapat menentukan nilai $x$.
+Bentuk permasalahan Ulam yang dibahas pada paper ini diangkat dari online judge SPOJ oleh Micha\l{} Miodek \cite{guessn5}. Penjawab menentukan sebuah bilangan $x$ pada rentang $S_M=\{0,...,M-1\}$. Anda sebagai penanya harus mencari nilai $x$ dengan memberikan maksimal $n$ query khusus apakah "$x \in Q$?", lalu penjawab menjawab "ya" atau "tidak" pada setiap query yang ditanyakan. Permasalahan utama adalah penjawab dapat berbohong sampai $e$ kali. Selain itu, penjawab hanya boleh menjawab query penanya setelah penanya selesai menanyakan semua query-nya. Tujuan dari Ulam adalah mencari jumlah query minimal untuk dapat menentukan nilai $x$.
 
 Bentuk dari query adalah string $s_1s_2s_3...s_n$ dimana si bernilai '0' atau '1'. Jawaban dari penjawab adalah "Ya" jika $s_x=1$ atau "Tidak" jika $s_x=0$ dengan asumsi penjawab menjawab jujur.
 
 Tugas sesungguhnya dari permasalahan ini adalah bukan untuk mencari nilai $x$, tapi hanya menyiapkan query yang dapat memeungkinkan untuk mendapatkan nilai $x$ dari semua kemungkinan jawaban dari penjawab. Penjawab tidak akan menjawab query yang diberikan penanya. Jika penjawab menemukan ada suatu set jawaban yang menyebabkan lebih dari satu kemungkinan nilai $x$, maka pengujian dianggap gagal.
 
-\begin{figure}
+Batasan yang digunakan pada permasalahan Ulam adalah sebagai berikut:
+\begin{itemize}
+  \item Batas maksimum kasus uji adalah $2^7$.
+  \item Interval bilangan yang yang dicari berada pada $\{0,...,M-1\}$, dengan n maksimum $2^12$.
+  \item Dataset yang digunakan adalah dataset pada permasalahan SPOJ GUESSN5.
+\end{itemize}
+
+\begin{figure} \label{fig:guessn5_test_case}
 \centering
 \includegraphics[scale=0.6]{../img/example.png}
 \caption{Contoh kasus uji pada GUESSN5}
-\label{fig:guessn5_test_case}
 \end{figure}
 
-Gambar \ref{fig:guessn5_test_case} adalah contoh empat uji kasus dari permasalahan SPOJ GUESSN5. Pada uji kasus yang pertama hanya terdapat dua angka. Penjawab dapat menjawab "YYYYYY" atau "NNNNNN" jika penjawab tidak berbohong. Penjawab dapat menjawab "YYYYYN", "YYYYNY", "YYYNYY", "YYNYYY", "YNYYYY", "NYYYYY", "NNNNNY", "NNNNYN", "NNNYNN", "NNYNNN", "NYNNNN", atau "YNNNNN" jika penjawab berbohong satu kali. Penjawab dapat menjawab "NNNNYY", "NNNYNY", "NNNYYN", "NNYNNY", "NNYNYN", "NNYYNN", "NYNNNY", "NYNNYN", "NYNYNN", "NYYNNN", "YNNNNY", "YNNNYN", "YNNYNN", "YNYNNN", "YYNNNN", "NNYYYY", "NYNYYY", "NYYNYY", "NYYYNY", "NYYYYN", "YNNYYY", "YNYNYY", "YNYYNY", "YNYYYN", "YYNNYY", "YYNYNY", "YYNYYN", "YYYNNY", "YYYNYN", atau "YYYYNN" jika penjawab berbohong dua kali. Kemungkinan jawaban selain tersebut di atas tidak mungkin karena penjawab akan berbohong tiga kali.
+Gambar \ref{fig:guessn5_test_case} adalah contoh empat uji kasus dari permasalahan SPOJ GUESSN5.
 
-Pada uji kasus yang kedua penjawab mencoba memberikan solusi namun jawabannya salah. Penanya dapat menjawab "YYYNNN" yaitu jawaban yang valid karena jumlah bohong tiga kali untuk kedua kemungkinan angka. Pada kasus ini, penanya membutuhkan query tambahan.
+\begin{exmp}
+Pada uji kasus yang pertama hanya terdapat dua angka. Jika penjawab tidak berbohong, penjawab dapat menjawab pilihan
+\begin{align*}
+111111 \;\;& 000000\textrm{.}
+\end{align*}
+Jika penjawab berbohong satu kali, penjawab dapat menjawab 
+\begin{align*}
+& 111110 & & 111101 & 111011 \\
+& 110111 & & 101111 & 011111 \\
+& 000001 & & 000010 & 000100 \\
+& 001000 & & 010000 & 100000 &\textrm{.}
+\end{align*}
+Jika penjawab berbohong dua kali, penjawab dapat menjawab
+\begin{align*}
+& 000011 & & 000101 & 000110 \\
+& 001001 & & 001010 & 001100 \\
+& 010001 & & 010010 & 010100 \\
+& 011000 & & 100001 & 100010 \\
+& 100100 & & 101000 & 110000 \\
+& 001111 & & 010111 & 011011 \\
+& 011101 & & 011110 & 100111 \\
+& 101011 & & 101101 & 101110 \\
+& 110011 & & 110101 & 110110 \\
+& 111001 & & 111010 & 111100 &\textrm{.}
+\end{align*}
+Penanya memenangkan permainan karena kemungkinan jawaban selain tersebut di atas membuat penjawab akan berbohong tiga kali.
+\end{exmp}
 
+\begin{exmp}
+Pada uji kasus yang kedua penjawab mencoba memberikan solusi namun jawabannya salah. Penanya dapat menjawab $111000$ yaitu jawaban yang valid karena jumlah bohong tiga kali untuk kedua kemungkinan angka. Pada kasus ini penanya kalah karena penanya membutuhkan query tambahan.
+\end{exmp}
+
+\begin{exmp}
 Pada uji kasus yang ketiga penanya tidak memberikan solusi.
+\end{exmp}
 
-Pada uji kasus yang keempat penanya memberikan query yang lebih sedikit dari jumlah query maksimal yang diperbolehkan. Dari semua kemungkinan jawaban penjawab, pasti hanya ada satu jawaban nilai $x$, jadi solusi penanya berhasil.
-
-\begin{itemize}
-  \item Batas maksimum kasus uji adalah $2^7$.
-  \item Interval bilangan yang yang dicari berada pada $[1,n]$, dengan n maksimum $2^12$.
-  \item Dataset yang digunakan adalah dataset pada permasalahan SPOJ GUESSN5.
-\end{itemize}
+\begin{exmp}
+Pada uji kasus yang keempat penanya memberikan query yang lebih sedikit dari jumlah query maksimal yang diperbolehkan. Dari semua kemungkinan jawaban penjawab, pasti hanya ada satu jawaban nilai $x$, jadi penanya memenangkan permainan.
+\end{exmp}
 
 
 \section{Backround from coding theory}
 
-Tujuan utama dari teori pengkodean (\textit{coding theory}) adalah bagaimana mengirimkan pesan pada kanal yang mengandung derau (\textit{noisy channel}) **[1]**. Misal jika ada delapan macam kata pesan yang akan dikirim, maka kita merepresentasikan pesan tersebut menjadi bitstring dengan panjang 3. Namun jika pesan tersebut dikirm langsung melewati kanal yang mengandung derau, bisa jadi misalkan ada 1 bit akan tertukar, misal $001$ menjadi $011$. Jika terjadi seperti itu, maka sebuah kata dapat tertukar menjadi kata yang lain.
+Tujuan utama dari teori pengkodean (\textit{coding theory}) adalah bagaimana mengirimkan pesan pada kanal yang mengandung derau (\textit{noisy channel}) \cite{VanLint2016}. Misal jika ada delapan macam kata pesan yang akan dikirim, maka kita merepresentasikan pesan tersebut menjadi bitstring biner dengan panjang 3. Namun jika pesan tersebut dikirm langsung melewati kanal yang mengandung derau, bisa jadi misalkan ada 1 bit akan tertukar, misal $001$ menjadi $011$. Jika terjadi seperti itu, maka sebuah kata dapat tertukar menjadi kata yang lain.
 
-Kita tahu bahwa jika kode biner sepanjang $n$ digunakan untuk membuat $2^n$ bitstring tidak dapat mendeteksi eror. Ide yang paling mungkin adalah pengirim dan penerima menyetujui sebuah metode enkripsi bitstring menjadi bitstring yang lebih panjang dan dapat mendeteksi maksimal sebanyak $e$ error.
+Kita tahu bahwa jika kode biner sepanjang $n$ digunakan untuk membuat $2^n$ bitstring tidak dapat mendeteksi eror. Ide yang paling mungkin adalah pengirim dan penerima menyetujui sebuah metode enkripsi bitstring menjadi bitstring yang lebih panjang dan dapat mendeteksi maksimal sebanyak $e$ error menggunakan kode linear.
 
-\begin{equation}
+Kode linear adalah kode yang paling banyak dipelajari karena struktur aljabar yang mudah dipelajari dibandingkan kode non-linear \cite{Huffman}. Bidang kode linear dapat dinotasikan sebagai $\mathbb{F}_q^n$, yaitu kode memiliki $q$ jenis elemen dan memiliki panjang $n$. Bentuk kode biner adalah $\mathbb{F}_2^n$, memiliki struktur aljabar penjumlahan dan pengurangan sebagai berikut.
+
+\begin{align*}
+0 + 0 &= 0 & 0 \cdot 0 &= 0 \\
+0 + 1 &= 1 & 0 \cdot 1 &= 0 \\
+1 + 0 &= 1 & 1 \cdot 0 &= 0 \\
+1 + 1 &= 0 & 1 \cdot 1 &= 1
+\end{align*}
+
+\begin{equation} \label{eq:dh}
 d_H(x,y) = |\{i \in {1,...,n} \mid x_i \neq y_i\}|
-\label{eq:dh}
 \end{equation}
 
-Jarak Hamming dari bitstring $x$ dan $y$ dengan panjang $n$ didefinisikan dengan persamaan \ref{eq:dh} **[2]**. Sebagai contohnya $d_H(0000,1111)= 4$ dan $d_H(00110,00101)= 2$. $d_H(x,y)$ juga dapat dikatakan jumlah minimal untuk mentransformasi dari $x$ ke $y$. Contoh $x=00110$ dan $y=00101$ memiliki perbedaan pada 2 bit terakhir dengan jarak Hamming 2, dapat dikatakan $x+00011 = y$.
+Jarak Hamming dari bitstring $x$ dan $y$ dengan panjang $n$ didefinisikan dengan persamaan \ref{eq:dh} \cite{Cicalese2000}. Sebagai contohnya $d_H(0000,1111)= 4$ dan $d_H(00110,00101)= 2$. $d_H(x,y)$ juga dapat dikatakan jumlah minimal untuk mentransformasi dari $x$ ke $y$. Contoh $x=00110$ dan $y=00101$ memiliki perbedaan pada 2 bit terakhir dengan jarak Hamming 2, dapat dikatakan $x+00011 = y$.
 
-\begin{equation}
+\begin{equation} \label{eq:wt}
 wt(x) = |\{i \in {1,...,n} \mid x_i \neq 0\}|
-\label{eq:wt}
 \end{equation}
 
 Bobot dari bitstring $x$ didefinisikan dengan $wt(x)$, yaitu jumlah digit pada $x$ yang bukan $0$ seperti pada persamaan \ref{eq:wt}. Sebagai contohnya, $wt(00101) = 2$ dan $wt(11111) = 5$. Jika dihubungkan dengan jarak Hamming, jika $x+e = y$ maka $d_H(x,y) = wt(x+y)$.
 
-\begin{equation}
+\begin{equation} \label{eq:dh_unequal}
 d_H(x,y) \le d_H(x,z) + d_H(y,z)
-\label{eq:dh_unequal}
 \end{equation}
 
-\begin{equation}
+\begin{equation} \label{eq:wt_unequal}
 wt(x+y) \le wt(x) + wt(y)
-\label{eq:wt_unequal}
 \end{equation}
 
-Terdapat sebuah sifat pada jarak Hamming yang bernama segitiga pertidaksamaan (\textit{triangle inequality}), seperti pada Persamaan \ref{eq:dh_unequal}. Dari Persamaan \ref{eq:dh_unequal}, misalkan $z$ adalah $\vec{0}$ yaitu string biner yang berisi semua $0$, maka didapatkan Persamaan \ref{eq:wt_unequal}.
+Terdapat sebuah sifat pada jarak Hamming yang bernama segitiga pertidaksamaan (\textit{triangle inequality}), seperti pada Persamaan \ref{eq:dh_unequal} \cite{VanLint2016}. Dari Persamaan \ref{eq:dh_unequal}, misalkan $z$ adalah $\vec{0}$ yaitu string biner yang berisi semua $0$, maka didapatkan Persamaan \ref{eq:wt_unequal}.
 
 Kode biner (\textit{binary code}) adalah sejumlah $M$ bitstring biner dengan panjang masing-masing bitstring adalah $n$ dan jarak Hamming pada masing masing bitstring adalah $d$. Mari kita ambil contoh $M=8$, $n=6$, dan $d=3$ pada Gambar \ref{fig:binarycode683}. Parameter pada kode ini adalah $(6,8,3)2$, yaitu kode biner yang ditunjukkan pada angka 2, panjang bitstring 6, berisi 8 bitstring, dengan jarak Hamming minimal 3. Bitstring pada kode biner selanjutnya disebut kata kode (\textit{codeword}).
 
-\begin{figure}
+\begin{figure} \label{fig:binarycode683}
 \centering
 \begin{BVerbatim}
 000000  100110
@@ -150,16 +190,14 @@ Kode biner (\textit{binary code}) adalah sejumlah $M$ bitstring biner dengan pan
 011110  111000
 \end{BVerbatim}
 \caption{Kode biner $(6,8,3)2$}
-\label{fig:binarycode683}
 \end{figure}
 
 Dengan kode biner $(6,8,3)2$ pada Gambar \ref{fig:binarycode683}, pengirim dan penerima menyepakati hanya kata kode yang akan dikirim dan diterima. Dengan asumsi hanya ada satu bit yang dapat error, pesan error tetap dapat dikembalikan ke bentuk semula. Misal $111100$ menjadi $111000$, $000011$ menjadi $001011$, dan seterusnya. Jarak Hamming antara setiap dua kata kode yang berbeda adalah 3, berarti dari setiap kata kode, terdapat sejumlah bitstring selain kata kode berjarak 1.
 
-\begin{figure}
+\begin{figure} \label{fig:codewordsball}
 \centering
 \includegraphics[width=\linewidth]{../img/codewordsball.png}
 \caption{Bola codeword yang tidak saling overlap}
-\label{fig:codewordsball}
 \end{figure}
 
 Notasi umum kode biner adalah $(n,M,d)2$. Kita bisa asumsikan ada $M$ bola yang tidak saling bersinggungan atau berpotongan, dengan radius bola $e=(d-1)/2$ seperti pada Gambar \ref{fig:codewordsball}. Dari ilustrasi bola-bola tersebut dapat disimpulkan bahwa jika dikirimkan sebuah kata kode, bitstring setelah terjadi maksimal $e$ pertukaran bit, hasil tetap hanya dekat dengan satu kata kode saja.
@@ -219,7 +257,6 @@ Jadi jika $d_H(x_i,y_i) \ge d$ maka $d_H(x_i+z,y_i+z) \ge d$.
 \end{proof}
 
 
-\bibliographystyle{plain}
 \bibliography{holy}
 
 \end{document}
