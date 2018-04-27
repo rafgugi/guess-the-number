@@ -1,0 +1,74 @@
+\documentclass[conference,compsoc]{IEEEtran}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{caption}
+\usepackage{cite}
+\usepackage{fancyvrb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xesearch}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{exmp}{Example}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+
+\setcounter{table}{0}
+
+\newcommand{\refeq}[1]{Persamaan \ref{#1}}
+\renewcommand{\thetable}{\arabic{table}}
+\renewcommand{\thefigure}{\arabic{figure}}
+
+\captionsetup[table]{labelsep=period, font=footnotesize, justification=centering}
+\captionsetup[figure]{name=Gambar. , labelsep=period, font=footnotesize, justification=justified}
+\captionsetup[lstlisting]{labelsep=period, font=footnotesize}
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+\bibliographystyle{acm}
+
+\begin{document}
+\title{Perfect Queries for Non-interactive\\Ulam Searching Game with Many Lies}
+
+\author{\IEEEauthorblockN{Risyanggi Azmi Faizin\IEEEauthorrefmark{1},
+Rully Sulaiman\IEEEauthorrefmark{2},
+Hari Ginardi\IEEEauthorrefmark{3} and
+Micha\l{} Miodek\IEEEauthorrefmark{4}}
+\IEEEauthorblockA{\IEEEauthorrefmark{1}Informatics Engineering\\
+Institut Teknologi Sepupuh Nopember,
+Indonesia\\ Email: risyanggi@gmail.com}
+\IEEEauthorblockA{\IEEEauthorrefmark{2}Informatics Engineering\\
+Institut Teknologi Sepupuh Nopember,
+Indonesia\\ Email: risyanggi@gmail.com}
+\IEEEauthorblockA{\IEEEauthorrefmark{3}Informatics Engineering\\
+Institut Teknologi Sepupuh Nopember,
+Indonesia\\ Email: risyanggi@gmail.com}
+\IEEEauthorblockA{\IEEEauthorrefmark{4}University of Warsaw\\
+Poland\\ Email: miodziu@gmail.com}}
+
+\maketitle
+
+% As a general rule, do not put math, special symbols or citations
+% in the abstract
+\begin{abstract}
+On the classic Ulam and Rényi searching problem, the questioner has to ask some yes-no questions to find an unknown value within the agreed search space, but the answerer is allowed to lie. There are already solutions of some variations on the Ulam and Rényi searching problem, ie on the type of query between range or subset and the maximum number of lies between one, two, three, and so on. But there is no perfect solution for non-interactive queries which the answerer can only answer the questioner's query after the questioner has finished querying all the queries. In this paper we will describe the perfect solution for non-interactive Ulam and Rényi searching problem with many lies using binary code with Hamming distance.
+\end{abstract}
+% no keywords
+
+\IEEEpeerreviewmaketitle
+
+\section{Introduction}
+
+In the development of information technology over the last few decades, information technology is often used as a solution to the problems that ever existed, which was previously solved manually by humans. Examples of problems that ever existed were one of the classic Ulam and Rényi searching problem. This problem can be illustrated by the presence of two players called questioner and answerer. Given search space $S_M = {0,\ldots,M-1}$, answerer choose a value $x \in S_M$. Questioner must find the value $x$ by asking some yes-no question, is "$x \in Q$?", where $Q \subset S_M$, then answerer answer with "yes" or "no". The main problem is the answerers can lie up $e$ times. The problem with this game is to find the minimum number of queries to be able to determine the value of $x$.
+
+% Penelitian tentang permasalahan Ulam selama ini hanya membahas tentang query yang interaktif dari penanya dan penjawab, baik dengan jumlah maksimal bohong satu, dua, tiga, dan lebih dari tiga. Namun belum ada jurnal ilmiah yang membahas permasalahan Ulam dengan query non-interaktif dengan jumlah bohong lebih dari dua. Kontribusi dari penelitian ini adalah menggunakan metode pencarian biner non-interaktif untuk menyelesaikan permasalahan Ulam.
+
+On the Ulam and Rényi searching problem, questioner and answerer must agree on some rules before playing. They include search space constraints, limits on how answerers are allowed to lie, question formats, and how interactions between answerer and questioner \cite{Pelc2002}. First, questioner and answerer agree on the search space $S_M$, which has $M$ numbers, answerer can only choose a number $x$ within $\{0,\ldots,M-1\}$.
+
+The rule of how the answerers are allowed to lie is the fundamental rule in the Ulam and Rényi search game. The rules of probability lie triggered by Rényi and the lie number rule triggered by Ulam \cite{Ulam1991}. On a globally bounded error probability, the probability of the answerer may lie is $r$, so the answerer may lie up to $rn$ times where $n$ is number of question and $r<1$ \cite{Dhagat1992}. Pada aturan jumlah bohong, variasi beragam antara maksimal penjawab dapat berbohong hanya satu \cite{Ellis2008} \cite{Pelc1988}, dua \cite{Cicalese2000}, tiga \cite{Negro1992}, dan lebih dari tiga \cite{Berlekamp1998} \cite{Deppe2004}.
+
