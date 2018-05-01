@@ -4,152 +4,92 @@
 #include <string>
 #include <vector>
 
+#define MAX_M 4096
+
 using namespace std;
 
 int main(int argc, char const *argv[]) {
     int t; // test cases
     int M, e, q; // a test case
-    int max, min;
+    int m; // log2(M)
+    int d; // minimal distance
+    int min;
 
     string s;
     char flag = 0;
     vector <string> queries;
-    map <int, int> distances[4096];
-    map <char, int> counter;
-    int max_query;
+    short distances[MAX_M]; // only distance from 0 to 1..M
+    short minimal[MAX_M / 2]; // param: d needed; return: query
+    short binary;
 
-    // scanf("%d", &t);
     cin >> t;
     while (t--) {
-        /* Clear the cache */
-        queries.clear();
-        //*/
-        // scanf("%d%d%d", &n, &w, &m);
-        cin >> M >> e;
+        queries.clear(); // Clear the cache
 
-        max_query = (2*e + 1) * M;
+        cin >> M >> e >> min;
+        m = log2(M);
+        d = (2*e + 1);
 
+        /* reset the distances */
         for (int i = 0; i < M; ++i) {
-            for (int j = i+1; j < M; ++j) {
-                distances[i][j] = 0;
-            }
+            minimal[(i+1)/2] = 0; // and the minimal
+            distances[i] = 0;
         }
 
-        /* Generate the initial binary */
-        // int ceilog2 = ceil(log2(n));
-        // for (int i = 0, pow2 = 1; i < ceilog2; ++i, pow2 *= 2) {
-        //     s = "";
-        //     flag = 1;
-        //     int j;
-        //     for (j = 0; j < n; ++j) {
-        //         if (j % pow2 == 0) {
-        //             flag = !flag; // reverse flag
-        //         }
-        //         s += flag + '0';
-        //     }
-        // }
-        if (queries.empty()) {
-            s = "";
-            for (int i = 0; i < M; ++i) {
-                // s += '0' + (i >= M/2);
-                s += '0' + (i % 2);
-            }
-            queries.push_back(s);
-        }
+        /* Bikin query template */
+        for (int i = 1; i < M; ++i) {
+            string ans = "";
+            min = 999;
+            // binary start from 0 to M
+            for (int j = 0; j < M; ++j) {
+                int g = i;
+                int two = j;
+                binary = 0;
+                // convert int g to binary q
+                // same as for q in query
+                for (int k = 0; k < m; k++) {
+                    short q = g & 1;
+                    g = g >> 1;
 
-        char ready = 1; // the first query always ready
+                    binary = binary ^ (q & (two & 1));
+                    two = two >> 1;
+                }
+                ans += '0' + binary;
 
-        while (1) {
-            /* update the distance based on query */
-            if (ready) {
-                max = -1;
-                min = 1000;
-                for (int i = 0; i < M; ++i) {
-                    for (int j = i+1; j < M; ++j) {
-                        distances[i][j] += (s[i] != s[j]);
-                        if (distances[i][j] < min) {
-                            min = distances[i][j];
-                        }
-                        if (distances[i][j] > max) {
-                            max = distances[i][j];
-                        }
+                if (j != 0) {
+                    distances[j] += (ans[0] != binary + '0');
+                    if (distances[j] < min) {
+                        min = distances[j];
                     }
                 }
-                cout << s << endl;
-                queries.push_back(s);
-
-                /* reset the query */
-                s = "0";
-                for (int i = 1; i < M; ++i) {
-                    s += "x";
+                if (minimal[min] == 0) {
+                    minimal[min] = i;
                 }
-            } else { // kalau masih perlu dipancing biar x nya bisa diisi
-                cout << s << " => ";
-                for (int i = 0; i < M; ++i) {
-                    if (s[i] == 'x') {
-                        s[i] = '0' + (i % 2);
-                        break;
-                    }
-                }
-                cout << s << endl;
             }
+            // cout << ans << "(" << min << ")"<< endl;
+            queries.push_back(ans);
 
-            if (min >= 2*e + 1) {
+            if (min >= d) {
                 break;
             }
-            if (queries.size() >= max_query) {
-                break;
-            }
+        }
 
-            /* generate query */
-            ready = 0;
-            counter['0'] = 1;
-            counter['1'] = 0;
-            for (int i = 0; i < M; ++i) {
-                for (int j = i+1; j < M; ++j) {
-                    // cout << s << endl;
-                    if (distances[i][j] == min) { // brarti dibedain
-                        if (s[i] != 'x') {
-                            s[j] = s[i] == '0' ? '1' : '0';
-                            counter[s[j]]++;
-                        } else if (s[j] != 'x') {
-                            s[i] = s[j] == '0' ? '1' : '0';
-                            counter[s[i]]++;
-                        }
-                    } else if (distances[i][j] == max) { // brarti disamain
-                        if (s[i] != 'x') {
-                            s[j] = s[i] == '1' ? '1' : '0';
-                            counter[s[j]]++;
-                        } else if (s[j] != 'x') {
-                            s[i] = s[j] == '1' ? '1' : '0';
-                            counter[s[i]]++;
-                        }
-                    }
-                    if (counter['0'] > M/2 || counter['1'] > M/2) { // ini harusnya pake >=, tapi jadinya loop forever
-                        break;
-                    }
-                }
-                if (counter['0'] > M/2 || counter['1'] > M/2) { // ini harusnya pake >=, tapi jadinya loop forever
-                    break;
-                }
-            }
+        int rounds = d / (M / 2);
+        int mod = d % (M / 2);
 
-            /* Fill the rest x with the loser */
-            if (counter['0'] > M/2 || counter['1'] > M/2) {
-                cout << s << ": ";
-                char filler = counter['0'] > counter['1'] ? '1' : '0';
-                for (int i = 0; i < M; ++i) {
-                    if (s[i] == 'x') {
-                        s[i] = filler;
-                    }
-                }
-                ready = 1;
+        // total query needed
+        cout << rounds * (M - 1) + minimal[mod] << endl;
+
+        // round query
+        for (int i = 0; i < rounds; ++i) {
+            for (int j = 0; j < queries.size(); ++j) {
+                cout << queries[j] << endl;
             }
         }
 
-        cout << queries.size() << endl;
-        for (int i = 0; i < queries.size(); ++i) {
-            // cout << queries[i] << endl;
+        // mod query
+        for (int i = 0; i < minimal[mod]; ++i) {
+            cout << queries[i] << endl;
         }
 
     }

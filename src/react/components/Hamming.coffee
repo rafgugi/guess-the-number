@@ -3,7 +3,7 @@ createReactClass = require 'create-react-class'
 combinatoric = require '../combinatoric'
 dom = React.createElement
 
-{abs, min, max, log2, ceil, round, pow} = Math
+{abs, min, max, log2, ceil, floor, round, pow} = Math
 lieLimit = 16 # limitation of lie by the program
 
 Hamming = createReactClass
@@ -81,6 +81,17 @@ Hamming = createReactClass
     queries = q.split '\n'
 
     for query in queries
+      if query.length is 0 then continue
+      if query.length is log2 range
+        ans = ''
+        for j in [0...range] by 1
+          two = j
+          binary = 0
+          for q in query
+            binary ^= q & (two & 1)
+            two = floor(two / 2)
+          ans += '' + binary
+        query = ans;
       for i in [0...range] by 1
         codewords[i] += "" + query[i]
         for j in [i+1...range] by 1
@@ -91,7 +102,7 @@ Hamming = createReactClass
   queryValidator: (q, range) ->
     queries = q.split '\n'
     for query in queries
-      if query.length isnt range
+      if query.length isnt range and query.length isnt log2(range) and query.length isnt 0
         console.log "query harus berjumlah #{range} (#{query.length})"
         return false
     return true
