@@ -13,20 +13,19 @@ int main(int argc, char const *argv[]) {
     int M, e, q; // a test case
     int m; // log2(M)
     int d; // minimal distance
-    int min;
-
-    string s;
-    char flag = 0;
+    int the_real_M; // trick if M isn't power of 2
     vector <string> queries;
     short distances[MAX_M]; // only distance from 0 to 1..M
     short minimal[MAX_M / 2]; // param: d needed; return: query
-    short binary;
 
     cin >> t;
     while (t--) {
         queries.clear(); // Clear the cache
+        cin >> M >> e >> m; // variabel m buat coba coba
 
-        cin >> M >> e >> min;
+        the_real_M = M;
+        M = pow(2, ceil(log2(M)));
+
         m = log2(M);
         d = (2*e + 1);
 
@@ -39,14 +38,14 @@ int main(int argc, char const *argv[]) {
         /* Bikin query template */
         for (int i = 1; i < M; ++i) {
             string ans = "";
-            min = 999;
-            // binary start from 0 to M
+            int min = 999;
+            /* binary start from 0 to M */
             for (int j = 0; j < M; ++j) {
                 int g = i;
                 int two = j;
-                binary = 0;
-                // convert int g to binary q
-                // same as for q in query
+                short binary = 0;
+                /* convert int g to binary q
+                 * same as for q in query */
                 for (int k = 0; k < m; k++) {
                     short q = g & 1;
                     g = g >> 1;
@@ -56,42 +55,36 @@ int main(int argc, char const *argv[]) {
                 }
                 ans += '0' + binary;
 
-                if (j != 0) {
+                if (j != 0) { // update distance from the ans[0] view
                     distances[j] += (ans[0] != binary + '0');
                     if (distances[j] < min) {
                         min = distances[j];
                     }
                 }
-                if (minimal[min] == 0) {
+                if (minimal[min] == 0) { // see above
                     minimal[min] = i;
                 }
             }
-            // cout << ans << "(" << min << ")"<< endl;
-            queries.push_back(ans);
+            queries.push_back(ans.substr(0, the_real_M)); // only the real M
 
             if (min >= d) {
                 break;
             }
         }
 
+        /* total query needed */
         int rounds = d / (M / 2);
         int mod = d % (M / 2);
-
-        // total query needed
         cout << rounds * (M - 1) + minimal[mod] << endl;
 
-        // round query
-        for (int i = 0; i < rounds; ++i) {
+        for (int i = 0; i < rounds; ++i) { // round query
             for (int j = 0; j < queries.size(); ++j) {
                 cout << queries[j] << endl;
             }
         }
-
-        // mod query
-        for (int i = 0; i < minimal[mod]; ++i) {
+        for (int i = 0; i < minimal[mod]; ++i) { // mod query
             cout << queries[i] << endl;
         }
-
     }
     return 0;
 }
