@@ -1,6 +1,5 @@
 #include <cmath>
 #include <iostream>
-#include <map>
 #include <string>
 #include <vector>
 
@@ -10,7 +9,7 @@ using namespace std;
 
 int main(int argc, char const *argv[]) {
     int t; // test cases
-    int M, e, q; // a test case
+    int M, e, max_query_allowed; // a test case
     int m; // log2(M)
     int d; // minimal distance
     int the_real_M; // trick if M isn't power of 2
@@ -21,21 +20,21 @@ int main(int argc, char const *argv[]) {
     cin >> t;
     while (t--) {
         queries.clear(); // Clear the cache
-        cin >> M >> e >> m; // variabel m buat coba coba
+        cin >> M >> e >> max_query_allowed; // variabel m buat coba coba
 
         the_real_M = M;
-        M = pow(2, ceil(log2(M)));
+        M = pow(2, ceil(log2(M))); // M is the closest power(2)
 
         m = log2(M);
         d = (2*e + 1);
 
-        /* reset the distances */
+        /* reset the distances and the minimal */
         for (int i = 0; i < M; ++i) {
-            minimal[(i+1)/2] = 0; // and the minimal
+            minimal[(i+1)/2] = 0;
             distances[i] = 0;
         }
 
-        /* Bikin query template */
+        /* Make a perfect (M-1,M,M/2) binary code */
         for (int i = 1; i < M; ++i) {
             string ans = "";
             int min = 999;
@@ -61,13 +60,13 @@ int main(int argc, char const *argv[]) {
                         min = distances[j];
                     }
                 }
-                if (minimal[min] == 0) { // see above
-                    minimal[min] = i;
-                }
+            }
+            if (minimal[min] == 0) { // see above
+                minimal[min] = i;
             }
             queries.push_back(ans.substr(0, the_real_M)); // only the real M
 
-            if (min >= d) {
+            if (min >= d) { // if min Hamming distance reaches d, stop
                 break;
             }
         }
@@ -75,15 +74,20 @@ int main(int argc, char const *argv[]) {
         /* total query needed */
         int rounds = d / (M / 2);
         int mod = d % (M / 2);
-        cout << rounds * (M - 1) + minimal[mod] << endl;
+        int total = rounds * (M - 1) + minimal[mod];
+        if (total <= max_query_allowed) {
+            cout << total << endl;
 
-        for (int i = 0; i < rounds; ++i) { // round query
-            for (int j = 0; j < queries.size(); ++j) {
-                cout << queries[j] << endl;
+            for (int i = 0; i < rounds; ++i) { // round query
+                for (int j = 0; j < queries.size(); ++j) {
+                    cout << queries[j] << endl;
+                }
             }
-        }
-        for (int i = 0; i < minimal[mod]; ++i) { // mod query
-            cout << queries[i] << endl;
+            for (int i = 0; i < minimal[mod]; ++i) { // mod query
+                cout << queries[i] << endl;
+            }
+        } else {
+            cout << 0 << endl;
         }
     }
     return 0;
