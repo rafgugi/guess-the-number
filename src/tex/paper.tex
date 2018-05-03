@@ -145,7 +145,7 @@ Pada uji kasus yang keempat penanya memberikan query yang lebih sedikit dari jum
 \end{exmp}
 
 
-\section{Backround from coding theory}
+\section{Backround of binary code}
 
 Tujuan utama dari teori pengkodean (\textit{coding theory}) adalah bagaimana mengirimkan pesan pada kanal yang mengandung derau (\textit{noisy channel}) \cite{VanLint2016}. Misal jika ada delapan macam kata pesan yang akan dikirim, maka kita merepresentasikan pesan tersebut menjadi bitstring biner dengan panjang 3. Namun jika pesan tersebut dikirm langsung melewati kanal yang mengandung derau, bisa jadi misalkan ada 1 bit akan tertukar, misal $001$ menjadi $011$. Jika terjadi seperti itu, maka sebuah kata dapat tertukar menjadi kata yang lain.
 
@@ -172,8 +172,6 @@ wt(\vec{x}) = |\{i \in {1,\ldots,n} \mid x_i \neq 0\}|
 
 Bobot dari bitstring $\vec{x}$ didefinisikan dengan $wt(\vec{x})$, yaitu jumlah digit pada $\vec{x}$ yang bukan $0$ seperti pada \refeq{eq:wt}. Sebagai contohnya, $wt(00101) = 2$ dan $wt(11111) = 5$. Jika dihubungkan dengan jarak Hamming, jika $\vec{x}+\vec{e} = \vec{y}$ maka $d_H(\vec{x},\vec{y}) = wt(\vec{x}+\vec{y})$.
 
-
-
 Terdapat sebuah sifat pada jarak Hamming yang bernama segitiga pertidaksamaan (\textit{triangle inequality}) \cite{VanLint2016}.
 \begin{equation} \label{eq:dh_unequal}
 d_H(\vec{x},\vec{y}) \le d_H(\vec{x},\vec{z}) + d_H(\vec{y},\vec{z})
@@ -183,7 +181,7 @@ Dari \refeq{eq:dh_unequal}, misalkan $\vec{z}$ adalah $\vec{0}$ yaitu string bin
 wt(\vec{x}+\vec{y}) \le wt(\vec{x}) + wt(\vec{y})
 \end{equation}
 
-Kode biner (\textit{binary code}) adalah sejumlah $M$ bitstring biner dengan panjang masing-masing bitstring adalah $n$ dan jarak Hamming pada masing masing bitstring adalah $d$. Mari kita ambil contoh $M=8$, $n=6$, dan $d=3$ pada Gambar \ref{fig:binarycode683}. Parameter pada kode ini adalah $(6,8,3)2$, yaitu kode biner yang ditunjukkan pada angka 2, panjang bitstring 6, berisi 8 bitstring, dengan jarak Hamming minimal 3. Bitstring pada kode biner selanjutnya disebut kata kode (\textit{codeword}).
+Kode biner (\textit{binary code}) adalah sejumlah $M$ bitstring biner dengan panjang masing-masing bitstring adalah $n$ dan jarak Hamming pada masing masing bitstring adalah $d$. Mari kita ambil contoh $M=8$, $n=6$, dan $d=3$ pada Gambar \ref{fig:binarycode683}. Parameter pada kode ini adalah $(6,8,3)_2$, yaitu kode biner yang ditunjukkan pada angka 2, panjang bitstring 6, berisi 8 bitstring, dengan jarak Hamming minimal 3. Bitstring pada kode biner selanjutnya disebut kata kode (\textit{codeword}).
 
 \begin{figure}
 \centering
@@ -193,11 +191,11 @@ Kode biner (\textit{binary code}) adalah sejumlah $M$ bitstring biner dengan pan
 010101  110011
 011110  111000
 \end{BVerbatim}
-\caption{Kode biner $(6,8,3)2$}
+\caption{Kode biner $(6,8,3)_2$}
 \label{fig:binarycode683}
 \end{figure}
 
-Dengan kode biner $(6,8,3)2$ pada Gambar \ref{fig:binarycode683}, pengirim dan penerima menyepakati hanya kata kode yang akan dikirim dan diterima. Dengan asumsi hanya ada satu bit yang dapat error, pesan error tetap dapat dikembalikan ke bentuk semula. Misal $111100$ menjadi $111000$, $000011$ menjadi $001011$, dan seterusnya. Jarak Hamming antara setiap dua kata kode yang berbeda adalah 3, berarti dari setiap kata kode, terdapat sejumlah bitstring selain kata kode berjarak 1.
+Dengan kode biner $(6,8,3)_2$ pada Gambar \ref{fig:binarycode683}, pengirim dan penerima menyepakati hanya kata kode yang akan dikirim dan diterima. Dengan asumsi hanya ada satu bit yang dapat error, pesan error tetap dapat dikembalikan ke bentuk semula. Misal $111100$ menjadi $111000$, $000011$ menjadi $001011$, dan seterusnya. Jarak Hamming antara setiap dua kata kode yang berbeda adalah 3, berarti dari setiap kata kode, terdapat sejumlah bitstring selain kata kode berjarak 1.
 
 \begin{figure}
 \centering
@@ -206,12 +204,10 @@ Dengan kode biner $(6,8,3)2$ pada Gambar \ref{fig:binarycode683}, pengirim dan p
 \label{fig:codewordsball}
 \end{figure}
 
-Notasi umum kode biner adalah $(n,M,d)2$. Kita bisa asumsikan ada $M$ bola yang tidak saling bersinggungan atau berpotongan, dengan radius bola $e$ seperti pada Gambar \ref{fig:codewordsball}. Jarak antara satu bola dengan bola yang lain adalah minimal $d$, sehingga didapatkan \refeq{eq:de}.
+Notasi umum kode biner adalah $(n,M,d)_2$. Kita bisa asumsikan ada $M$ bola yang tidak saling bersinggungan atau berpotongan, dengan radius bola $e$ seperti pada Gambar \ref{fig:codewordsball}. Jarak antara satu bola dengan bola yang lain adalah minimal $d$, sehingga didapatkan \refeq{eq:de}.
 \begin{equation} \label{eq:de}
 d = 2e + 1
 \end{equation}
-
-%Dari ilustrasi bola-bola tersebut dapat disimpulkan bahwa jika dikirimkan sebuah kata kode, bitstring setelah terjadi maksimal $e$ pertukaran bit, hasil tetap hanya dekat dengan satu kata kode saja.
 
 
 \section{Solusi permainan Ulam non-interaktif}
@@ -225,7 +221,7 @@ Penanya memenangkan permainan jika $L'$ memiliki paling banyak satu row dengan $
 Untuk meyakinkan bahwa setelah seluruh jawaban $\vec{z}$ diberikan dan diaplikasikan ke matrix $L$ dan tidak pasti hanya ada 1 baris yang memiliki nilai $1$ antara $n-e \le wt(\vec{x_r}) \le n$, adalah dengan memastikan bahwa jarak Hamming setiap row yang berbeda pada $L'$ adalah minimal $d$.
 
 \begin{lemma}
-Diketahui integer $n$, $M$, dan $d$. Jika $L'$ adalah kode biner $(n,M,d)2$ yang valid, maka pasti hanya ada paling banyak satu codeword $\vec{c}$ yang memiliki $0 \le wt(\vec{c}) \le e$.
+Diketahui integer $n$, $M$, dan $d$. Jika $L'$ adalah kode biner $(n,M,d)_2$ yang valid, maka pasti hanya ada paling banyak satu codeword $\vec{c}$ yang memiliki $0 \le wt(\vec{c}) \le e$.
 \end{lemma}
 
 \begin{proof}
@@ -261,10 +257,10 @@ wt(\vec{x}) &> e
 Jadi jika ada codeword $c$ dimana $0 \le wt(c) \le e$ maka $wt(\vec{x}) > e$ dimana $\vec{x} \neq c$.
 \end{proof}
 
-Dari pembuktian diatas, dapat disimpulkan bahwa untuk menyelesaikan permainan pencarian Ulam non-interaktif dengan batas pencarian $M$ dan maksimal kebohongan $e$, transpose dari $n$ query yang dibuat harus membentuk kode biner $(n,M,d)2$.
+Dari pembuktian diatas, dapat disimpulkan bahwa untuk menyelesaikan permainan pencarian Ulam non-interaktif dengan batas pencarian $M$ dan maksimal kebohongan $e$, transpose dari $n$ query yang dibuat harus membentuk kode biner $(n,M,d)_2$.
 
 \begin{lemma}
-Diketahui integer $n$, $M$, dan $d$. Jika $L'$ adalah kode biner $(n,M,d)2$ yang valid, maka jika setiap codeword $\vec{c}$ pada $L'$ ditambah dengan $\vec{z} \mid \vec{z} \in \mathbb{F}_2^n$ maka hasilnya akan tetap menjadi kode biner $(n,M,d)2$ yang valid.  
+Diketahui integer $n$, $M$, dan $d$. Jika $L'$ adalah kode biner $(n,M,d)_2$ yang valid, maka jika setiap codeword $\vec{c}$ pada $L'$ ditambah dengan $\vec{z} \mid \vec{z} \in \mathbb{F}_2^n$ maka hasilnya akan tetap menjadi kode biner $(n,M,d)_2$ yang valid.  
 \end{lemma}
 
 \begin{proof}
@@ -281,11 +277,38 @@ Jadi jika $d_H(\vec{x_i},\vec{y_j}) \ge d$ maka $d_H(\vec{x_i}+\vec{z},\vec{y_j}
 
 \section{Generate query with generator matrix}
 
-An $(n,M,d)2$ binary code can be generated by using combinatorial addition of a generator matrix $G$ $n \times m$ where $2^m = M$. Perfect generator matrix $G = [n,M]$ can make a perfect binary code $(n,M,d)2$ which each two different codewords have Hamming distance exactly $M/2$. Assume that $g_i$ is row of $G$. Then we iterate each $g_i$ to make new query until Hamming distance reaches what we need. If we need more than $M/2$ Hamming distance, repeat.
+An $(n,M,d)_2$ binary code can be generated by using linear combination of a generator matrix $G$ where $G$ is a $n \times m$ matrix and $2^m = M$. Generator matrix $[7,3,4]2$ in Figure \ref{fig:generator734} can create a perfect binary code $(7,8,4)_2$ code in Figure \ref{fig:binarycode784}. 
 
-\begin{enumerate}
-	\item A $g$ is a binary string $\mathbb{F}_2^m$
-\end{enumerate}
+A generator matrix $[n, m]2$ where $n = 2^m - 1$ and each column is a linear combination of $m$ bit binary string except $\vec{0}$ can make a perfect binary code $(n,M,d)_2$ where $d = M/2$. \textbf{\textit{We need a profing :(}}
+
+\begin{figure}
+\centering
+\begin{BVerbatim}
+1001101
+0101011
+0010111
+\end{BVerbatim}
+\caption{Generator matrix $[7,3]_2$}
+\label{fig:generator734}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{BVerbatim}
+0000000  1000111
+0011101  1000111
+0101011  1000111
+0110110  1000111
+\end{BVerbatim}
+\caption{Perfect binary code $(7,8,4)_2$}
+\label{fig:binarycode784}
+\end{figure}
+
+Assume that $g_i$ is row of $G$. Then we iterate each $g_i$ to make new query until Hamming distance reaches what we need. If we need more than $M/2$ Hamming distance, repeat.
+
+% \begin{enumerate}
+% 	\item A $g$ is a binary string $\mathbb{F}_2^m$
+% \end{enumerate}
 
 
 \bibliography{holy}
