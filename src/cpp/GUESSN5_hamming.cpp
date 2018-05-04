@@ -1,4 +1,5 @@
 #include <cmath>
+#include <cstdio>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -35,36 +36,52 @@ int main(int argc, char const *argv[]) {
         }
 
         /* Make a perfect (M-1,M,M/2) binary code */
-        for (int i = 1; i < M; ++i) {
+        for (int i = 1; i < M; i <<= 1) {
             string ans = "";
             int min = 999;
             /* binary start from 0 to M */
             for (int j = 0; j < M; ++j) {
-                int g = i;
-                int two = j;
-                short binary = 0;
-                /* convert int g to binary q
-                 * same as for q in query */
-                for (int k = 0; k < m; k++) {
-                    short q = g & 1;
-                    g = g >> 1;
-
-                    binary = binary ^ (q & (two & 1));
-                    two = two >> 1;
+                int bitstring = i & j;
+                short binary;
+                /* counting bit set */
+                for (binary = 0; bitstring; bitstring >>= 1) {
+                    binary ^= bitstring & 1;
                 }
                 ans += '0' + binary;
 
                 if (j != 0) { // update distance from the ans[0] view
-                    distances[j] += (ans[0] != binary + '0');
+                    distances[j] += (ans[0] != ans[j]);
+                }
+            }
+            queries.push_back(ans.substr(0, the_real_M)); // only the real M
+        }
+        minimal[1] = m;
+
+        for (int i = M-1; i; --i) {
+            if ((i & (i - 1)) == 0) continue; // power of two done above
+            string ans = "";
+            int min = 999;
+            /* binary start from 0 to M */
+            for (int j = 0; j < M; ++j) {
+                int bitstring = i & j;
+                short binary = 0;
+                /* counting bit set */
+                for (binary = 0; bitstring; bitstring >>= 1) {
+                    binary ^= bitstring & 1;
+                }
+                ans += '0' + binary;
+
+                if (j != 0) { // update distance from the ans[0] view
+                    distances[j] += (ans[0] != ans[j]);
                     if (distances[j] < min) {
                         min = distances[j];
                     }
                 }
             }
-            if (minimal[min] == 0) { // see above
-                minimal[min] = i;
-            }
             queries.push_back(ans.substr(0, the_real_M)); // only the real M
+            if (minimal[min] == 0) { // see above
+                minimal[min] = queries.size();
+            }
 
             if (min >= d) { // if min Hamming distance reaches d, stop
                 break;
@@ -75,9 +92,11 @@ int main(int argc, char const *argv[]) {
         int rounds = d / (M / 2);
         int mod = d % (M / 2);
         int total = rounds * (M - 1) + minimal[mod];
-        if (total <= max_query_allowed) {
-            cout << total << endl;
+        int old = d * m;
+        // printf("(%d,%d) %d:%d [%s]\n", rounds, mod, total, old, total <= old ? "true" : "false");
 
+        if (total <= old) {
+            cout << total << endl;
             for (int i = 0; i < rounds; ++i) { // round query
                 for (int j = 0; j < queries.size(); ++j) {
                     cout << queries[j] << endl;
@@ -87,7 +106,12 @@ int main(int argc, char const *argv[]) {
                 cout << queries[i] << endl;
             }
         } else {
-            cout << 0 << endl;
+            cout << old << endl;
+            for (int i = 0; i < d; ++i) {
+                for (int j = 0; j < m; ++j) {
+                    cout << queries[j] << endl;
+                }
+            }
         }
     }
     return 0;
