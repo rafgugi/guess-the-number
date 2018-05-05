@@ -35,7 +35,7 @@ int main(int argc, char const *argv[]) {
             distances[i] = 0;
         }
 
-        /* Make a perfect (M-1,M,M/2) binary code */
+        /* Make a (m,M,1) binary code */
         for (int i = 1; i < M; i <<= 1) {
             string ans = "";
             int min = 999;
@@ -57,6 +57,7 @@ int main(int argc, char const *argv[]) {
         }
         minimal[1] = m;
 
+        /* Make a perfect (M-1,M,M/2) binary code */
         for (int i = M-1; i; --i) {
             if ((i & (i - 1)) == 0) continue; // power of two done above
             string ans = "";
@@ -91,23 +92,21 @@ int main(int argc, char const *argv[]) {
         /* total query needed */
         int rounds = d / (M / 2);
         int mod = d % (M / 2);
-        int total = rounds * (M - 1) + minimal[mod];
-        int old = d * m;
-        // printf("(%d,%d) %d:%d [%s]\n", rounds, mod, total, old, total <= old ? "true" : "false");
+        bool new_algo = minimal[mod] < mod * m;
+        int total = rounds * (M - 1) + (new_algo ? minimal[mod] : mod * m);
 
-        if (total <= old) {
-            cout << total << endl;
-            for (int i = 0; i < rounds; ++i) { // round query
-                for (int j = 0; j < queries.size(); ++j) {
-                    cout << queries[j] << endl;
-                }
+        cout << total << endl;
+        for (int i = 0; i < rounds; ++i) { // round query
+            for (int j = 0; j < queries.size(); ++j) {
+                cout << queries[j] << endl;
             }
+        }
+        if (new_algo) {
             for (int i = 0; i < minimal[mod]; ++i) { // mod query
                 cout << queries[i] << endl;
             }
         } else {
-            cout << old << endl;
-            for (int i = 0; i < d; ++i) {
+            for (int i = 0; i < mod; ++i) { // old query
                 for (int j = 0; j < m; ++j) {
                     cout << queries[j] << endl;
                 }
