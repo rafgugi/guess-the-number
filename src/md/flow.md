@@ -1,4 +1,4 @@
-## Guessn5
+## This is no longer used
 
 ### Bonus paper
 

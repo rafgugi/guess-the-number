@@ -11,12 +11,10 @@ using namespace std;
 int main(int argc, char const *argv[]) {
     int t; // test cases
     int M, e, max_query_allowed; // a test case
-    int m; // log2(M)
-    int d; // minimal distance
     int the_real_M; // trick if M isn't power of 2
     vector <string> queries;
     short distances[MAX_M]; // only distance from 0 to 1..M
-    short minimal[MAX_M / 2]; // param: d needed; return: query
+    short minimal[MAX_M / 2 + 1]; // param: d needed; return: query
 
     cin >> t;
     while (t--) {
@@ -26,8 +24,8 @@ int main(int argc, char const *argv[]) {
         the_real_M = M;
         M = pow(2, ceil(log2(M))); // M is the closest power(2)
 
-        m = log2(M);
-        d = (2*e + 1);
+        int m = log2(M); // log2(M)
+        int d = (2*e + 1); // minimal distance
 
         /* reset the distances and the minimal */
         for (int i = 0; i < M; ++i) {
