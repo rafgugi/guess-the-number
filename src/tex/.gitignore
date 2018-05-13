@@ -1,4 +1,12 @@
-*
-!.gitignore
-!*.bib
-!*.tex
+*.aux
+*.bbl
+*.blg
+*.gz
+*.lof
+*.log
+*.lol
+*.lot
+*.pdf
+*.toc
+*.xml
+*blx.bib

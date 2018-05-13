@@ -1,0 +1,37 @@
+\documentclass[a4paper, twoside, 11pt, listof=nochaptergap] {book}
+
+\input {util/packages}
+\input {util/utils}
+\input {util/styles}
+\input {util/variables}
+\input {util/setting}
+\input {lang/indonesian/hyphenation}
+\addbibresource{holy.bib}
+
+\begin{document}
+  %-- Things that should go first but can't be placed in preamble
+  % Figure numbering uses chapter numbering as prefix
+  \counterwithin {figure}{chapter}
+  
+  \pagestyle {normal}
+  %--
+  
+  \frontmatter
+    \include {buku/sampul}
+    % \include {buku/lembar_pengesahan}
+    \include {buku/abstrak}
+    \include {buku/kata_pengantar}
+    \include {buku/daftar_isi}
+  
+  \mainmatter
+    \include {buku/bab1} \cleardoublepage
+    \include {buku/bab2} \cleardoublepage
+    \include {buku/bab3} \cleardoublepage
+    \include {buku/bab4} \cleardoublepage
+    \include {buku/bab5} \cleardoublepage
+    \include {buku/bab6} \cleardoublepage
+  
+  \backmatter
+    \include {buku/daftar_pustaka}
+    \include {buku/biodata}
+\end{document}

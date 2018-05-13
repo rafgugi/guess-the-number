@@ -70,7 +70,7 @@ Dalam perkembangan dunia teknologi informasi selama beberapa dekade terakhir, te
 
 Pada permasalahan pencarian Ulam, penanya dan penjawab harus menyepakati beberapa peraturan sebelum bermain. Peraturan tersebut meliputi batasan ruang pencarian, batasan bagaimana penjawab diperbolehkan berbohong, format pertanyaan, dan bagaimana interaksi antara penjawab dan penanya \cite{Pelc2002}. Pertama penanya dan penjawab harus menyepakati batas ruang pencarian $S_M$, yaitu $M$ angka, penjawab hanya boleh menentukan angka $x$ diantara dalam set $\{0,\ldots,M-1\}$.
 
-Aturan bagaimana penjawab diperbolehkan berbohong adalah aturan yang fundamental dalam permainan pencarian Ulam dan Rényi. Aturan probabilitas berbohong dicetuskan oleh Rényi dan aturan jumlah bohong dicetuskan oleh Ulam \cite{Ulam1991}. Pada kebohongan probabilitas yang diikiat secara global, probabilitas penjawab melakukan kebohongan ditentukan oleh $r$, sehingga maksimal penjawab melakukan kebohongan adalah $rn$ dimana $n$ adalah jumlah pertanyaan dan $r<1$ \cite{Dhagat1992}. Pada aturan jumlah bohong, variasi beragam antara maksimal penjawab dapat berbohong hanya satu \cite{Ellis2008} \cite{Pelc1988}, dua \cite{Cicalese2000}, tiga \cite{Negro1992}, dan lebih dari tiga \cite{Berlekamp1998} \cite{Deppe2004}.
+Aturan bagaimana penjawab diperbolehkan berbohong adalah aturan yang fundamental dalam permainan pencarian Ulam dan Rényi. Aturan probabilitas berbohong dicetuskan oleh Rényi dan aturan jumlah bohong dicetuskan oleh Ulam \cite{StanislawMUlam1976}. Pada kebohongan probabilitas yang diikiat secara global, probabilitas penjawab melakukan kebohongan ditentukan oleh $r$, sehingga maksimal penjawab melakukan kebohongan adalah $rn$ dimana $n$ adalah jumlah pertanyaan dan $r<1$ \cite{Dhagat1999}. Pada aturan jumlah bohong, variasi beragam antara maksimal penjawab dapat berbohong hanya satu \cite{Ellis2008} \cite{Pelc1988}, dua \cite{Cicalese2000}, tiga \cite{Negro1992}, dan lebih dari tiga \cite{Berlekamp1998} \cite{Deppe2004}.
 
 Pada aturan format pertanyaan, terdapat beberapa variasi. Yang pertama adalah pertanyaan komparasi, bentuk pertanyaannya adalah "Apakah $x<a$?" dimana $a \in S_M$ \cite{Innes} \cite{Auletta1992}. Lalu ada pertanyaan interval dan bi-interval, bentuk pertanyaannya adalah "Apakah $x$ ada dalam interval $[a,b]$?" \cite{Peter2017} dan "Apakah $x$ ada dalam interval $[a,b] \cup [c,d]$?" \cite{Mundici1997}. Lalu format pertanyaan subset, bentuk pertanyaannya adalah "Apakah $x$ ada dalam $A$ dimana $A \subseteq S_M$" \cite{Katona} \cite{Macula1997}.
 
@@ -90,9 +90,9 @@ Tugas sesungguhnya dari permasalahan ini adalah bukan untuk mencari nilai $x$, t
 
 Batasan yang digunakan pada permasalahan Ulam adalah sebagai berikut:
 \begin{itemize}
-	\item Batas maksimum kasus uji adalah $2^7$.
-	\item Interval bilangan yang yang dicari berada pada $\{0,\ldots,M-1\}$, dengan n maksimum $2^12$.
-	\item Dataset yang digunakan adalah dataset pada permasalahan SPOJ GUESSN5.
+  \item Batas maksimum kasus uji adalah $2^7$.
+  \item Interval bilangan yang yang dicari berada pada $\{0,\ldots,M-1\}$, dengan n maksimum $2^12$.
+  \item Dataset yang digunakan adalah dataset pada permasalahan SPOJ GUESSN5.
 \end{itemize}
 
 \begin{figure}
@@ -255,7 +255,7 @@ Nah masalahnya, jika $d$ yang kita butuhkan kurang dari $M/2$, maka kita harus m
 % Assume that $g_i$ is row of $G$. Then we iterate each $g_i$ to make new query until Hamming distance reaches what we need. If we need more than $M/2$ Hamming distance, repeat.
 
 % \begin{enumerate}
-% 	\item A $g$ is a binary string $\mathbb{F}_2^m$
+%   \item A $g$ is a binary string $\mathbb{F}_2^m$
 % \end{enumerate}
 
 
