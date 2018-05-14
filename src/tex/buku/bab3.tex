@@ -2,3 +2,8 @@
 
 Pada bab ini akan dijelaskan desain algoritma yang akan digunakan untuk menyelesaikan permasalahan.
 
+
+
+Now again see a generator matrix $[7,3,4]_2$ in Figure \ref{fig:generator734} can create a perfect binary code $(7,8,4)_2$ code in Figure \ref{fig:binarycode784}. A generator matrix $[n, m, d]_2$ where $n = 2^m - 1$ and each \textbf{column} is a linear combination of $m$ bit binary string except $\vec{0}$ can make a perfect binary code $(n,M,d)_2$ where $d = M/2$. \textbf{\textit{We need a profing or citation..}}
+
+Nah masalahnya, jika $d$ yang kita butuhkan kurang dari $M/2$, maka kita harus menggunakan seminimal mungkin $n$ kolom pertama $[M-1,M,M/2]_2$ sehingga menghasilkan $[n,M,d]_2$. Asumsikan kita memiliki fungsi $\aleph(d)$ adalah berapa kolom pada generator matrix yang akan menghasilkan kode biner dengan minimal jarak Hamming $d$. Hal yang pasti adalah $\aleph(M/2) = M-1$ dan $\aleph(1) = {log}_2(m)$ (need proving). Worst case adalah $\aleph(d)=M/2 + d - 1$. Best case adalah karena ada $M-1$ kolom untuk $0 \leq d \leq M/2$, maka $\aleph(d) = d/2$ (sepertinya tidak mungkin). Nah problem kita adalah bagaimana mengurutkan kolom pada generator matrix sehingga $\aleph(d)$ sesempurna mungkin, atau bisa dikatakan $\aleph(d) - \aleph(d-1) \approx 2$.

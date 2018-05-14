@@ -13,20 +13,19 @@ Tugas sesungguhnya dari permasalahan ini adalah bukan untuk mencari nilai $x$, t
 Batasan yang digunakan pada permasalahan Ulam adalah sebagai berikut:
 \begin{itemize}
   \item Batas maksimum kasus uji adalah $2^7$.
-  \item Interval bilangan yang yang dicari berada pada $\{0,\ldots,M-1\}$, dengan n maksimum $2^12$.
+  \item Interval bilangan yang yang dicari berada pada $\{0,\ldots,M-1\}$, dengan n maksimum $2^{12}$.
   \item Dataset yang digunakan adalah dataset pada permasalahan SPOJ GUESSN5.
 \end{itemize}
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.6]{../img/example.png}
+\includegraphics[scale=0.43]{../img/example.png}
 \caption{Contoh kasus uji pada GUESSN5}
 \label{fig:guessn5_test_case}
 \end{figure}
 
 Gambar \ref{fig:guessn5_test_case} adalah contoh empat uji kasus dari permasalahan SPOJ GUESSN5.
 
-\begin{exmp}
 Pada uji kasus yang pertama hanya terdapat dua angka. Jika penjawab tidak berbohong, penjawab dapat menjawab pilihan
 \begin{align*}
 111111 \;\;& 000000\textrm{.}
@@ -52,35 +51,33 @@ Jika penjawab berbohong dua kali, penjawab dapat menjawab
 & 111001 & & 111010 & 111100 &\textrm{.}
 \end{align*}
 Penanya memenangkan permainan karena kemungkinan jawaban selain tersebut di atas membuat penjawab akan berbohong tiga kali.
-\end{exmp}
 
-\begin{exmp}
 Pada uji kasus yang kedua penjawab mencoba memberikan solusi namun jawabannya salah. Penanya dapat menjawab $111000$ yaitu jawaban yang valid karena jumlah bohong tiga kali untuk kedua kemungkinan angka. Pada kasus ini penanya kalah karena penanya membutuhkan query tambahan.
-\end{exmp}
 
-\begin{exmp}
 Pada uji kasus yang ketiga penanya tidak memberikan solusi.
-\end{exmp}
 
-\begin{exmp}
 Pada uji kasus yang keempat penanya memberikan query yang lebih sedikit dari jumlah query maksimal yang diperbolehkan. Dari semua kemungkinan jawaban penjawab, pasti hanya ada satu jawaban nilai $x$, jadi penanya memenangkan permainan.
-\end{exmp}
 
 
-\section{Backround of binary code}
+\section{Teori pengkodean}
 
 Tujuan utama dari teori pengkodean (\textit{coding theory}) adalah bagaimana mengirimkan pesan pada kanal yang mengandung derau (\textit{noisy channel}) \cite{VanLint2016}. Misal jika ada delapan macam kata pesan yang akan dikirim, maka kita merepresentasikan pesan tersebut menjadi bitstring biner dengan panjang 3. Namun jika pesan tersebut dikirm langsung melewati kanal yang mengandung derau, bisa jadi misalkan ada 1 bit akan tertukar, misal $001$ menjadi $011$. Jika terjadi seperti itu, maka sebuah kata dapat tertukar menjadi kata yang lain.
 
 Kita tahu bahwa jika kode biner sepanjang $n$ digunakan untuk membuat $2^n$ bitstring tidak dapat mendeteksi eror. Ide yang paling mungkin adalah pengirim dan penerima menyetujui sebuah metode enkripsi bitstring menjadi bitstring yang lebih panjang dan dapat mendeteksi maksimal sebanyak $e$ error menggunakan kode linear.
 
-Kode linear adalah kode yang paling banyak dipelajari karena struktur aljabar yang mudah dipelajari dibandingkan kode non-linear \cite{Huffman}. Bidang kode linear dapat dinotasikan sebagai $\mathbb{F}_q^n$, yaitu kode memiliki $q$ jenis elemen dan memiliki panjang $n$. Bentuk kode biner adalah $\mathbb{F}_2^n$, memiliki struktur aljabar penjumlahan dan pengurangan sebagai berikut.
+Kode linear adalah kode yang paling banyak dipelajari karena struktur aljabar yang mudah dipelajari dibandingkan kode non-linear \cite{Huffman}. Bidang kode linear dapat dinotasikan sebagai $\mathbb{F}_q^n$, yaitu kode memiliki $q$ jenis elemen dan memiliki panjang $n$. Bentuk kode biner adalah $\mathbb{F}_2^n$, memiliki struktur aljabar penjumlahan dan perkalian pada Gambar \ref{fig:algebra}.
 
+\begin{figure}
+\centering
 \begin{align*}
 0 + 0 &= 0 & 0 \cdot 0 &= 0 \\
 0 + 1 &= 1 & 0 \cdot 1 &= 0 \\
 1 + 0 &= 1 & 1 \cdot 0 &= 0 \\
 1 + 1 &= 0 & 1 \cdot 1 &= 1
 \end{align*}
+\caption{Operasi linear pada $\mathbb{F}_2$}
+\label{fig:algebra}
+\end{figure}
 
 \begin{equation} \label{eq:dh}
 d_H(\vec{x},\vec{y}) = |\{i \in {1,\ldots,n} \mid x_i \neq y_i\}|
@@ -103,6 +100,9 @@ Dari \refeq{eq:dh_unequal}, misalkan $\vec{z}$ adalah $\vec{0}$ yaitu string bin
 wt(\vec{x}+\vec{y}) \le wt(\vec{x}) + wt(\vec{y})
 \end{equation}
 
+
+\section{Kode biner}
+
 Kode biner (\textit{binary code}) adalah sejumlah $M$ bitstring biner dengan panjang masing-masing bitstring adalah $n$ dan jarak Hamming pada masing masing bitstring adalah $d$. Mari kita ambil contoh $M=8$, $n=6$, dan $d=3$ pada Gambar \ref{fig:binarycode683}. Parameter pada kode ini adalah $(6,8,3)_2$, yaitu kode biner yang ditunjukkan pada angka 2, panjang bitstring 6, berisi 8 bitstring, dengan jarak Hamming minimal 3. Bitstring pada kode biner selanjutnya disebut kata kode (\textit{codeword}).
 
 \begin{figure}
@@ -121,7 +121,7 @@ Dengan kode biner $(6,8,3)_2$ pada Gambar \ref{fig:binarycode683}, pengirim dan 
 
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{../img/codewordsball.png}
+\includegraphics[scale=0.6]{../img/codewordsball.png}
 \caption{Bola codeword yang tidak saling overlap}
 \label{fig:codewordsball}
 \end{figure}
@@ -131,12 +131,7 @@ Notasi umum kode biner adalah $(n,M,d)_2$. Kita bisa asumsikan ada $M$ bola yang
 d = 2e + 1
 \end{equation}
 
-
-\section{Generate binary code with generator matrix}
-
-An $(n,M,d)_2$ binary code can be generated by using linear combination of each row of a generator matrix $[n,m,d]_2$ where $2^m = M$. A Generator matrix $G$ is an $n \times m$ matrix. Now see that binary code $(6,8,3)_2$ in Figure \ref{fig:binarycode683} can be generated using generator matrix $[6,3,3]_2$ in Figure \ref{fig:generator633}. Assume that each row of $[6,3,3]_2$ is $g_1$, $g_2$, and $g_3$, then binary code $(6,8,3)_2$ is the linear combination of all vectors of the form ${\lambda}_1 g_1 + {\lambda}_2 g_2 + {\lambda}_3 g_3$ where $\lambda{_i} \in \mathbb{F}_2^6$.
-
-Now again see a generator matrix $[7,3,4]_2$ in Figure \ref{fig:generator734} can create a perfect binary code $(7,8,4)_2$ code in Figure \ref{fig:binarycode784}. A generator matrix $[n, m, d]_2$ where $n = 2^m - 1$ and each \textbf{column} is a linear combination of $m$ bit binary string except $\vec{0}$ can make a perfect binary code $(n,M,d)_2$ where $d = M/2$. \textbf{\textit{We need a profing or citation..}}
+Sebuah kode biner $(n,M,d)_2$ dapat dibangkitkan dari kombinasi linear dari setiap baris pada generator matrix $[n,m,d]_2$ dimana $2^m = M$. Generator matriks $G$ adalah matriks berukuran $n \times m$, dapat juga disebut basis dari sebuah kode biner \cite{VanLint2016}. Contoh kode biner $(6,8,3)_2$ pada Gambar \ref{fig:binarycode683} dapat dibangkitkan dari generator matriks $[6,3,3]_2$ pada Gambar \ref{fig:generator633}. Asumsikan bahwa setiap baris dari $[6,3,3]_2$ adalah $g_1$, $g_2$, and $g_3$, lalu kode biner $(6,8,3)_2$ adalah semua kombinasi linear penjumlahan dari semua vektor dalam bentuk ${\lambda}_1 g_1 + {\lambda}_2 g_2 + {\lambda}_3 g_3$ dimana $\lambda{_i} \in \mathbb{F}_2^6$.
 
 \begin{figure}
 \centering
@@ -172,4 +167,4 @@ Now again see a generator matrix $[7,3,4]_2$ in Figure \ref{fig:generator734} ca
 \label{fig:binarycode784}
 \end{figure}
 
-Nah masalahnya, jika $d$ yang kita butuhkan kurang dari $M/2$, maka kita harus menggunakan seminimal mungkin $n$ kolom pertama $[M-1,M,M/2]_2$ sehingga menghasilkan $[n,M,d]_2$. Asumsikan kita memiliki fungsi $\aleph(d)$ adalah berapa kolom pada generator matrix yang akan menghasilkan kode biner dengan minimal jarak Hamming $d$. Hal yang pasti adalah $\aleph(M/2) = M-1$ dan $\aleph(1) = {log}_2(m)$ (need proving). Worst case adalah $\aleph(d)=M/2 + d - 1$. Best case adalah karena ada $M-1$ kolom untuk $0 \leq d \leq M/2$, maka $\aleph(d) = d/2$ (sepertinya tidak mungkin). Nah problem kita adalah bagaimana mengurutkan kolom pada generator matrix sehingga $\aleph(d)$ sesempurna mungkin, atau bisa dikatakan $\aleph(d) - \aleph(d-1) \approx 2$.
+Dari sebuah kode biner, kita dapat membuat kode biner yang baru dengan memodifikasi kode biner yang sudah ada \cite{Huffman}. Modifikasi yang dapat dilakukan adalah menambah dan mengurangi kode. Dari sebuah kode biner $(n,M,d)_2$, dapat dilakukan pemotongan pada kolom tertentu sehingga kode biner menjadi $(n-1,M,d')_2$ dimana $d'=d \lor d'=d-1$. Begitu pula dengan penambahan kode, dari sebuah kode biner $(n,M,d)_2$, dapat dilakukan penambahan kode sehingga kode biner menjadi $(n+1,M,d')_2$ dimana $d'=d \lor d'=d+1$. 
