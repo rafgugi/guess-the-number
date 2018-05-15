@@ -1,8 +1,8 @@
-\chapter {DASAR TEORI}
+\chapter {KAJIAN PUSTAKA DAN DASAR TEORI}
 
 Pada bab ini, dasar teori yang digunakan sebagai landasan pengerjaan tugas akhir ini akan dijabarkan.
 
-\section{Problem formulation}
+\section{Formulasi permasalahan}
 
 Bentuk permasalahan Ulam yang dibahas pada paper ini diangkat dari online judge SPOJ oleh Micha\l{} Miodek \cite{guessn5}. Penjawab menentukan sebuah bilangan $x$ pada rentang $S_M=\{0,\ldots,M-1\}$. Anda sebagai penanya harus mencari nilai $x$ dengan memberikan maksimal $n$ query khusus apakah "$x \in Q$?", lalu penjawab menjawab "ya" atau "tidak" pada setiap query yang ditanyakan. Permasalahan utama adalah penjawab dapat berbohong sampai $e$ kali. Selain itu, penjawab hanya boleh menjawab query penanya setelah penanya selesai menanyakan semua query-nya. Tujuan dari Ulam adalah mencari jumlah query minimal untuk dapat menentukan nilai $x$.
 
@@ -59,6 +59,25 @@ Pada uji kasus yang ketiga penanya tidak memberikan solusi.
 Pada uji kasus yang keempat penanya memberikan query yang lebih sedikit dari jumlah query maksimal yang diperbolehkan. Dari semua kemungkinan jawaban penjawab, pasti hanya ada satu jawaban nilai $x$, jadi penanya memenangkan permainan.
 
 
+\section{Solusi pada permasalahan Ulam secara umum}
+
+Pada permasalahan Ulam, penjawab menentukan sebuah angka $x$ dimana $x \in S_n$, lalu penanya akan menanyakan query untuk membantu mencari nilai $x$. Pada kenyataannya, penjawab tidak benar-benar memilih sebuah angka $x$, namun mempersiapkan $n$ angka dengan state keboongan dari setiap angka \cite{Pelc1987}. State kebohongan setiap angka dapat digambarkan dengan bipartite graph kanal untuk status kebohongan dari setiap bilangan $S_n$ \cite{Ahlswede2008}. Setiap kanal $C_i \subseteq S_n$ pada $C=\{C_0,C_1,\ldots,C_e\}$ adalah kanal berbentuk vektor yang berisi elemen dari $S_n$ dengan status jumlah kebohongan $i$ \cite{Ellis2005}.
+
+Setiap query $Q={q_1,q_2,\ldots} | q_i \in S_n$, dengan jawaban penjawab adalah "ya" maka set angka yang dianggap benar pada query tersebut adalah $Q_t=Q$ sedangkan jika jawaban penjawab adalah "tidak" maka set angka yang dianggap benar pada query tersebut adalah $Q_t=S_n-Q$. Semua angka yang dianggap salah yaitu pada $S_n-Q_t={t_1,t_2,\ldots}$ akan dipindahkan ke state kanal setelahnya. Jika $t_i$ berasal dari $C_e$, maka $t_i$ akan dikeluarkan dari kanal, sehingga nilai $x$ pasti bukan $t_i$ karena melampaui jumlah bohong maksimal.
+
+Kanal pada setiap state query dan jawaban query memiliki bobot, yaitu berapa kesempatan setiap nilai angka pada setiap kanal untuk berbohong, sampai akhirnya tereliminasi karena melampaui jumlah bohong maksimal. Setiap state dapat dinotasikan pada Persamaan \ref{eq:berlekamp}, dimana $B$ adalah fungsi Berlekamp, $C$ adalah vektor kanal state, $c_i$ adalah jumlah elemen pada $C_i$, $k$ adalah jumlah query tersisa, dan $e$ adalah jumlah bohong maksimal. Notasi kombinatorik pada Persamaan \ref{eq:combinatoric} yaitu $q$ kombinasi $i$.
+
+\begin{equation} \label{eq:berlekamp}
+B(C,k,e) = \sum^{e}_{i=0} c_i \binom{k}{\leq e-i}
+\end{equation}
+
+\begin{equation} \label{eq:combinatoric}
+\binom{k}{\leq e} = \sum^{e}_{i=0} \binom{q}{i}
+\end{equation}
+
+Menurut \cite{Ellis2005} jika $B(C, k, e) < 2k$ maka penanya pasti gagal. Berdasarkan teori konservasi Berlekamp \cite{Deppe2004} $B(C, k, e) = B_y(C, k-1, e) + B_n(C, k-1, e)$ yaitu bobot pada state $k$ sama dengan jumlah bobot pada state $k-1$ dengan jawaban penjawab "ya" dan "tidak". Oleh karena itu yang harus dilakukan adalah mempersiapkan query agar selisih bobot jawaban "ya" dan "tidak" sekecil mungkin untuk meminimalkan bobot. 
+
+
 \section{Teori pengkodean}
 
 Tujuan utama dari teori pengkodean (\textit{coding theory}) adalah bagaimana mengirimkan pesan pada kanal yang mengandung derau (\textit{noisy channel}) \cite{VanLint2016}. Misal jika ada delapan macam kata pesan yang akan dikirim, maka kita merepresentasikan pesan tersebut menjadi bitstring biner dengan panjang 3. Namun jika pesan tersebut dikirm langsung melewati kanal yang mengandung derau, bisa jadi misalkan ada 1 bit akan tertukar, misal $001$ menjadi $011$. Jika terjadi seperti itu, maka sebuah kata dapat tertukar menjadi kata yang lain.
@@ -83,19 +102,19 @@ Kode linear adalah kode yang paling banyak dipelajari karena struktur aljabar ya
 d_H(\vec{x},\vec{y}) = |\{i \in {1,\ldots,n} \mid x_i \neq y_i\}|
 \end{equation}
 
-Jarak Hamming dari bitstring $\vec{x}$ dan $\vec{y}$ dengan panjang $n$ didefinisikan dengan \refeq{eq:dh} \cite{Cicalese2000}. Sebagai contohnya $d_H(0000,1111)= 4$ dan $d_H(00110,00101)= 2$. $d_H(\vec{x},\vec{y})$ juga dapat dikatakan jumlah minimal untuk mentransformasi dari $\vec{x}$ ke $\vec{y}$. Contoh $\vec{x}=00110$ dan $\vec{y}=00101$ memiliki perbedaan pada 2 bit terakhir dengan jarak Hamming 2, dapat dikatakan $\vec{x}+00011 = \vec{y}$.
+Jarak Hamming dari bitstring $\vec{x}$ dan $\vec{y}$ dengan panjang $n$ didefinisikan dengan Persamaan \ref{eq:dh} \cite{Cicalese2000}. Sebagai contohnya $d_H(0000,1111)= 4$ dan $d_H(00110,00101)= 2$. $d_H(\vec{x},\vec{y})$ juga dapat dikatakan jumlah minimal untuk mentransformasi dari $\vec{x}$ ke $\vec{y}$. Contoh $\vec{x}=00110$ dan $\vec{y}=00101$ memiliki perbedaan pada 2 bit terakhir dengan jarak Hamming 2, dapat dikatakan $\vec{x}+00011 = \vec{y}$.
 
 \begin{equation} \label{eq:wt}
 wt(\vec{x}) = |\{i \in {1,\ldots,n} \mid x_i \neq 0\}|
 \end{equation}
 
-Bobot dari bitstring $\vec{x}$ didefinisikan dengan $wt(\vec{x})$, yaitu jumlah digit pada $\vec{x}$ yang bukan $0$ seperti pada \refeq{eq:wt}. Sebagai contohnya, $wt(00101) = 2$ dan $wt(11111) = 5$. Jika dihubungkan dengan jarak Hamming, jika $\vec{x}+\vec{e} = \vec{y}$ maka $d_H(\vec{x},\vec{y}) = wt(\vec{x}+\vec{y})$.
+Bobot dari bitstring $\vec{x}$ didefinisikan dengan $wt(\vec{x})$, yaitu jumlah digit pada $\vec{x}$ yang bukan $0$ seperti pada Persamaan \ref{eq:wt}. Sebagai contohnya, $wt(00101) = 2$ dan $wt(11111) = 5$. Jika dihubungkan dengan jarak Hamming, jika $\vec{x}+\vec{e} = \vec{y}$ maka $d_H(\vec{x},\vec{y}) = wt(\vec{x}+\vec{y})$.
 
 Terdapat sebuah sifat pada jarak Hamming yang bernama segitiga pertidaksamaan (\textit{triangle inequality}) \cite{VanLint2016}.
 \begin{equation} \label{eq:dh_unequal}
 d_H(\vec{x},\vec{y}) \le d_H(\vec{x},\vec{z}) + d_H(\vec{y},\vec{z})
 \end{equation}
-Dari \refeq{eq:dh_unequal}, misalkan $\vec{z}$ adalah $\vec{0}$ yaitu string biner yang berisi semua $0$, maka didapatkan \refeq{eq:wt_unequal}.
+Dari Persamaan \ref{eq:dh_unequal}, misalkan $\vec{z}$ adalah $\vec{0}$ yaitu string biner yang berisi semua $0$, maka didapatkan Persamaan \ref{eq:wt_unequal}.
 \begin{equation} \label{eq:wt_unequal}
 wt(\vec{x}+\vec{y}) \le wt(\vec{x}) + wt(\vec{y})
 \end{equation}
@@ -126,7 +145,7 @@ Dengan kode biner $(6,8,3)_2$ pada Gambar \ref{fig:binarycode683}, pengirim dan 
 \label{fig:codewordsball}
 \end{figure}
 
-Notasi umum kode biner adalah $(n,M,d)_2$. Kita bisa asumsikan ada $M$ bola yang tidak saling bersinggungan atau berpotongan, dengan radius bola $e$ seperti pada Gambar \ref{fig:codewordsball}. Jarak antara satu bola dengan bola yang lain adalah minimal $d$, sehingga didapatkan \refeq{eq:de}.
+Notasi umum kode biner adalah $(n,M,d)_2$. Kita bisa asumsikan ada $M$ bola yang tidak saling bersinggungan atau berpotongan, dengan radius bola $e$ seperti pada Gambar \ref{fig:codewordsball}. Jarak antara satu bola dengan bola yang lain adalah minimal $d$, sehingga didapatkan Persamaan \ref{eq:de}.
 \begin{equation} \label{eq:de}
 d = 2e + 1
 \end{equation}
@@ -144,27 +163,4 @@ Sebuah kode biner $(n,M,d)_2$ dapat dibangkitkan dari kombinasi linear dari seti
 \label{fig:generator633}
 \end{figure}
 
-\begin{figure}
-\centering
-\begin{BVerbatim}
-1001101
-0101011
-0010111
-\end{BVerbatim}
-\caption{Generator matrix $[7,3,4]_2$}
-\label{fig:generator734}
-\end{figure}
-
-\begin{figure}
-\centering
-\begin{BVerbatim}
-0000000  1000111
-0011101  1000111
-0101011  1000111
-0110110  1000111
-\end{BVerbatim}
-\caption{Perfect binary code $(7,8,4)_2$}
-\label{fig:binarycode784}
-\end{figure}
-
-Dari sebuah kode biner, kita dapat membuat kode biner yang baru dengan memodifikasi kode biner yang sudah ada \cite{Huffman}. Modifikasi yang dapat dilakukan adalah menambah dan mengurangi kode. Dari sebuah kode biner $(n,M,d)_2$, dapat dilakukan pemotongan pada kolom tertentu sehingga kode biner menjadi $(n-1,M,d')_2$ dimana $d'=d \lor d'=d-1$. Begitu pula dengan penambahan kode, dari sebuah kode biner $(n,M,d)_2$, dapat dilakukan penambahan kode sehingga kode biner menjadi $(n+1,M,d')_2$ dimana $d'=d \lor d'=d+1$. 
+Dari sebuah kode biner, kita dapat membuat kode biner yang baru dengan memodifikasi kode biner yang sudah ada \cite{Huffman}. Modifikasi yang dapat dilakukan adalah menambah dan mengurangi kode. Dari sebuah kode biner $(n,M,d)_2$, dapat dilakukan pemotongan pada kolom tertentu sehingga kode biner menjadi $(n-1,M,d^\prime)_2$ dimana $d^\prime=d$ atau $d^\prime=d-1$. Begitu pula dengan penambahan kode, dari sebuah kode biner $(n,M,d)_2$, dapat dilakukan penambahan kode sehingga kode biner menjadi $(n+1,M,d^\prime)_2$ dimana $d^\prime=d$ atau $d^\prime=d+1$. 
