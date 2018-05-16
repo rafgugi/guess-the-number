@@ -2,9 +2,33 @@
 
 Bab ini memaparkan tentang metodologi penelitian yang digunakan pada penelitian ini.
 
-\section{Analisis penyelesaian masalah}
+\section{Solusi menggunakan repetisi kode biner}
 
-Pada permasalahan pencarian Ulam non-interaktif, penjawab tidak diperbolehkan menjawab sebelum penanya selesai menanyakan seluruh query. Pendekatan pertama yang mungkin untuk menyelesaikan permasalahan ini adalah dengan mempersiapkan pencarian biner. Namun pencarian biner tidak dapat menyelesaikan masalah kebohongan dalam jawaban. Oleh karena itu diperlukan pendekatan statistik peluang menggunakan pembobotan berlekamp. Gambar \ref{fig:flow_berlekamp} menjelaskan alur proses adalah membuat query pencarian biner terlebih dahulu, lalu dioptimasi menggunakan fungsi pembobotan berlekamp untuk menghitung peluang dari semua angka-angka dalam range $S_n$.
+Pada permasalahan pencarian Ulam non-interaktif, penjawab tidak diperbolehkan menjawab sebelum penanya selesai menanyakan seluruh query. Pendekatan pertama yang mungkin untuk menyelesaikan permasalahan ini adalah dengan mempersiapkan pencarian biner. Query awal pencarian biner berjumlah $q_b=ceil(log_2(n))$, yaitu bilangan bulat minimal yang jika dipangkat dua akan bernilai minimal $n$, agar setiap kemungkinan jawaban dari penjawab dapat mewakili semua kemungkinan nilai $x$. Lalu setiap query akan diulang sebanyak $q_e=2e+1$ kali agar penjawab pasti menjawab dengan jujur, karena $e$ query untuk jawaban bohong, ditambah dengan $e$ query untuk mengeliminasi jawaban bohong, ditambah dengan satu query jawaban pasti jujur karena kesempatan penjawab untuk berbohong sudah habis. Total jumlah query $q=q_b \times q_e$.
+
+\begin{table}[h!]
+\caption{Contoh pencarian biner pada $n=8$}
+\label{tab:binary_8}
+\begin{center}
+\begin{tabu} {|X[l]|X[c]|X[c]|X[c]|X[c]|X[c]|X[c]|X[c]|X[c]|} 
+\hline
+$x$  & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
+\hline
+$Q_1$ & 0 & 0 & 0 & 0 & 1 & 1 & 1 & 1 \\
+\hline
+$Q_2$ & 0 & 0 & 1 & 1 & 0 & 0 & 1 & 1 \\
+\hline
+$Q_3$ & 0 & 1 & 0 & 1 & 0 & 1 & 0 & 1 \\
+\hline
+Jawaban & NNN & NNY & NYN & NYY & YNN & YNY & YYN & YYY \\
+\hline
+\end{tabu}
+\end{center}
+\end{table}
+
+\section{Solusi menggunakan pembobotan Berlekamp}
+
+Query pencarian biner dengan repetisi pasti dapat menyelesaikan permasalahan Ulam non-interaktif, namun jumlah query terlalu banyak dan redundansi. Oleh karena itu diperlukan pendekatan statistik peluang menggunakan pembobotan berlekamp untuk mereduksi jumlah query. Gambar \ref{fig:flow_berlekamp} menjelaskan alur proses adalah membuat query pencarian biner terlebih dahulu, lalu dioptimasi menggunakan fungsi pembobotan berlekamp untuk menghitung peluang dari semua angka-angka dalam range $S_n$.
 
 \begin{figure}
 \centering
@@ -12,6 +36,8 @@ Pada permasalahan pencarian Ulam non-interaktif, penjawab tidak diperbolehkan me
 \caption{Diagram alir solusi menggunakan pembobotan Berlekamp}
 \label{fig:flow_berlekamp}
 \end{figure}
+
+Misalnya jika $n=8$, $e=2$, $m=6$, maka jumlah $q_b$ untuk pencarian biner adalah 00001111, 00110011 dan 01010101 seperti pada Tabel \ref{tab:binary_8}. Dari tiga query, tersebut, semua jawaban penjawab mulai dari "NNN" sampai "YYY" dapat mewakili semua nilai $x$ dalam $S_n={1,2,...,8}$ sehingga nilai $q_b=3$. Lalu masing-masing query diulang sebanyak $q_e=2e+1=5$ kali. Maka total dari $q=q_b \times q_e=9$.
 
 \begin{figure}
 \centering
