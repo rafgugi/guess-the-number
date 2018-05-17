@@ -1,6 +1,35 @@
 \chapter {KAJIAN PUSTAKA DAN DASAR TEORI}
 
-Pada bab ini, dasar teori yang digunakan sebagai landasan pengerjaan tugas akhir ini akan dijabarkan.
+Pada bab ini, dasar teori yang digunakan sebagai landasan pengerjaan penelitian ini akan dijabarkan.
+
+\section{Kasus-kasus pencarian Ulam di online judge}
+
+Pada online judge SPOJ, ada lima variasi soal yang diajukan seperti pada Tabel \ref{tab:kasus_spoj}. Jenis soal classical adalah jenis soal yang jawaban yang diajukan hanya dapat bernilai benar atau salah, sedangkan jenis soal challenge membolehkan jawaban yang diajukan adalah yang paling buruk ataupun yang paling baik. Pada soal challenge, terdapat nilai skor dari jawaban yang diajukan.
+
+Soal GUESSN1 dan GUESSN3 adalah pencarian Ulam dengan jumlah maksimal kebohongan satu dan tipe query interaktif. Soal jenis ini dapat diselesaikan dengan menentukan query dengan pembobotan Berlekamp $w_j (a,b)=a(j+1)+b$ dimana j adalah jumlah query tersisa, $a$ dan $b$ berturut adalah \textit{truth}-set dan \textit{lie}-set \cite{Pelc1987}.
+
+\begin{table}[h!]
+\caption{Daftar kasus pencarian Ulam di SPOJ}
+\label{tab:kasus_spoj}
+\begin{center}
+\begin{tabular} {|l|l|l|l|l|l|}
+\hline
+Kode & Jumlah bohong & Jenis query & Tipe query & Jenis soal & Kesulitan \\
+\hline
+GUESSN1 & 1 & Subset & Interaktif & challenge & Mudah \\
+\hline
+GUESSN2 & 2-16 & Subset & Interaktif & challenge & Susah  \\
+\hline
+GUESSN3 & 1 & Range & Interaktif & classical & Menengah \\
+\hline
+GUESSN4 & 1 & Subset & Non-interaktif & challenge & Menengah \\
+\hline
+GUESSN5 & 2-16 & Subset & Non-interaktif & challenge & Sangat susah \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
 
 \section{Formulasi permasalahan}
 
@@ -9,13 +38,6 @@ Bentuk permasalahan Ulam yang dibahas pada paper ini diangkat dari online judge 
 Bentuk dari query adalah string $s_1s_2s_3\ldots s_n$ dimana si bernilai '0' atau '1'. Jawaban dari penjawab adalah "Ya" jika $s_x=1$ atau "Tidak" jika $s_x=0$ dengan asumsi penjawab menjawab jujur.
 
 Tugas sesungguhnya dari permasalahan ini adalah bukan untuk mencari nilai $x$, tapi hanya menyiapkan query yang dapat memeungkinkan untuk mendapatkan nilai $x$ dari semua kemungkinan jawaban dari penjawab. Penjawab tidak akan menjawab query yang diberikan penanya. Jika penjawab menemukan ada suatu set jawaban yang menyebabkan lebih dari satu kemungkinan nilai $x$, maka pengujian dianggap gagal.
-
-Batasan yang digunakan pada permasalahan Ulam adalah sebagai berikut:
-\begin{itemize}
-  \item Batas maksimum kasus uji adalah $2^7$.
-  \item Interval bilangan yang yang dicari berada pada $\{0,\ldots,M-1\}$, dengan n maksimum $2^{12}$.
-  \item Dataset yang digunakan adalah dataset pada permasalahan SPOJ GUESSN5.
-\end{itemize}
 
 \begin{figure}
 \centering
@@ -30,7 +52,7 @@ Pada uji kasus yang pertama hanya terdapat dua angka. Jika penjawab tidak berboh
 \begin{align*}
 111111 \;\;& 000000\textrm{.}
 \end{align*}
-Jika penjawab berbohong satu kali, penjawab dapat menjawab 
+Jika penjawab berbohong satu kali, penjawab dapat menjawab
 \begin{align*}
 & 111110 & & 111101 & 111011 \\
 & 110111 & & 101111 & 011111 \\
@@ -75,7 +97,7 @@ B(C,k,e) = \sum^{e}_{i=0} c_i \binom{k}{\leq e-i}
 \binom{k}{\leq e} = \sum^{e}_{i=0} \binom{q}{i}
 \end{equation}
 
-Menurut \cite{Ellis2005} jika $B(C, k, e) < 2k$ maka penanya pasti gagal. Berdasarkan teori konservasi Berlekamp \cite{Deppe2004} $B(C, k, e) = B_y(C, k-1, e) + B_n(C, k-1, e)$ yaitu bobot pada state $k$ sama dengan jumlah bobot pada state $k-1$ dengan jawaban penjawab "ya" dan "tidak". Oleh karena itu yang harus dilakukan adalah mempersiapkan query agar selisih bobot jawaban "ya" dan "tidak" sekecil mungkin untuk meminimalkan bobot. 
+Menurut \cite{Ellis2005} jika $B(C, k, e) < 2k$ maka penanya pasti gagal. Berdasarkan teori konservasi Berlekamp \cite{Deppe2004} $B(C, k, e) = B_y(C, k-1, e) + B_n(C, k-1, e)$ yaitu bobot pada state $k$ sama dengan jumlah bobot pada state $k-1$ dengan jawaban penjawab "ya" dan "tidak". Oleh karena itu yang harus dilakukan adalah mempersiapkan query agar selisih bobot jawaban "ya" dan "tidak" sekecil mungkin untuk meminimalkan bobot.
 
 
 \section{Teori pengkodean}
@@ -163,4 +185,4 @@ Sebuah kode biner $(n,M,d)_2$ dapat dibangkitkan dari kombinasi linear dari seti
 \label{fig:generator633}
 \end{figure}
 
-Dari sebuah kode biner, kita dapat membuat kode biner yang baru dengan memodifikasi kode biner yang sudah ada \cite{Huffman}. Modifikasi yang dapat dilakukan adalah menambah dan mengurangi kode. Dari sebuah kode biner $(n,M,d)_2$, dapat dilakukan pemotongan pada kolom tertentu sehingga kode biner menjadi $(n-1,M,d^\prime)_2$ dimana $d^\prime=d$ atau $d^\prime=d-1$. Begitu pula dengan penambahan kode, dari sebuah kode biner $(n,M,d)_2$, dapat dilakukan penambahan kode sehingga kode biner menjadi $(n+1,M,d^\prime)_2$ dimana $d^\prime=d$ atau $d^\prime=d+1$. 
+Dari sebuah kode biner, kita dapat membuat kode biner yang baru dengan memodifikasi kode biner yang sudah ada \cite{Huffman}. Modifikasi yang dapat dilakukan adalah menambah dan mengurangi kode. Dari sebuah kode biner $(n,M,d)_2$, dapat dilakukan pemotongan pada kolom tertentu sehingga kode biner menjadi $(n-1,M,d^\prime)_2$ dimana $d^\prime=d$ atau $d^\prime=d-1$. Begitu pula dengan penambahan kode, dari sebuah kode biner $(n,M,d)_2$, dapat dilakukan penambahan kode sehingga kode biner menjadi $(n+1,M,d^\prime)_2$ dimana $d^\prime=d$ atau $d^\prime=d+1$.

@@ -2,15 +2,19 @@
 
 Bab ini memaparkan tentang metodologi penelitian yang digunakan pada penelitian ini.
 
-\section{Solusi menggunakan repetisi kode biner}
+\section{Analisis penyelesaian masalah}
 
-Pada permasalahan pencarian Ulam non-interaktif, penjawab tidak diperbolehkan menjawab sebelum penanya selesai menanyakan seluruh query. Pendekatan pertama yang mungkin untuk menyelesaikan permasalahan ini adalah dengan mempersiapkan pencarian biner. Query awal pencarian biner berjumlah $q_b=log_2(n)$, agar setiap kemungkinan jawaban dari penjawab dapat mewakili semua kemungkinan nilai $x$. Lalu setiap query akan diulang sebanyak $q_e=2e+1$ kali agar penjawab pasti menjawab dengan jujur, karena $e$ query untuk jawaban bohong, ditambah dengan $e$ query untuk mengeliminasi jawaban bohong, ditambah dengan satu query jawaban pasti jujur karena kesempatan penjawab untuk berbohong sudah habis. Total jumlah query $q=q_b \times q_e$.
+Pada permasalahan pencarian Ulam non-interaktif, penjawab tidak diperbolehkan menjawab sebelum penanya selesai menanyakan seluruh query. Ada beberapa pendekatan yang dapat dilakukan untuk menyelesaikan masalah tersebut.
+
+\subsection{Solusi menggunakan repetisi kode biner}
+
+Pendekatan pertama yang mungkin untuk menyelesaikan permasalahan ini adalah dengan mempersiapkan pencarian biner. Query awal pencarian biner berjumlah $q_b=log_2(n)$, agar setiap kemungkinan jawaban dari penjawab dapat mewakili semua kemungkinan nilai $x$. Lalu setiap query akan diulang sebanyak $q_e=2e+1$ kali agar penjawab pasti menjawab dengan jujur, karena $e$ query untuk jawaban bohong, ditambah dengan $e$ query untuk mengeliminasi jawaban bohong, ditambah dengan satu query jawaban pasti jujur karena kesempatan penjawab untuk berbohong sudah habis. Total jumlah query $q=q_b \times q_e$.
 
 \begin{table}[h!]
 \caption{Contoh pencarian biner pada $n=8$}
 \label{tab:binary_8}
 \begin{center}
-\begin{tabu} {|X[l]|X[c]|X[c]|X[c]|X[c]|X[c]|X[c]|X[c]|X[c]|} 
+\begin{tabu} {|X[l]|X[c]|X[c]|X[c]|X[c]|X[c]|X[c]|X[c]|X[c]|}
 \hline
 $x$  & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
 \hline
@@ -29,13 +33,12 @@ Jawaban & NNN & NNY & NYN & NYY & YNN & YNY & YYN & YYY \\
 Misalnya jika $n=8$, $e=2$, $m=6$, maka jumlah $q_b$ untuk pencarian biner adalah 00001111, 00110011 dan 01010101 seperti pada Tabel \ref{tab:binary_8}. Dari tiga query, tersebut, semua jawaban penjawab mulai dari "NNN" sampai "YYY" dapat mewakili semua nilai $x$ dalam $S_n={1,2,...,8}$ sehingga nilai $q_b=3$. Lalu masing-masing query diulang sebanyak $q_e=2e+1=5$ kali. Maka total dari $q=q_b \times q_e=9$.
 
 
-\section{Solusi menggunakan pembobotan Berlekamp}
+\subsection{Solusi menggunakan pembobotan Berlekamp}
 
-Query pencarian biner dengan repetisi pasti dapat menyelesaikan permasalahan Ulam non-interaktif, namun jumlah query menghasilkan banyak redundansi. Oleh karena itu diperlukan pendekatan statistik peluang menggunakan pembobotan Berlekamp untuk mereduksi jumlah query. Gambar \ref{fig:flow_berlekamp} menjelaskan alur proses adalah membuat query pencarian biner terlebih dahulu, lalu dioptimasi menggunakan fungsi pembobotan berlekamp untuk menghitung peluang dari semua angka-angka dalam range $S_n$.
+Query pencarian biner dengan repetisi pasti dapat menyelesaikan permasalahan Ulam non-interaktif, namun jumlah query menghasilkan banyak redundansi. Oleh karena itu diperlukan pendekatan statistik peluang menggunakan pembobotan Berlekamp untuk mereduksi jumlah query. Gambar \ref{fig:flow_berlekamp} menjelaskan alur proses adalah membuat query pencarian biner terlebih dahulu, lalu menggunakan fungsi pembobotan Berlekamp untuk mencari query sisanya agar penanya menang.
 
 \begin{figure}
 \centering
-% \includegraphics[scale=0.4]{../img/flowchart-berlekamp.png}
 \begin{tikzpicture}[node distance=2cm]
 % nodes
 \node (start) [start] {Start};
@@ -56,9 +59,24 @@ Query pencarian biner dengan repetisi pasti dapat menyelesaikan permasalahan Ula
 \end{figure}
 
 
-\section{Solusi menggunakan kode biner}
+\subsection{Solusi menggunakan kode biner}
 
-Diberikan sebuah matriks $L$ berukuran $n \times M$ berisi $n$. Kumpulan query ini dinotasikan dengan $L = \{\vec{q_1},\vec{q_2},\ldots,\vec{q_n}\}$ dimana $\vec{q_i} = \{s_1,s_2,\ldots,s_M\}$. Himpunan nilai $s_i$ yang mungkin adalah $s_i \in \{0,1\}$. Diberikan sebuah vektor $\vec{z} \in \{z_1,z_2,\ldots,z_n\}$ dimana $z_i \in \{0,1\}$ berisi jawaban dari seluruh query secara berurutan, $z_i$ adalah jawaban dari $\vec{q_i}$, dimana $0$ berarti 'tidak' dan $1$ berarti 'ya'. Karena jika jawaban $0$ berarti query harus ditambah dengan 1 dan jika jawaban $1$ berarti query ditambah dengan 0 (diabaikan), maka kita memiliki $\vec{z'}$ yaitu inverse dari $\vec{z}$. 
+Tujuan dari permasalahan ini adalah untuk menghasilkan $n$ query. Diberikan sebuah matriks $L$ berukuran $n \times M$ berisi $n$ query. Kumpulan query ini dinotasikan dengan $L = \{\vec{q_1},\vec{q_2},\ldots,\vec{q_n}\}$ dimana $\vec{q_i} = \{s_1,s_2,\ldots,s_M\}$. Himpunan nilai $s_i$ yang mungkin adalah $s_i \in \mathbb{F}_2$. Diberikan sebuah vektor $\vec{z} \in \{z_1,z_2,\ldots,z_n\}$ dimana $z_i \in \{0,1\}$ berisi jawaban dari seluruh query secara berurutan, $z_i$ adalah jawaban dari $\vec{q_i}$, dimana $0$ berarti 'tidak' dan $1$ berarti 'ya'. Karena jika jawaban $0$ berarti query harus ditambah dengan 1 dan jika jawaban $1$ berarti query ditambah dengan 0 (diabaikan), maka kita memiliki $\vec{z'}$ yaitu inverse dari $\vec{z}$.
+
+\begin{lemma}
+Diketahui integer $n$, $M$, dan $d$. Jika $L'$ adalah kode biner $(n,M,d)_2$ yang valid, maka jika setiap codeword $\vec{c}$ pada $L'$ ditambah dengan $\vec{z} \mid \vec{z} \in \mathbb{F}_2^n$ maka hasilnya akan tetap menjadi kode biner $(n,M,d)_2$ yang valid.
+\end{lemma}
+
+\begin{proof}
+Jika $d_H(\vec{x_i},\vec{y_j}) \ge d \mid \vec{x_i},\vec{y_j} \in L'$ maka
+\begin{align*}
+d_H(\vec{x_i}+\vec{z},\vec{y_j}+\vec{z}) &\ge d \\
+wt(\vec{x_i}+\vec{y_j}+\vec{z}+\vec{z}) &\ge d \\
+wt(\vec{x_i}+\vec{y_j}) &\ge d \\
+d_H(\vec{x_i},\vec{y_j}) &\ge d \\
+\end{align*}
+Jadi jika $d_H(\vec{x_i},\vec{y_j}) \ge d$ maka $d_H(\vec{x_i}+\vec{z},\vec{y_j}+\vec{z}) \ge d$.
+\end{proof}
 
 Matriks $L'$ berukuran $M \times n$ adalah hasil transpose dari matriks $L$. Tambahkan seluruh baris pada $L'$ dengan $z'$. Maka jawaban dari permainan Ulam non-interaktif adalah index dari baris $r$ pada $L'$ yang memiliki bobot $wt(\vec{x_r}) > n-e$.
 
@@ -105,17 +123,16 @@ Jadi jika ada codeword $c$ dimana $0 \le wt(c) \le e$ maka $wt(\vec{x}) > e$ dim
 
 Dari pembuktian diatas, dapat disimpulkan bahwa untuk menyelesaikan permainan pencarian Ulam non-interaktif dengan batas pencarian $M$ dan maksimal kebohongan $e$, transpose dari $n$ query yang dibuat harus membentuk kode biner $(n,M,d)_2$.
 
-\begin{lemma}
-Diketahui integer $n$, $M$, dan $d$. Jika $L'$ adalah kode biner $(n,M,d)_2$ yang valid, maka jika setiap codeword $\vec{c}$ pada $L'$ ditambah dengan $\vec{z} \mid \vec{z} \in \mathbb{F}_2^n$ maka hasilnya akan tetap menjadi kode biner $(n,M,d)_2$ yang valid.  
-\end{lemma}
 
-\begin{proof}
-Jika $d_H(\vec{x_i},\vec{y_j}) \ge d \mid \vec{x_i},\vec{y_j} \in L'$ maka
-\begin{align*}
-d_H(\vec{x_i}+\vec{z},\vec{y_j}+\vec{z}) &\ge d \\
-wt(\vec{x_i}+\vec{y_j}+\vec{z}+\vec{z}) &\ge d \\
-wt(\vec{x_i}+\vec{y_j}) &\ge d \\
-d_H(\vec{x_i},\vec{y_j}) &\ge d \\
-\end{align*}
-Jadi jika $d_H(\vec{x_i},\vec{y_j}) \ge d$ maka $d_H(\vec{x_i}+\vec{z},\vec{y_j}+\vec{z}) \ge d$.
-\end{proof}
+\section{Implementasi algoritma}
+
+Implementasi merupakan tahap untuk membangun algoritma yang akan digunakan. Pada tahap ini dilakukan implementasi dari rancangan struktur data yang akan dimodelkan sesuai dengan permasalahan. Implementasi ini dilakukan dengan menggunakan bahasa pemrograman C++ agar dapat disubmit ke SPOJ.
+
+Implementasi dalam bahasa coffeescript untuk menghasilkan halaman web. Visualisasi dalam bentuk web digunakan untuk mencari pola pada query karena penampilan yang lebih dapat dipahami. Selain itu akan dibuat visualisasi untuk memudahkan pembacaan jarak Hamming pada kode biner. Aplikasi web akan menerima input, lalu menampilkan visualisasi sesuai dengan kebutuhan.
+
+
+\section{Pengujian}
+
+Tahap pengujian adalah melakukan uji coba menggunakan dataset pada Online Judge SPOJ GUESSN5 untuk mengetahui hasil dan performa dari metode dan struktur data yang dibangun. Hal yang dinilai pada pengujian adalah skor, penggunaan memory, dan waktu yang dibutuhkan. Pembobotan skor adalah jika penjawab menemukan ada suatu set jawaban yang menyebabkan lebih dari satu kemungkinan nilai $x$, maka pengujian dianggap gagal. Jika berhasil, maka nilai skor bertambah $q^2$. Jika gagal, maka nilai skor bertambah $4m^2$. Total skor adalah jumlah semua skor dari setiap kasus uji. Semakin besar skor maka semakin baik algoritma yang digunakan.
+
+Evaluasi dan perbaikan juga akan dilakukan pada Online Judge hingga perangkat lunak yang diuji mengeluarkan hasil dan performa yang sesuai dengan data uji pada Online Judge SPOJ.
