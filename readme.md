@@ -1,14 +1,12 @@
-## Guess the number
+## Research in guess the number
 
-### How do I get set up?
+### Setup for visualization web app
 
 - Ensure you have [Node.js](https://nodejs.org/en/), [npm](https://www.npmjs.com/), [bower](https://bower.io/), and [gulp](http://gulpjs.com/)
 - Run `npm install`
 - Run `bower install`
 - Run `npm start`
 - Open `index.html` in browser
-
-### What to do with this app?
 
 Judge has chosen a number x in the range [1, n]. Guesser has to find the number x using q
 queries range [a, b], then Judge has to answer if the number x is inside range [a, b].
@@ -19,3 +17,8 @@ the query whether the number is inside range [a, b] given by Guesser.
 
 Judge is allowed to lie w times in single game. Program will memorize all queries and answers to
 ensure Judge doesn't lie more than w times
+
+### Documentation
+
+- Documentation is in `src/tex/buku.tex`, compile with XeLaTeX
+- Research notes is in `src/md/*.md`
