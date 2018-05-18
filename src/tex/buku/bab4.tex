@@ -5,10 +5,11 @@ Bab ini memaparkan tentang hasil dan pembahasan pada metode-metode yang digunaka
 \section{Lingkungan Uji Coba}
 
 Uji coba dilakukan pada perangkat dengan spesifikasi berikut.
+
 \begin{enumerate}
   \item Perangkat Keras
   \begin{enumerate}
-    \item Processor Intel® Core™ i5-7400 CPU @ 3.00GHz (4 CPUs), ~3.0GHz
+    \item Processor Intel® Core™ i7-7400 CPU @ 3.00GHz (4 CPUs), ~3.0GHz
     \item Random Access Memory 8192MB
   \end{enumerate}
   \item Perangkat Lunak
@@ -19,11 +20,61 @@ Uji coba dilakukan pada perangkat dengan spesifikasi berikut.
   \end{enumerate}
 \end{enumerate}
 
-\section{Hasil menggunakan repetisi kode biner}
+\section{Algoritma repetisi pencarian biner}
 
-Subbab ini menjelaskan implementasi program utama. Program ini merupakan program yang digunakan untuk menyelesaikan permasalahan DSA Attack.
+Algoritma repetisi pencarian biner akan menghasilkan maksimal sebanyak $ceil(log_2(M)) . (2e + 1)$ query. Algoritma pencarian biner ada pada Kode Sumber \ref{alg:repetisi_biner}. Baris \ref{alg:for_qb} menunjukkan perulangan untuk setiap jenis query. Nilai $qb$ adalah hasil $log_2$ dari M, lalu dibulatkan ke atas karena $M$ harus merupakan perpangkatan dari 2, jika tidak maka bulatkan ke perpangkatan 2 terdekat ke atas. Baris \ref{alg:for_m} menunjukkan perulangan untuk membuat setiap satu jenis query pencarian biner. Baris \ref{alg:find_bit} menunjukkan proses untuk mencari bit pada posisi tertentu pada sebuah integer \cite{bithack}.
 
-\subsection{Penggunaan Library, Tipe data, dan Struct}
+\begin{algorithm}[H]
+\label{alg:repetisi_biner}
+\caption{Algoritma repetisi pencarian biner}
+\Fn{repetitive\_binary\_search($M$, $e$)}{
+\KwData{$M$ search space, $e$ max lies allowed}
+\KwResult{$queries$}
+  $queries = [\ ]$\;
+  $qb = ceil(log_2(M))$\;
+  $qe = 2*e + 1$\;
+  $twopower = 1$\;
+  \For{$i = 0$ \KwTo $qb$}{\label{alg:for_qb}
+    $string = ""$\;
+    \For{$j = 0$ \KwTo $M$}{\label{alg:for_m}
+      \eIf{$j\ \&\ twopower$}{\label{alg:find_bit}
+        $string \mathrel{+}= "1"$\;
+      }{
+        $string \mathrel{+}= "0"$\;
+      }
+    }
+    \For{$j = 0$ \KwTo $qe$}{
+      $queries.push(string)$\;
+    }
+    $twopower \mathrel{*}= 2$\;
+  }
+  \Return $queries$\;
+}
+\end{algorithm}
+
+Algoritma disubmit ke SPOJ dalam bahasa C, menghasilkan penilaian yang ditunjukkan pada Tabel \ref{tab:score_repetitive}. Karena ini adalah algoritma yang pasti benar dengan cara termudah, maka dapat diasumsikan bahwa skor yang didapat dari algoritma ini adalah skor minimal yang dapat menjadi tolok ukur keberhasilan algoritma yang lain.
+
+\begin{table}[h!]
+\caption{Hasil algoritma repetisi pencarian biner pada SPOJ}
+\label{tab:score_repetitive}
+\begin{center}
+\begin{tabular} {|l|l|}
+\hline
+ID & 20152331 \\
+\hline
+Tanggal & 2017-09-14 06:08:19 \\
+\hline
+Skor & 42,787,090 \\
+\hline
+Waktu & 0.00 \\
+\hline
+Memori & 2.7M \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\subsection{Penggunaan library, tipe data, dan struct}
 
 Program ini menggunakan beberapa \textit{library} dan tipe data seperti yang ditunjukkan pada kode sumber \ref{code:header_main}.
 

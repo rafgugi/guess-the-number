@@ -13,6 +13,7 @@
 %--    Redactions    --%
 \captionsetup[table] {skip=6pt, name={Tabel }}
 \captionsetup[figure] {skip=6pt,name={Gambar }}
+\captionsetup[algorithm] {skip=6pt,name={Algoritma }}
 
 % Babel is weird
 \addto\captionsindonesian
@@ -117,3 +118,11 @@
 \newtheorem{corollary}{Corollary}[theorem]
 \newtheorem{exmp}{Example}[section]
 \newtheorem{lemma}[theorem]{Lemma}
+
+% Algorithm
+\renewcommand{\algorithmcfname}{Algoritma}%
+\renewcommand{\algorithmautorefname}{algoritma}%
+\SetAlgoCaptionLayout{centered textbf}
+\SetAlCapSty{}
+\SetKwProg{Fn}{Function}{}{end}
+\DontPrintSemicolon

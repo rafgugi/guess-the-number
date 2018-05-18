@@ -6,7 +6,7 @@ Bab ini memaparkan tentang metodologi penelitian yang digunakan pada penelitian 
 
 Pada permasalahan pencarian Ulam non-interaktif, penjawab tidak diperbolehkan menjawab sebelum penanya selesai menanyakan seluruh query. Ada beberapa pendekatan yang dapat dilakukan untuk menyelesaikan masalah tersebut.
 
-\subsection{Solusi menggunakan repetisi kode biner}
+\subsection{Solusi menggunakan repetisi pencarian biner}
 
 Pendekatan pertama yang mungkin untuk menyelesaikan permasalahan ini adalah dengan mempersiapkan pencarian biner. Query awal pencarian biner berjumlah $q_b=log_2(n)$, agar setiap kemungkinan jawaban dari penjawab dapat mewakili semua kemungkinan nilai $x$. Lalu setiap query akan diulang sebanyak $q_e=2e+1$ kali agar penjawab pasti menjawab dengan jujur, karena $e$ query untuk jawaban bohong, ditambah dengan $e$ query untuk mengeliminasi jawaban bohong, ditambah dengan satu query jawaban pasti jujur karena kesempatan penjawab untuk berbohong sudah habis. Total jumlah query $q=q_b \times q_e$.
 
@@ -126,7 +126,7 @@ Dari pembuktian diatas, dapat disimpulkan bahwa untuk menyelesaikan permainan pe
 
 \section{Implementasi algoritma}
 
-Implementasi merupakan tahap untuk membangun algoritma yang akan digunakan. Pada tahap ini dilakukan implementasi dari rancangan struktur data yang akan dimodelkan sesuai dengan permasalahan. Implementasi ini dilakukan dengan menggunakan bahasa pemrograman C++ agar dapat disubmit ke SPOJ.
+Implementasi merupakan tahap untuk membangun algoritma yang akan digunakan. Pada tahap ini dilakukan implementasi dari rancangan struktur data yang akan dimodelkan sesuai dengan permasalahan. Implementasi dilakukan dengan menggunakan bahasa pemrograman C++ agar dapat disubmit ke SPOJ.
 
 Implementasi dalam bahasa coffeescript untuk menghasilkan halaman web. Visualisasi dalam bentuk web digunakan untuk mencari pola pada query karena penampilan yang lebih dapat dipahami. Selain itu akan dibuat visualisasi untuk memudahkan pembacaan jarak Hamming pada kode biner. Aplikasi web akan menerima input, lalu menampilkan visualisasi sesuai dengan kebutuhan.
 
