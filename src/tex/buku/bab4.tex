@@ -72,46 +72,4 @@ Memori & 2.7M \\ \hline
 \end{center}
 \end{table}
 
-
-\section{Penyelesaian menggunakan pembobotan Berlekamp}
-
-Pada algoritma menggunakan pembobotan juga akan dibuat query non interaktif pada setiap kasus uji. Sebanyak $\log_2(M)$ query awal adalah query biner. Selanjutnya mencari query dengan pendekatan berlekamp, yaitu mencari $\Delta_j$ terkecil seperti pada Persamaan \ref{eq:deltaj}.
-
-\begin{algorithm}[h]
-\caption{Algoritma pembobotan Berlekamp}
-\label{alg:bobot_berlekamp}
-\Fn{berlekamp\_weight($M$, $e$)}{
-\KwData{$M$ search space, $e$ max lies allowed}
-\KwResult{$queries$}
-  $V = \text{make\_variation}(M)$\;\label{alg:make_varies}
-  $C = \text{make\_channel}(M,e)$\;\label{alg:init_channel}
-  $n = \text{ch}(C)$\label{alg:init_ch}
-  \While{true}{\label{alg:brute}
-  }
-  \Return $queries$\;
-}
-\end{algorithm}
-
-Langkah pertama adalah menggenerate $\mathcal{V}$ seperti pada baris \ref{alg:make_varies}, di mana $\mathcal{V}$ adalah semua variasi query yang paling mungkin digunakan untuk diajukan sebagai query. Jumlah $\mathcal{V}$ adalah $2^n$. Namun dapat $\mathcal{V}$ dioptimasi dengan cara hanya menggunakan query dengan jumlah \texttt{1} dan \texttt{0} sama atau selisih satu. Lalu hapus juga query yang saling berkebalikan. Misalnya \texttt{0011} berkebalikan dengan \texttt{1100}, \texttt{0101} berkebalikan dengan \texttt{1010}, dan sebagainya. Dengan begitu jumlah $\mathcal{V}$ adalah seperti pada Persamaan \ref{eq:varcount}.
-
-\begin{equation}
-\label{eq:varcount}
-|\mathcal{V}| = \begin{dcases}
-  \binom{M}{M/2} / 2, & \text{jika } M \text{ genap} \\
-  \binom{M}{M/2} / 2 + \binom{M-1}{M/2 + 1}, & \text{jika } M \text{ ganjil}
-\end{dcases}
-\end{equation}
-
-Langkah kedua adalah buat kanal $C$ dengan state awal $\{M,\underbrace{0,\ldots,0}_e\}$ seperti pada \ref{alg:init_channel}. Lalu cari nilai $n$ yaitu jumlah query yang akan diberikan dengan menggunakan Persamaan \ref{eq:character} seperti pada baris \ref{alg:init_ch}.
-
-Langkah ketiga adalah pada sebuah state, cari sebuah query dari $\mathcal{V}$ di mana menghasilkan nilai berlekamp yang memiliki $\Delta_j$ terkecil seperti pada baris \ref{alg:brute}. Asumsikan semua jawaban dari sebuah query adalah "ya" karena permainan ini bersifat non-interaktif dan penjawab dapat menjawab apapun.
-
-Query tersebut lalu divariasikan variasi biner sebanyak $\log_2(M)$ untuk dapat mengatasi segala kemungkinan state. Misal jika query tersebut adalah \texttt{000111}, maka akan divariasikan menjadi \texttt{00001111}, \texttt{00110011}, dan \texttt{01010101}.
-
-Ulangi langkah ketiga sampai vector hanya berisi sebuah angka \texttt{1} dan sisanya berisi \texttt{0}. Setap melakukan langkah ketiga akan menghasilkan $\log_2(M)$ query.
-
-**Kelemahan** propose method ini adalah masih menggunakan combinatoric untuk menghasilkan $\mathcal{V}$. Dengan maksimal jumlah $n = 4096$ akan menghasilkan jumlah $\mathcal{V}$ sebanyak $\binom{4096}{2048} / 2$. Oleh karena itu perlu menggenerate $\mathcal{V}$ yang lebih sedikit namun yang paling optimal.
-
-Sedikit mengatasi kelemahan, variasi tidak perlu digenerate dari awal program dijalankan. Kita tinggal hanya memotong setiap channel menjadi mendekati setengah dari nilai sebelumnya. Namun masalahnya adalah jika nilai pada sebuah channel ganjil, maka kita tidak dapat memotongnya menjadi setengah. Pada saat itu lah kita akan mencoba setiap nilai menjadi $\text{floor}(\text{Ch}(i) / 2)$ atau $\text{floor}(\text{Ch}(i) / 2) + 1$.
-
 \section{Penyelesaian menggunakan kode biner}

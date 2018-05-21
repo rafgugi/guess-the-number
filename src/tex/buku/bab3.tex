@@ -33,32 +33,6 @@ Jawaban & NNN & NNY & NYN & NYY & YNN & YNY & YYN & YYY \\
 Misalnya jika $n=8$, $e=2$, $m=6$, maka jumlah $q_b$ untuk pencarian biner adalah \texttt{00001111}, \texttt{00110011} dan \texttt{01010101} seperti pada Tabel \ref{tab:binary_8}. Dari tiga query, tersebut, semua jawaban penjawab mulai dari "NNN" sampai "YYY" dapat mewakili semua nilai $x$ dalam $S_n={1,2,...,8}$ sehingga nilai $q_b=3$. Lalu masing-masing query diulang sebanyak $q_e=2e+1=5$ kali. Maka total dari $q=q_b \times q_e=9$.
 
 
-\subsection{Solusi menggunakan pembobotan Berlekamp}
-
-Query pencarian biner dengan repetisi pasti dapat menyelesaikan permasalahan Ulam non-interaktif, namun jumlah query menghasilkan banyak redundansi. Oleh karena itu diperlukan pendekatan statistik peluang menggunakan pembobotan Berlekamp untuk mereduksi jumlah query. Gambar \ref{fig:flow_berlekamp} menjelaskan alur proses adalah membuat query pencarian biner terlebih dahulu, lalu menggunakan fungsi pembobotan Berlekamp untuk mencari query sisanya agar penanya menang.
-
-\begin{figure}
-\centering
-\begin{tikzpicture}[node distance=2cm]
-% nodes
-\node (start) [start] {Start};
-\node (input) [io, below of=start] {Input n, e};
-\node (proc1) [process, below of=input] {Generate initial binary search query};
-\node (proc2) [process, below of=proc1] {Generate remaining query using Berlekamp function};
-\node (output) [io, below of=proc2] {Output query};
-\node (end) [start, below of=output] {End};
-% draws
-\draw[arrow]  (start) -- (input);
-\draw[arrow]  (input) -- (proc1);
-\draw[arrow]  (proc1) -- (proc2);
-\draw[arrow]  (proc2) -- (output);
-\draw[arrow]  (output) -- (end);
-\end{tikzpicture}
-\caption{Diagram alir solusi menggunakan pembobotan Berlekamp}
-\label{fig:flow_berlekamp}
-\end{figure}
-
-
 \subsection{Solusi menggunakan kode biner}
 
 Tujuan dari permasalahan ini adalah untuk menghasilkan $n$ query. Diberikan sebuah matriks $L$ berukuran $n \times M$ berisi $n$ query. Kumpulan query ini dinotasikan dengan $L = \{\vec{q_1},\vec{q_2},\ldots,\vec{q_n}\}$ di mana $\vec{q_i} = \{s_1,s_2,\ldots,s_M\}$. Himpunan nilai $s_i$ yang mungkin adalah $s_i \in \mathbb{F}_2$. Diberikan sebuah vektor $\vec{z} \in \{z_1,z_2,\ldots,z_n\}$ di mana $z_i \in \{0,1\}$ berisi jawaban dari seluruh query secara berurutan, $z_i$ adalah jawaban dari $\vec{q_i}$, di mana $0$ berarti 'tidak' dan $1$ berarti 'ya'. Karena jika jawaban $0$ berarti query harus ditambah dengan 1 dan jika jawaban $1$ berarti query ditambah dengan 0 (diabaikan), maka kita memiliki $\vec{z'}$ yaitu inverse dari $\vec{z}$.
