@@ -6,7 +6,7 @@ Pada bab ini, dasar teori yang digunakan sebagai landasan pengerjaan penelitian 
 
 Pada online judge SPOJ, ada lima variasi soal yang diajukan seperti pada Tabel \ref{tab:kasus_spoj}. Jenis soal classical adalah jenis soal yang jawaban yang diajukan hanya dapat bernilai benar atau salah, sedangkan jenis soal challenge membolehkan jawaban yang diajukan adalah yang paling buruk ataupun yang paling baik. Pada soal challenge, terdapat nilai skor dari jawaban yang diajukan.
 
-Soal GUESSN1 dan GUESSN3 adalah pencarian Ulam dengan jumlah maksimal kebohongan satu dan tipe query interaktif. Soal jenis ini dapat diselesaikan dengan menentukan query dengan pembobotan Berlekamp $w_j (a,b)=a(j+1)+b$ dimana j adalah jumlah query tersisa, $a$ dan $b$ berturut adalah \textit{truth}-set dan \textit{lie}-set \cite{Pelc1987}.
+Soal GUESSN1 dan GUESSN3 adalah pencarian Ulam dengan jumlah maksimal kebohongan satu dan tipe query interaktif. Soal jenis ini dapat diselesaikan dengan menentukan query dengan pembobotan Berlekamp $w_j (a,b)=a(j+1)+b$ di mana j adalah jumlah query tersisa, $a$ dan $b$ berturut adalah \textit{truth}-set dan \textit{lie}-set \cite{Pelc1987}.
 
 \begin{table}[h!]
 \caption{Daftar kasus pencarian Ulam di SPOJ}
@@ -35,7 +35,7 @@ GUESSN5 & 2-16 & Subset & Non-interaktif & challenge & Sangat susah \\
 
 Bentuk permasalahan Ulam yang dibahas pada paper ini diangkat dari online judge SPOJ oleh Micha\l{} Miodek \cite{guessn5}. Penjawab menentukan sebuah bilangan $x$ pada rentang $S_M=\{0,\ldots,M-1\}$. Anda sebagai penanya harus mencari nilai $x$ dengan memberikan maksimal $n$ query khusus apakah "$x \in Q$?", lalu penjawab menjawab "ya" atau "tidak" pada setiap query yang ditanyakan. Permasalahan utama adalah penjawab dapat berbohong sampai $e$ kali. Selain itu, penjawab hanya boleh menjawab query penanya setelah penanya selesai menanyakan semua query-nya. Tujuan dari Ulam adalah mencari jumlah query minimal untuk dapat menentukan nilai $x$.
 
-Bentuk dari query adalah string $s_1s_2s_3\ldots s_n$ dimana si bernilai '0' atau '1'. Jawaban dari penjawab adalah "Ya" jika $s_x=1$ atau "Tidak" jika $s_x=0$ dengan asumsi penjawab menjawab jujur.
+Bentuk dari query adalah string $s_1s_2s_3\ldots s_n$ di mana $s_i$ bernilai $0$ atau $1$. Jawaban dari penjawab adalah "Ya" jika $s_x=1$ atau "Tidak" jika $s_x=0$ dengan asumsi penjawab menjawab jujur.
 
 Tugas sesungguhnya dari permasalahan ini adalah bukan untuk mencari nilai $x$, tapi hanya menyiapkan query yang dapat memeungkinkan untuk mendapatkan nilai $x$ dari semua kemungkinan jawaban dari penjawab. Penjawab tidak akan menjawab query yang diberikan penanya. Jika penjawab menemukan ada suatu set jawaban yang menyebabkan lebih dari satu kemungkinan nilai $x$, maka pengujian dianggap gagal.
 
@@ -46,35 +46,50 @@ Tugas sesungguhnya dari permasalahan ini adalah bukan untuk mencari nilai $x$, t
 \label{fig:guessn5_test_case}
 \end{figure}
 
-Gambar \ref{fig:guessn5_test_case} adalah contoh empat uji kasus dari permasalahan SPOJ GUESSN5.
+Gambar \ref{fig:guessn5_test_case} adalah contoh empat uji kasus dari permasalahan SPOJ GUESSN5. Pada uji kasus yang pertama hanya terdapat dua angka. Jika penjawab tidak berbohong, penjawab dapat menjawab pilihan
 
-Pada uji kasus yang pertama hanya terdapat dua angka. Jika penjawab tidak berbohong, penjawab dapat menjawab pilihan
-\begin{align*}
-111111 \;\;& 000000\textrm{.}
-\end{align*}
+\begin{center}
+\begin{BVerbatim}
+111111   000000.
+\end{BVerbatim}
+\end{center}
+
+\noindent
 Jika penjawab berbohong satu kali, penjawab dapat menjawab
-\begin{align*}
-& 111110 & & 111101 & 111011 \\
-& 110111 & & 101111 & 011111 \\
-& 000001 & & 000010 & 000100 \\
-& 001000 & & 010000 & 100000 &\textrm{.}
-\end{align*}
+
+% \begin{align*}
+\begin{center}
+\begin{BVerbatim}
+111110   111101   111011
+110111   101111   011111
+000001   000010   000100
+001000   010000   100000.
+\end{BVerbatim}
+\end{center}
+% \end{align*}
+
+\noindent
 Jika penjawab berbohong dua kali, penjawab dapat menjawab
-\begin{align*}
-& 000011 & & 000101 & 000110 \\
-& 001001 & & 001010 & 001100 \\
-& 010001 & & 010010 & 010100 \\
-& 011000 & & 100001 & 100010 \\
-& 100100 & & 101000 & 110000 \\
-& 001111 & & 010111 & 011011 \\
-& 011101 & & 011110 & 100111 \\
-& 101011 & & 101101 & 101110 \\
-& 110011 & & 110101 & 110110 \\
-& 111001 & & 111010 & 111100 &\textrm{.}
-\end{align*}
+
+\begin{center}
+\begin{BVerbatim}
+000011   000101   000110
+001001   001010   001100
+010001   010010   010100
+011000   100001   100010
+100100   101000   110000
+001111   010111   011011
+011101   011110   100111
+101011   101101   101110
+110011   110101   110110
+111001   111010   111100.
+\end{BVerbatim}
+\end{center}
+
+\noindent
 Penanya memenangkan permainan karena kemungkinan jawaban selain tersebut di atas membuat penjawab akan berbohong tiga kali.
 
-Pada uji kasus yang kedua penjawab mencoba memberikan solusi namun jawabannya salah. Penanya dapat menjawab $111000$ yaitu jawaban yang valid karena jumlah bohong tiga kali untuk kedua kemungkinan angka. Pada kasus ini penanya kalah karena penanya membutuhkan query tambahan.
+Pada uji kasus yang kedua penjawab mencoba memberikan solusi namun jawabannya salah. Penanya dapat menjawab \texttt{111000} yaitu jawaban yang valid karena jumlah bohong tiga kali untuk kedua kemungkinan angka. Pada kasus ini penanya kalah karena penanya membutuhkan query tambahan.
 
 Pada uji kasus yang ketiga penanya tidak memberikan solusi.
 
@@ -83,26 +98,39 @@ Pada uji kasus yang keempat penanya memberikan query yang lebih sedikit dari jum
 
 \section{Solusi pada permasalahan Ulam secara umum}
 
-Pada permasalahan Ulam, penjawab menentukan sebuah angka $x$ dimana $x \in S_n$, lalu penanya akan menanyakan query untuk membantu mencari nilai $x$. Pada kenyataannya, penjawab tidak benar-benar memilih sebuah angka $x$, namun mempersiapkan $n$ angka dengan state keboongan dari setiap angka \cite{Pelc1987}. State kebohongan setiap angka dapat digambarkan dengan bipartite graph kanal untuk status kebohongan dari setiap bilangan $S_n$ \cite{Ahlswede2008}. Setiap kanal $C_i \subseteq S_n$ pada $C=\{C_0,C_1,\ldots,C_e\}$ adalah kanal berbentuk vektor yang berisi elemen dari $S_n$ dengan status jumlah kebohongan $i$ \cite{Ellis2005}.
+Pada permasalahan Ulam, penjawab menentukan sebuah angka $x$ di mana $x \in S_n$, lalu penanya akan menanyakan query untuk membantu mencari nilai $x$. Pada kenyataannya, penjawab tidak benar-benar memilih sebuah angka $x$, namun mempersiapkan $n$ angka dengan state keboongan dari setiap angka \cite{Pelc1987}. State kebohongan setiap angka dapat digambarkan dengan bipartite graph kanal untuk status kebohongan dari setiap bilangan $S_n$ \cite{Ahlswede2008}. Setiap kanal $C_i \subseteq S_n$ pada $C=\{C_0,C_1,\ldots,C_e\}$ adalah kanal berbentuk vektor yang berisi elemen dari $S_n$ dengan status jumlah kebohongan $i$ \cite{Ellis2005}.
 
-Setiap query $Q={q_1,q_2,\ldots} | q_i \in S_n$, dengan jawaban penjawab adalah "ya" maka set angka yang dianggap benar pada query tersebut adalah $Q_t=Q$ sedangkan jika jawaban penjawab adalah "tidak" maka set angka yang dianggap benar pada query tersebut adalah $Q_t=S_n-Q$. Semua angka yang dianggap salah yaitu pada $S_n-Q_t={t_1,t_2,\ldots}$ akan dipindahkan ke state kanal setelahnya. Jika $t_i$ berasal dari $C_e$, maka $t_i$ akan dikeluarkan dari kanal, sehingga nilai $x$ pasti bukan $t_i$ karena melampaui jumlah bohong maksimal.
+Setiap query $Q=\{q_1,q_2,\ldots\} \mid q_i \in S_n$, dengan jawaban penjawab adalah "ya" maka set angka yang dianggap benar pada query tersebut adalah $Q_t=\{t_1,t_2,\ldots\} \mid t_i = q_i$ sedangkan jika jawaban penjawab adalah "tidak" maka set angka yang dianggap benar pada query tersebut adalah $Q_t=S_n-Q$. Semua angka yang dianggap salah yaitu pada $S_n-Q_t=\{t_1,t_2,\ldots\}$ akan dipindahkan ke state kanal setelahnya. Jika $t_i$ berasal dari $C_e$, maka $t_i$ akan dikeluarkan dari kanal, sehingga nilai $x$ pasti bukan $t_i$ karena melampaui jumlah bohong maksimal.
 
-Kanal pada setiap state query dan jawaban query memiliki bobot, yaitu berapa kesempatan setiap nilai angka pada setiap kanal untuk berbohong, sampai akhirnya tereliminasi karena melampaui jumlah bohong maksimal. Setiap state dapat dinotasikan pada Persamaan \ref{eq:berlekamp}, dimana $B$ adalah fungsi Berlekamp, $C$ adalah vektor kanal state, $c_i$ adalah jumlah elemen pada $C_i$, $k$ adalah jumlah query tersisa, dan $e$ adalah jumlah bohong maksimal. Notasi kombinatorik pada Persamaan \ref{eq:combinatoric} yaitu $q$ kombinasi $i$.
+Kanal pada setiap state query dan jawaban query memiliki bobot, yaitu berapa kesempatan setiap nilai angka pada setiap kanal untuk berbohong, sampai akhirnya tereliminasi karena melampaui jumlah bohong maksimal. Setiap state dapat dinotasikan pada Persamaan \ref{eq:berlekamp}, di mana $wb$ adalah fungsi Berlekamp, $C$ adalah vektor kanal state, $c_i$ adalah jumlah elemen pada $C_i$, $k$ adalah jumlah query tersisa, dan $e$ adalah jumlah bohong maksimal. Notasi kombinatorik pada Persamaan \ref{eq:combinatoric} yaitu $q$ kombinasi $i$.
 
 \begin{equation} \label{eq:berlekamp}
-B(C,k,e) = \sum^{e}_{i=0} c_i \binom{k}{\leq e-i}
+wb(C,k) = \sum^{e}_{i=0} c_i \binom{k}{\leq e-i}
 \end{equation}
 
 \begin{equation} \label{eq:combinatoric}
 \binom{k}{\leq e} = \sum^{e}_{i=0} \binom{q}{i}
 \end{equation}
 
-Menurut \cite{Ellis2005} jika $B(C, k, e) < 2k$ maka penanya pasti gagal. Berdasarkan teori konservasi Berlekamp \cite{Deppe2004} $B(C, k, e) = B_y(C, k-1, e) + B_n(C, k-1, e)$ yaitu bobot pada state $k$ sama dengan jumlah bobot pada state $k-1$ dengan jawaban penjawab "ya" dan "tidak". Oleh karena itu yang harus dilakukan adalah mempersiapkan query agar selisih bobot jawaban "ya" dan "tidak" sekecil mungkin untuk meminimalkan bobot.
+Karakter dari state $C$  yang dapat dinotasikan sebagai $ch(C)$ yang ditunjukkan pada Persamaan \ref{eq:character} adalah jumlah pertanyaan minimal untuk dapat memenangkan permainan pada state $C$ \cite{Deppe2004}. Oleh karena itu penanya memiliki kemungkinan untuk memenangkan permainan jika $wb(C,k) \geq 2^k$ \cite{Ellis2005}.
+
+\begin{equation} \label{eq:character}
+ch(C) = \min\{k \mid wb(C,k) \leq 2^k\}
+\end{equation}
+
+Berdasarkan teori konservasi Berlekamp \cite{Deppe2004} $wb(C,k) = wb_y(C,k) + wb_n(C,k)$ yaitu bobot pada state $k$ sama dengan jumlah bobot pada state $k-1$ dengan jawaban penjawab "ya" dan "tidak". Oleh karena itu yang harus dilakukan adalah mempersiapkan query agar selisih bobot jawaban "ya" dan "tidak" sekecil mungkin untuk meminimalkan bobot.
+
+Untuk mengetahui sebuah query memiliki selisih bobot jawaban "ya" dan "tidak" sekecil mungkin maka dibuatlah sebuah rumus seperti pada Persamaan \ref{eq:deltaj} di mana $j$ adalah state sisa pertanyaan, $Y$ dan $N$ adalah hasil $C$ ketika jawaban "ya" dan "tidak". Jika nilai $\Delta_j(C,Q) = 0$ maka dapat dikatakan bahwa query $a$ adalah sempurna pada state $j$. Namun karena penanya tidak dapat selalu membuat pertanyaan yang sempurna, maka akan dicari pertanyaan yang dapat menghasilkan $\Delta_j(C,Q)$ mendekati $0$.
+
+\begin{equation}
+\label{eq:deltaj}
+\Delta_j(C,Q) = wb(Y(C,Q),j) - wb(N(C,Q),j)
+\end{equation}
 
 
 \section{Teori pengkodean}
 
-Tujuan utama dari teori pengkodean (\textit{coding theory}) adalah bagaimana mengirimkan pesan pada kanal yang mengandung derau (\textit{noisy channel}) \cite{VanLint2016}. Misal jika ada delapan macam kata pesan yang akan dikirim, maka kita merepresentasikan pesan tersebut menjadi bitstring biner dengan panjang 3. Namun jika pesan tersebut dikirm langsung melewati kanal yang mengandung derau, bisa jadi misalkan ada 1 bit akan tertukar, misal $001$ menjadi $011$. Jika terjadi seperti itu, maka sebuah kata dapat tertukar menjadi kata yang lain.
+Tujuan utama dari teori pengkodean (\textit{coding theory}) adalah bagaimana mengirimkan pesan pada kanal yang mengandung derau (\textit{noisy channel}) \cite{VanLint2016}. Misal jika ada delapan macam kata pesan yang akan dikirim, maka kita merepresentasikan pesan tersebut menjadi bitstring biner dengan panjang 3. Namun jika pesan tersebut dikirm langsung melewati kanal yang mengandung derau, bisa jadi misalkan ada 1 bit akan tertukar, misal \texttt{001} menjadi \texttt{011}. Jika terjadi seperti itu, maka sebuah kata dapat tertukar menjadi kata yang lain.
 
 Kita tahu bahwa jika kode biner sepanjang $n$ digunakan untuk membuat $2^n$ bitstring tidak dapat mendeteksi eror. Ide yang paling mungkin adalah pengirim dan penerima menyetujui sebuah metode enkripsi bitstring menjadi bitstring yang lebih panjang dan dapat mendeteksi maksimal sebanyak $e$ error menggunakan kode linear.
 
@@ -124,19 +152,19 @@ Kode linear adalah kode yang paling banyak dipelajari karena struktur aljabar ya
 d_H(\vec{x},\vec{y}) = |\{i \in {1,\ldots,n} \mid x_i \neq y_i\}|
 \end{equation}
 
-Jarak Hamming dari bitstring $\vec{x}$ dan $\vec{y}$ dengan panjang $n$ didefinisikan dengan Persamaan \ref{eq:dh} \cite{Cicalese2000}. Sebagai contohnya $d_H(0000,1111)= 4$ dan $d_H(00110,00101)= 2$. $d_H(\vec{x},\vec{y})$ juga dapat dikatakan jumlah minimal untuk mentransformasi dari $\vec{x}$ ke $\vec{y}$. Contoh $\vec{x}=00110$ dan $\vec{y}=00101$ memiliki perbedaan pada 2 bit terakhir dengan jarak Hamming 2, dapat dikatakan $\vec{x}+00011 = \vec{y}$.
+Jarak Hamming dari bitstring $\vec{x}$ dan $\vec{y}$ dengan panjang $n$ didefinisikan dengan Persamaan \ref{eq:dh} \cite{Cicalese2000}. Sebagai contohnya $d_H(\texttt{0000},\texttt{1111})= 4$ dan $d_H(\texttt{00110},\texttt{00101})= 2$. $d_H(\vec{x},\vec{y})$ juga dapat dikatakan jumlah minimal untuk mentransformasi dari $\vec{x}$ ke $\vec{y}$. Contoh $\vec{x}=\texttt{00110}$ dan $\vec{y}=\texttt{00101}$ memiliki perbedaan pada 2 bit terakhir dengan jarak Hamming 2, dapat dikatakan $\vec{x}+\texttt{00011} = \vec{y}$.
 
 \begin{equation} \label{eq:wt}
 wt(\vec{x}) = |\{i \in {1,\ldots,n} \mid x_i \neq 0\}|
 \end{equation}
 
-Bobot dari bitstring $\vec{x}$ didefinisikan dengan $wt(\vec{x})$, yaitu jumlah digit pada $\vec{x}$ yang bukan $0$ seperti pada Persamaan \ref{eq:wt}. Sebagai contohnya, $wt(00101) = 2$ dan $wt(11111) = 5$. Jika dihubungkan dengan jarak Hamming, jika $\vec{x}+\vec{e} = \vec{y}$ maka $d_H(\vec{x},\vec{y}) = wt(\vec{x}+\vec{y})$.
+Bobot dari bitstring $\vec{x}$ didefinisikan dengan $wt(\vec{x})$, yaitu jumlah digit pada $\vec{x}$ yang bukan \texttt{0} seperti pada Persamaan \ref{eq:wt}. Sebagai contohnya, $wt(\texttt{00101}) = 2$ dan $wt(\texttt{11111}) = 5$. Jika dihubungkan dengan jarak Hamming, jika $\vec{x}+\vec{e} = \vec{y}$ maka $d_H(\vec{x},\vec{y}) = wt(\vec{x}+\vec{y})$.
 
 Terdapat sebuah sifat pada jarak Hamming yang bernama segitiga pertidaksamaan (\textit{triangle inequality}) \cite{VanLint2016}.
 \begin{equation} \label{eq:dh_unequal}
 d_H(\vec{x},\vec{y}) \le d_H(\vec{x},\vec{z}) + d_H(\vec{y},\vec{z})
 \end{equation}
-Dari Persamaan \ref{eq:dh_unequal}, misalkan $\vec{z}$ adalah $\vec{0}$ yaitu string biner yang berisi semua $0$, maka didapatkan Persamaan \ref{eq:wt_unequal}.
+Dari Persamaan \ref{eq:dh_unequal}, misalkan $\vec{z}$ adalah $\vec{0}$ yaitu string biner yang berisi semua \texttt{0}, maka didapatkan Persamaan \ref{eq:wt_unequal}.
 \begin{equation} \label{eq:wt_unequal}
 wt(\vec{x}+\vec{y}) \le wt(\vec{x}) + wt(\vec{y})
 \end{equation}
@@ -158,7 +186,7 @@ Kode biner (\textit{binary code}) adalah sejumlah $M$ bitstring biner dengan pan
 \label{fig:binarycode683}
 \end{figure}
 
-Dengan kode biner $(6,8,3)_2$ pada Gambar \ref{fig:binarycode683}, pengirim dan penerima menyepakati hanya kata kode yang akan dikirim dan diterima. Dengan asumsi hanya ada satu bit yang dapat error, pesan error tetap dapat dikembalikan ke bentuk semula. Misal $111100$ menjadi $111000$, $000011$ menjadi $001011$, dan seterusnya. Jarak Hamming antara setiap dua kata kode yang berbeda adalah 3, berarti dari setiap kata kode, terdapat sejumlah bitstring selain kata kode berjarak 1.
+Dengan kode biner $(6,8,3)_2$ pada Gambar \ref{fig:binarycode683}, pengirim dan penerima menyepakati hanya kata kode yang akan dikirim dan diterima. Dengan asumsi hanya ada satu bit yang dapat error, pesan error tetap dapat dikembalikan ke bentuk semula. Misal \texttt{111100} menjadi \texttt{111000}, \texttt{000011} menjadi \texttt{001011}, dan seterusnya. Jarak Hamming antara setiap dua kata kode yang berbeda adalah 3, berarti dari setiap kata kode, terdapat sejumlah bitstring selain kata kode berjarak 1.
 
 \begin{figure}
 \centering
@@ -172,7 +200,7 @@ Notasi umum kode biner adalah $(n,M,d)_2$. Kita bisa asumsikan ada $M$ bola yang
 d = 2e + 1
 \end{equation}
 
-Sebuah kode biner $(n,M,d)_2$ dapat dibangkitkan dari kombinasi linear dari setiap baris pada generator matrix $[n,m,d]_2$ dimana $2^m = M$. Generator matriks $G$ adalah matriks berukuran $n \times m$, dapat juga disebut basis dari sebuah kode biner \cite{VanLint2016}. Contoh kode biner $(6,8,3)_2$ pada Gambar \ref{fig:binarycode683} dapat dibangkitkan dari generator matriks $[6,3,3]_2$ pada Gambar \ref{fig:generator633}. Asumsikan bahwa setiap baris dari $[6,3,3]_2$ adalah $g_1$, $g_2$, and $g_3$, lalu kode biner $(6,8,3)_2$ adalah semua kombinasi linear penjumlahan dari semua vektor dalam bentuk ${\lambda}_1 g_1 + {\lambda}_2 g_2 + {\lambda}_3 g_3$ dimana $\lambda{_i} \in \mathbb{F}_2^6$.
+Sebuah kode biner $(n,M,d)_2$ dapat dibangkitkan dari kombinasi linear dari setiap baris pada generator matrix $[n,m,d]_2$ di mana $2^m = M$. Generator matriks $G$ adalah matriks berukuran $n \times m$, dapat juga disebut basis dari sebuah kode biner \cite{VanLint2016}. Contoh kode biner $(6,8,3)_2$ pada Gambar \ref{fig:binarycode683} dapat dibangkitkan dari generator matriks $[6,3,3]_2$ pada Gambar \ref{fig:generator633}. Asumsikan bahwa setiap baris dari $[6,3,3]_2$ adalah $g_1$, $g_2$, and $g_3$, lalu kode biner $(6,8,3)_2$ adalah semua kombinasi linear penjumlahan dari semua vektor dalam bentuk ${\lambda}_1 g_1 + {\lambda}_2 g_2 + {\lambda}_3 g_3$ di mana $\lambda{_i} \in \mathbb{F}_2^6$.
 
 \begin{figure}
 \centering
@@ -185,4 +213,4 @@ Sebuah kode biner $(n,M,d)_2$ dapat dibangkitkan dari kombinasi linear dari seti
 \label{fig:generator633}
 \end{figure}
 
-Dari sebuah kode biner, kita dapat membuat kode biner yang baru dengan memodifikasi kode biner yang sudah ada \cite{Huffman}. Modifikasi yang dapat dilakukan adalah menambah dan mengurangi kode. Dari sebuah kode biner $(n,M,d)_2$, dapat dilakukan pemotongan pada kolom tertentu sehingga kode biner menjadi $(n-1,M,d^\prime)_2$ dimana $d^\prime=d$ atau $d^\prime=d-1$. Begitu pula dengan penambahan kode, dari sebuah kode biner $(n,M,d)_2$, dapat dilakukan penambahan kode sehingga kode biner menjadi $(n+1,M,d^\prime)_2$ dimana $d^\prime=d$ atau $d^\prime=d+1$.
+Dari sebuah kode biner, kita dapat membuat kode biner yang baru dengan memodifikasi kode biner yang sudah ada \cite{Huffman}. Modifikasi yang dapat dilakukan adalah menambah dan mengurangi kode. Dari sebuah kode biner $(n,M,d)_2$, dapat dilakukan pemotongan pada kolom tertentu sehingga kode biner menjadi $(n-1,M,d^\prime)_2$ di mana $d^\prime=d$ atau $d^\prime=d-1$. Begitu pula dengan penambahan kode, dari sebuah kode biner $(n,M,d)_2$, dapat dilakukan penambahan kode sehingga kode biner menjadi $(n+1,M,d^\prime)_2$ di mana $d^\prime=d$ atau $d^\prime=d+1$.

@@ -4,26 +4,29 @@
 % and must be in preamble is to be implemented right here
 %---------------------------------------------------------
 
-%--    Whole document margin    --%
-\setlength {\parindent}{2.5em}
-\setlength {\parskip} {0.2em}
+%--    Whole document paragraph    --%
+\setlength{\parindent}{2.5em}
+\setlength{\parskip} {0.2em}
+\setstretch{1.5}
 
 \setlist[enumerate] {itemsep=0pt, topsep=6pt, partopsep=0pt, parsep=0pt}
 
 %--    Redactions    --%
-\captionsetup[table] {skip=6pt, name={Tabel }}
+\captionsetup[table] {skip=-6pt, name={Tabel }}
 \captionsetup[figure] {skip=6pt,name={Gambar }}
 \captionsetup[algorithm] {skip=6pt,name={Algoritma }}
+
+\AtBeginEnvironment{algorithm}{\setstretch{1}}
 
 % Babel is weird
 \addto\captionsindonesian
 {
-  \renewcommand {\lstlistingname}{Kode Sumber}
-  \renewcommand {\chaptername}{BAB}
-  \renewcommand {\contentsname}{DAFTAR ISI}
-  \renewcommand {\listfigurename}{DAFTAR GAMBAR}
-  \renewcommand {\listtablename}{DAFTAR TABEL}
-  \renewcommand {\lstlistlistingname}{DAFTAR KODE SUMBER}
+  \renewcommand{\lstlistingname}{Kode Sumber}
+  \renewcommand{\chaptername}{BAB}
+  \renewcommand{\contentsname}{DAFTAR ISI}
+  \renewcommand{\listfigurename}{DAFTAR GAMBAR}
+  \renewcommand{\listtablename}{DAFTAR TABEL}
+  \renewcommand{\lstlistlistingname}{DAFTAR KODE SUMBER}
 }
 
 %--    Document hierarchy depth    --%
@@ -34,7 +37,7 @@
 \setmonofont{Courier New}
 
 %--    Set the \chapter    --%
-\titleformat {\chapter}        % section
+\titleformat{\chapter}        % section
 [display]              % shape
 {\Centering\bfseries}        % format
 {\chaptername \ \Roman{chapter}}  % label
@@ -46,7 +49,7 @@
 \titlespacing*{\chapter}{0pt}{-20pt}{20pt}
 
 %--    Set the \chapter*    --%
-\titleformat {name=\chapter,numberless}  % section
+\titleformat{name=\chapter,numberless}  % section
 [display]          % shape
 {\Centering\bfseries}    % format
 {}              % label
@@ -55,7 +58,7 @@
 []              % after
 
 %--    Set the \section    --%
-\titleformat {\section}
+\titleformat{\section}
 [hang]
 {\bfseries}
 {\thesection. }
@@ -64,7 +67,7 @@
 [\vspace{-0.9em}]
 
 %--    Set the \subsection    --%
-\titleformat {\subsection}
+\titleformat{\subsection}
 [hang]
 {\bfseries}
 {\thesubsection. }
@@ -73,7 +76,7 @@
 [\vspace{-0.6em}]
 
 %--    Set the \subsubsection    --%
-\titleformat {\subsubsection}
+\titleformat{\subsubsection}
 [hang]
 {\bfseries}
 {\thesubsubsection. }
@@ -105,7 +108,6 @@
 % Prefix each segment
 \renewcommand{\cfttabpresnum}{Tabel }
 \renewcommand{\cftfigpresnum}{Gambar }
-\newcommand{\refeq}[1]{Persamaan \ref{#1}}
 
 % Set each segment's indentation such that none will overlap
 \cftsetindents{chapter}{0em}{4.4em}
@@ -120,9 +122,9 @@
 \newtheorem{lemma}[theorem]{Lemma}
 
 % Algorithm
-\renewcommand{\algorithmcfname}{Algoritma}%
+\renewcommand{\algorithmcfname}{Kode sumber}%
 \renewcommand{\algorithmautorefname}{algoritma}%
-\SetAlgoCaptionLayout{centered textbf}
 \SetAlCapSty{}
 \SetKwProg{Fn}{Function}{}{end}
+\SetAlCapSkip{1em} %ini antara caption sama body, padahal mksdku itu caption sama paragraphnya
 \DontPrintSemicolon
