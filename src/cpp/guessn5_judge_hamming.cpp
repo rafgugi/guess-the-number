@@ -32,9 +32,9 @@ int main(int argc, char const *argv[])
                 min = dist[i];
             }
         }
-        printf("%d %d %d", M[t], e[t], min);
+        printf("M:%d e:%d min:%d q:%d: ", M[t], e[t], min, q);
         if (min < 2*e[t] + 1) {
-            printf("FAIL\n", min);
+            printf("FAIL\n");
         } else {
             printf("SUCCESS\n");
         }
@@ -44,7 +44,7 @@ int main(int argc, char const *argv[])
 }
 
 /*
-./GUESSN5_hamming < input > output
+./GUESSN5_brute < input > output
 cat input > judge
 cat output >> judge
 ./guessn5_judge_hamming < judge
