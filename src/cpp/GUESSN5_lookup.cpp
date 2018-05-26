@@ -1,5 +1,6 @@
 #include <cmath>
 #include <cstdio>
+#include <cassert>
 using namespace std;
 
 #define MAX_M 4096
@@ -9,9 +10,10 @@ using namespace std;
 /**
  * Print first n bit of a code
  */
-void print_codeword(char *code, int n) {
+void print_codeword(bool *code, int n) {
     for (int i = 0; i < n; ++i) {
-        putchar(code[i]);
+        assert(code[i] == 0 || code[i] == 1);
+        printf("%d", code[i]);
     }
     putchar('\n');
 }
@@ -21,7 +23,7 @@ int main(int argc, char const *argv[]) {
     int M, e, max_query_allowed; // a test case
     int the_real_M; // trick if M isn't power of 2
 
-    char code[MAX_m+1][MAX_QUERY][MAX_M+1]; // all the codewords
+    bool code[MAX_m+1][MAX_QUERY][MAX_M+1]; // all the codewords
     bool is_code[MAX_m+1]; // has the codeword been made?
     int code_distance[MAX_m+1][MAX_M]; // only distance from 0 to 1..M
     int code_min[MAX_m+1]; // min distance
@@ -43,6 +45,10 @@ int main(int argc, char const *argv[]) {
     int code_order_pointer[MAX_m+1]; // is the code created
     int code_minimal[MAX_m+1][MAX_M/2+2]; // param: d needed; return: query
 
+    for (int i = 0; i <= MAX_m; ++i) {
+        is_code[i] = 0;
+    }
+
     scanf("%d", &t);
     while (t--) {
         scanf("%d%d%d", &M, &e, &max_query_allowed);
@@ -55,10 +61,14 @@ int main(int argc, char const *argv[]) {
 
         /* initial coding, if hasnt made yet */
         if (!is_code[m]) {
+            assert(m < MAX_m + 1);
             is_code[m] = 1;
             code_min[m] = 0;
             code_minimal[m][1] = 0;
             code_order_pointer[m] = 0;
+            for (int j = 1; j < M; ++j) {
+                code_distance[m][j] = 0;
+            }
         }
 
         /* find the best order */
@@ -67,19 +77,27 @@ int main(int argc, char const *argv[]) {
 
             /* generate the codeword */
             for (int j = 0; j < M; ++j) {
+                assert(m < MAX_m + 1);
+                assert(current < MAX_QUERY);
                 int bitstring = code_order[m][current] & j;
                 short binary = 0;
                 /* counting bit set */
                 for (binary = 0; bitstring; bitstring >>= 1) {
                     binary ^= bitstring & 1;
                 }
-                code[m][current][j] = '0' + binary;
+                assert(m < MAX_m + 1);
+                assert(current < MAX_QUERY);
+                assert(j < MAX_M + 1);
+                code[m][current][j] = binary;
             }
-            code[m][current][M] = 0; // close the string
 
             /* update the distance */
+            assert(m < MAX_m + 1);
             code_min[m] = MAX_M;
             for (int j = 1; j < M; ++j) {
+                assert(m < MAX_m + 1);
+                assert(current < MAX_QUERY);
+                assert(j < MAX_M);
                 code_distance[m][j] += (code[m][current][0] != code[m][current][j]);
                 if (code_distance[m][j] < code_min[m]) {
                     code_min[m] = code_distance[m][j];
@@ -87,23 +105,35 @@ int main(int argc, char const *argv[]) {
             }
 
             /* update the code order */
+            assert(m < MAX_m + 1);
+            assert(code_min[m] < MAX_M/2 + 2);
             if (code_minimal[m][code_min[m]] == 0) {
                 code_minimal[m][code_min[m]] = code_order_pointer[m];
+                code_minimal[m][code_min[m] + 1] = 0;
             }
         }
 
         /* total query needed */
         int rounds = d / (M / 2);
         int mod = d % (M / 2);
+        assert(mod < MAX_M/2 + 2);
         int total = rounds * (M - 1) + code_minimal[m][mod];
         printf("%d\n", total);
 
         for (int i = 0; i < rounds; ++i) { // round query
             for (int j = 0; j < M-1; ++j) {
+                assert(m < MAX_m + 1);
+                assert(j < MAX_QUERY);
+                assert(the_real_M < MAX_M + 1);
+                assert(j < code_order_pointer[m]);
                 print_codeword(code[m][j], the_real_M);
             }
         }
         for (int i = 0; i < code_minimal[m][mod]; ++i) { // mod query
+            assert(m < MAX_m + 1);
+            assert(i < MAX_QUERY);
+            assert(the_real_M < MAX_M + 1);
+            assert(i < code_order_pointer[m]);
             print_codeword(code[m][i], the_real_M);
         }
     }
