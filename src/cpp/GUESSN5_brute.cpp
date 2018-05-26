@@ -2,8 +2,6 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <string>
-#include <vector>
 using namespace std;
 
 #define MAX_M 4096
@@ -24,15 +22,14 @@ int main(int argc, char const *argv[]) {
     int M, e, max_query_allowed; // a test case
     int the_real_M; // trick if M isn't power of 2
 
-    // string code[MAX_m][MAX_M]; // all the codewords
-    char **code[MAX_m]; // all the codewords
-    bool is_code[MAX_m]; // has the codeword been made?
-    int code_distance[MAX_m][MAX_M]; // only distance from 0 to 1..M
-    int code_min[MAX_m]; // min distance
-    int code_order[MAX_m][MAX_M]; // the best efficient order of code
-    int code_order_pointer[MAX_m]; // how many codeword is sorted?
-    bool code_order_check[MAX_m][MAX_M]; // is the codeword sorted?
-    int code_minimal[MAX_m][MAX_M/2+2]; // param: d needed; return: query
+    char **code[MAX_m+1]; // all the codewords
+    bool is_code[MAX_m+1]; // has the codeword been made?
+    int code_distance[MAX_m+1][MAX_M]; // only distance from 0 to 1..M
+    int code_min[MAX_m+1]; // min distance
+    int code_order[MAX_m+1][MAX_M]; // the best efficient order of code
+    int code_order_pointer[MAX_m+1]; // how many codeword is sorted?
+    bool code_order_check[MAX_m+1][MAX_M]; // is the codeword sorted?
+    int code_minimal[MAX_m+1][MAX_M/2+2]; // param: d needed; return: query
 
     scanf("%d", &t);
     while (t--) {
@@ -70,25 +67,14 @@ int main(int argc, char const *argv[]) {
         while (code_min[m] < d && code_min[m] < M/2) {
             int best = 0; // best candidate
             int best_min = 0; // most
-            int best_max = MAX_M; // least
             int best_min_count = MAX_M; // least
-            int best_max_count = MAX_M; // least
             /* each loop find the one best code order candidate */
             for (int i = 1; i < M; ++i) {
                 int min = MAX_M;
-                int max = 0;
-                int min_count, max_count;
+                int min_count;
                 if (code_order_check[m][i]) continue; // skip used code
                 for (int j = 1; j < M; ++j) { // test the distance
                     int local = code_distance[m][j] + (code[m][i][0] != code[m][i][j]);
-                    if (local >= max) {
-                        if (local == max) {
-                            max_count++;
-                        } else {
-                            max = local;
-                            max_count = 1;
-                        }
-                    }
                     if (local <= min) {
                         if (local == min) {
                             min_count++;
@@ -102,7 +88,6 @@ int main(int argc, char const *argv[]) {
                 if (min > best_min || (min == best_min && min_count < best_min_count)) {
                     best = i;
                     best_min = min;
-                    best_max = max;
                     best_min_count = min_count;
                 }
             }
@@ -137,38 +122,32 @@ int main(int argc, char const *argv[]) {
         bool new_algo = code_minimal[m][mod] <= mod * m;
         int total = rounds * (M - 1) + (new_algo ? code_minimal[m][mod] : mod * m);
 
-        printf("%d\t%d\t%s\t", M, e, new_algo? "1" : "0");
+        /* Debug: are your queries good? */
+        // printf("%d\t%d\t%s\t", M, e, new_algo? "1" : "0");
         printf("%d\n", total);
 
-        continue; // Debug: skip print the codes
+        // continue; // Debug: skip print the codes
         for (int i = 0; i < rounds; ++i) { // round query
             for (int j = 1; j < M; ++j) {
                 print_codeword(code[m][j], the_real_M);
             }
         }
-        if (new_algo) {
-            for (int i = 0; i < code_minimal[m][mod]; ++i) { // mod query
-                print_codeword(code[m][code_order[m][i]], the_real_M);
-            }
-        } else {
-            for (int i = 0; i < mod; ++i) { // old query
-                for (int j = 0; j < m; ++j) {
-                    print_codeword(code[m][code_order[m][j]], the_real_M);
-                }
-            }
+        for (int i = 0; i < code_minimal[m][mod]; ++i) { // mod query
+            print_codeword(code[m][code_order[m][i]], the_real_M);
         }
     }
     int two = 1;
-    for (int i = 0; i < MAX_m; ++i, two <<= 1) {
+    for (int i = 0; i <= MAX_m; ++i, two <<= 1) {
         free(code[i]);
-        /* Debug: show the generated code order */
+        /* Debug: show the generated code order *
         if (is_code[i]) {
-            printf("%d:", two);
-            for (int j = 0; j < code_order_pointer[i]; ++j) {
-                printf(" %d", code_order[i][j]);
+            printf("%d:1", two);
+            for (int j = 1; j < code_order_pointer[i]; ++j) {
+                printf(",%d", code_order[i][j]);
             }
             printf("\n");
         }
+        //*/
     }
     return 0;
 }
