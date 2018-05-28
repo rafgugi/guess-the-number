@@ -1,32 +1,21 @@
 #include <cmath>
 #include <cstdio>
-#include <cassert>
+#include <iostream>
+#include <string>
+#include <vector>
 using namespace std;
 
 #define MAX_M 4096
-#define MAX_m 12
-#define MAX_QUERY 86 
-
-/**
- * Print first n bit of a code
- */
-void print_codeword(bool *code, int n) {
-    for (int i = 0; i < n; ++i) {
-        assert(code[i] == 0 || code[i] == 1);
-        printf("%d", code[i]);
-    }
-    putchar('\n');
-}
+#define MAX_QUERY 86
 
 int main(int argc, char const *argv[]) {
     int t; // test cases
     int M, e, max_query_allowed; // a test case
     int the_real_M; // trick if M isn't power of 2
+    string queries[MAX_QUERY];
+    short distances[MAX_M]; // only distance from 0 to 1..M
+    short minimal[MAX_M / 2 + 1]; // param: d needed; return: query
 
-    bool code[MAX_m+1][MAX_QUERY][MAX_M+1]; // all the codewords
-    bool is_code[MAX_m+1]; // has the codeword been made?
-    int code_distance[MAX_m+1][MAX_M]; // only distance from 0 to 1..M
-    int code_min[MAX_m+1]; // min distance
     const int code_order[][MAX_QUERY] = {
         /* 0  */ {},
         /* 1  */ {1},
@@ -42,99 +31,63 @@ int main(int argc, char const *argv[]) {
         /* 11 */ {1,2,4,8,16,32,64,128,256,512,1024,2047,63,455,585,1242,1899,238,373,583,1798,1181,419,692,1476,1684,1110,665,97,477,1907,637,1517,364,456,1844,1489,547,1093,951,283,1140,628,1362,1819,1016,377,1982,109,123,780,1172,1600,2019,491,814,1889,996,722,39,77,1351,696,1166,1148,641,1405,89,1500,1547,910,1782,167,9,443,1450,1368,643,49,1038,1614,625,190,849},
         /* 12 */ {1,2,4,8,16,32,64,128,256,512,1024,2048,4095,63,455,1609,2707,3362,1267,996,2125,3914,1624,238,2575,883,4058,978,124,1302,2094,3442,969,2832,1670,282,3233,2282,1991,907,3365,387,3663,336,1134,2489,712,1446,2169,140,3268,407,1760,285,3843,2302,1381,2121,91,4031,863,3806,521,1056,2336,799,2471,182,1032,4053,2603,994,3845,1887,685,1170,2095,2584,1701,3422,916,3424,263,2221,1091,1078},
     };
-    int code_order_pointer[MAX_m+1]; // is the code created
-    int code_minimal[MAX_m+1][MAX_M/2+2]; // param: d needed; return: query
 
-    for (int i = 0; i <= MAX_m; ++i) {
-        is_code[i] = 0;
-    }
-
-    scanf("%d", &t);
+    cin >> t;
     while (t--) {
-        scanf("%d%d%d", &M, &e, &max_query_allowed);
+        cin >> M >> e >> max_query_allowed; // variabel m buat coba coba
+
+        the_real_M = M;
+        M = pow(2, ceil(log2(M))); // M is the closest power(2)
+
+        int m = log2(M); // log2(M)
         int d = (2*e + 1); // minimal distance
-        the_real_M = M; // save the real M for printing the query
 
-        /* M must be power of two */
-        int m = ceil(log2(M)); // log2(M)
-        M = pow(2, m); // M is the closest power(2)
-
-        /* initial coding, if hasnt made yet */
-        if (!is_code[m]) {
-            assert(m < MAX_m + 1);
-            is_code[m] = 1;
-            code_min[m] = 0;
-            code_minimal[m][1] = 0;
-            code_order_pointer[m] = 0;
-            for (int j = 1; j < M; ++j) {
-                code_distance[m][j] = 0;
-            }
+        /* reset the distances and the minimal */
+        for (int i = 0; i < M; ++i) {
+            minimal[(i+1)/2] = 0;
+            distances[i] = 0;
         }
 
-        /* find the best order */
-        while (code_min[m] < d && code_min[m] < M/2) {
-            int current = code_order_pointer[m]++;
-
-            /* generate the codeword */
+        /* Make a perfect (M-1,M,M/2) binary code */
+        for (int i = 0, min = 0; i < M-1 && min < d; ++i) {
+            string ans = "";
+            min = 999;
+            /* binary start from 0 to M */
             for (int j = 0; j < M; ++j) {
-                assert(m < MAX_m + 1);
-                assert(current < MAX_QUERY);
-                int bitstring = code_order[m][current] & j;
+                int bitstring = code_order[m][i] & j;
                 short binary = 0;
                 /* counting bit set */
                 for (binary = 0; bitstring; bitstring >>= 1) {
                     binary ^= bitstring & 1;
                 }
-                assert(m < MAX_m + 1);
-                assert(current < MAX_QUERY);
-                assert(j < MAX_M + 1);
-                code[m][current][j] = binary;
-            }
+                ans += '0' + binary;
 
-            /* update the distance */
-            assert(m < MAX_m + 1);
-            code_min[m] = MAX_M;
-            for (int j = 1; j < M; ++j) {
-                assert(m < MAX_m + 1);
-                assert(current < MAX_QUERY);
-                assert(j < MAX_M);
-                code_distance[m][j] += (code[m][current][0] != code[m][current][j]);
-                if (code_distance[m][j] < code_min[m]) {
-                    code_min[m] = code_distance[m][j];
+                if (j != 0) { // update distance from the ans[0] view
+                    distances[j] += (ans[0] != ans[j]);
+                    if (distances[j] < min) {
+                        min = distances[j];
+                    }
                 }
             }
-
-            /* update the code order */
-            assert(m < MAX_m + 1);
-            assert(code_min[m] < MAX_M/2 + 2);
-            if (code_minimal[m][code_min[m]] == 0) {
-                code_minimal[m][code_min[m]] = code_order_pointer[m];
-                code_minimal[m][code_min[m] + 1] = 0;
+            queries[i] = ans.substr(0, the_real_M); // only the real M
+            if (minimal[min] == 0) { // see above
+                minimal[min] = i+1;
             }
         }
 
         /* total query needed */
         int rounds = d / (M / 2);
         int mod = d % (M / 2);
-        assert(mod < MAX_M/2 + 2);
-        int total = rounds * (M - 1) + code_minimal[m][mod];
-        printf("%d\n", total);
+        int total = rounds * (M - 1) + minimal[mod];
 
+        cout << total << endl;
         for (int i = 0; i < rounds; ++i) { // round query
             for (int j = 0; j < M-1; ++j) {
-                assert(m < MAX_m + 1);
-                assert(j < MAX_QUERY);
-                assert(the_real_M < MAX_M + 1);
-                assert(j < code_order_pointer[m]);
-                print_codeword(code[m][j], the_real_M);
+                cout << queries[j] << endl;
             }
         }
-        for (int i = 0; i < code_minimal[m][mod]; ++i) { // mod query
-            assert(m < MAX_m + 1);
-            assert(i < MAX_QUERY);
-            assert(the_real_M < MAX_M + 1);
-            assert(i < code_order_pointer[m]);
-            print_codeword(code[m][i], the_real_M);
+        for (int i = 0; i < minimal[mod]; ++i) { // mod query
+            cout << queries[i] << endl;
         }
     }
     return 0;
