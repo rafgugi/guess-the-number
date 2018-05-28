@@ -1,17 +1,17 @@
 \chapter{METODE PENELITIAN}
 
-Bab ini memaparkan tentang metodologi penelitian yang digunakan pada penelitian ini.
+Bab ini memaparkan tentang metodologi penelitian yang digunakan pada penelitian ini yaitu tahap analisis penyelesaian masalah, implementasi, dan pengujian.
 
 \section{Analisis penyelesaian masalah}
 
-Pada permasalahan pencarian Ulam non-interaktif, penjawab tidak diperbolehkan menjawab sebelum penanya selesai menanyakan seluruh query. Ada beberapa pendekatan yang dapat dilakukan untuk menyelesaikan masalah tersebut.
+Pada permasalahan pencarian Ulam non-interaktif, penjawab tidak diperbolehkan menjawab sebelum penanya selesai menanyakan seluruh query. Ada dua pendekatan yang dapat dilakukan untuk menyelesaikan masalah tersebut, yaitu menggunakan repetisi pencarian biner dan menggunakan kode biner.
 
 \subsection{Solusi menggunakan repetisi pencarian biner}
 
-Pendekatan pertama yang mungkin untuk menyelesaikan permasalahan ini adalah dengan mempersiapkan pencarian biner. Query awal pencarian biner berjumlah $q_b=\log_2(n)$, agar setiap kemungkinan jawaban dari penjawab dapat mewakili semua kemungkinan nilai $x$. Lalu setiap query akan diulang sebanyak $q_e=2e+1$ kali agar penjawab pasti menjawab dengan jujur, karena $e$ query untuk jawaban bohong, ditambah dengan $e$ query untuk mengeliminasi jawaban bohong, ditambah dengan satu query jawaban pasti jujur karena kesempatan penjawab untuk berbohong sudah habis. Total jumlah query $q=q_b \times q_e$.
+Pendekatan pertama yang mungkin untuk menyelesaikan permasalahan ini adalah dengan mempersiapkan pencarian biner. Query awal pencarian biner berjumlah $q_b=\log_2(M)$, agar setiap kemungkinan jawaban dari penjawab dapat mewakili semua kemungkinan nilai $x$. Lalu setiap query akan diulang sebanyak $q_e=2e+1$ kali agar penjawab pasti menjawab dengan jujur, karena $e$ query untuk jawaban bohong, ditambah dengan $e$ query untuk mengeliminasi jawaban bohong, ditambah dengan satu query jawaban pasti jujur karena kesempatan penjawab untuk berbohong sudah habis. Total jumlah query $q=q_b \times q_e$.
 
 \begin{table}[h!]
-\caption{Contoh pencarian biner pada $n=8$}
+\caption{Contoh pencarian biner pada $M=8$}
 \label{tab:binary_8}
 \begin{center}
 \begin{tabu} {|X[l]|X[c]|X[c]|X[c]|X[c]|X[c]|X[c]|X[c]|X[c]|}
@@ -30,46 +30,80 @@ Jawaban & NNN & NNY & NYN & NYY & YNN & YNY & YYN & YYY \\
 \end{center}
 \end{table}
 
-Misalnya jika $n=8$, $e=2$, $m=6$, maka jumlah $q_b$ untuk pencarian biner adalah \texttt{00001111}, \texttt{00110011} dan \texttt{01010101} seperti pada Tabel \ref{tab:binary_8}. Dari tiga query, tersebut, semua jawaban penjawab mulai dari "NNN" sampai "YYY" dapat mewakili semua nilai $x$ dalam $S_n={1,2,...,8}$ sehingga nilai $q_b=3$. Lalu masing-masing query diulang sebanyak $q_e=2e+1=5$ kali. Maka total dari $q=q_b \times q_e=9$.
+Misalnya jika $M=8$, $e=2$, maka jumlah $q_b$ untuk pencarian biner adalah \texttt{00001111}, \texttt{00110011} dan \texttt{01010101} seperti pada Tabel \ref{tab:binary_8}. Dari tiga query, tersebut, semua jawaban penjawab mulai dari "NNN" sampai "YYY" dapat mewakili semua nilai $x$ dalam $S_M={1,2,...,8}$ sehingga nilai $q_b=3$. Lalu masing-masing query diulang sebanyak $q_e=2e+1=5$ kali. Maka total dari $q=q_b \times q_e=9$.
+
+Algoritma pencarian biner ada pada Kode Sumber \ref{alg:repetisi_biner}. Baris \ref{alg:for_qb} menunjukkan perulangan untuk setiap jenis query $q_b$. Nilai $q_b$ adalah hasil $\log_2$ dari M, lalu dibulatkan ke atas karena $M$ harus merupakan perpangkatan dari 2 sehingga nilai $q_b = \text{ceil}(\log_2(M))$. Baris \ref{alg:for_m} menunjukkan perulangan untuk membuat setiap satu jenis query pencarian biner. Baris \ref{alg:find_bit} menunjukkan proses untuk mencari bit pada posisi tertentu pada sebuah integer \cite{bithack}. Setiap query akan diulang sebanyak $qe$ seperti yang ditunjukkan pada baris \ref{alg:for_qe}.
+
+\begin{algorithm}[h]
+\caption{Algoritma repetisi pencarian biner}
+\label{alg:repetisi_biner}
+\Fn{repetitive\_binary\_search($M$, $e$)}{
+\KwData{$M$ search space, $e$ max lies allowed}
+\KwResult{$queries$}
+  $queries = [\ ]$\;
+  $qb = \text{ceil}(\log_2(M))$\;
+  $qe = 2*e + 1$\;
+  $twopower = 1$\;
+  \For{$i = 0$ \KwTo $qb$}{\label{alg:for_qb}
+    $string = ""$\;
+    \For{$j = 0$ \KwTo $M$}{\label{alg:for_m}
+      \eIf{$j\ \&\ twopower$}{\label{alg:find_bit}
+        $string \mathrel{+}= "1"$\;
+      }{
+        $string \mathrel{+}= "0"$\;
+      }
+    }
+    \For{$j = 0$ \KwTo $qe$}{\label{alg:for_qe}
+      $queries$.push($string$)\;
+    }
+    $twopower \mathrel{*}= 2$\;
+  }
+  \Return $queries$\;
+}
+\end{algorithm}
 
 
 \subsection{Solusi menggunakan kode biner}
 
-Tujuan dari permasalahan ini adalah untuk menghasilkan $n$ query. Diberikan sebuah matriks $L$ berukuran $n \times M$ berisi $n$ query. Kumpulan query ini dinotasikan dengan $L = \{\vec{q_1},\vec{q_2},\ldots,\vec{q_n}\}$ di mana $\vec{q_i} = \{s_1,s_2,\ldots,s_M\}$. Himpunan nilai $s_i$ yang mungkin adalah $s_i \in \mathbb{F}_2$. Diberikan sebuah vektor $\vec{z} \in \{z_1,z_2,\ldots,z_n\}$ di mana $z_i \in \{0,1\}$ berisi jawaban dari seluruh query secara berurutan, $z_i$ adalah jawaban dari $\vec{q_i}$, di mana $0$ berarti 'tidak' dan $1$ berarti 'ya'. Karena jika jawaban $0$ berarti query harus ditambah dengan 1 dan jika jawaban $1$ berarti query ditambah dengan 0 (diabaikan), maka kita memiliki $\vec{z'}$ yaitu inverse dari $\vec{z}$.
+\subsubsection{Keterkaitan permasalahan Ulam non interaktif dengan kode biner}
+
+Tujuan dari permasalahan ini adalah untuk menghasilkan $n$ query. Diberikan sebuah matriks $L$ berukuran $n \times M$ berisi $n$ query. Kumpulan query ini dinotasikan dengan $L = \{\vec{q_1},\vec{q_2},\ldots,\vec{q_n}\}$ di mana $\vec{q_i} = \{s_1,s_2,\ldots,s_M\}$. Himpunan nilai $s_j$ yang mungkin adalah $s_j \in \{0,1\}$.
+
+Diberikan sebuah vektor $\vec{z} \in \{z_1,z_2,\ldots,z_n\}$ di mana $z_i \in \{0,1\}$ berisi jawaban dari seluruh query secara berurutan, $z_i$ adalah jawaban dari $\vec{q_i}$. Jika $z_i=0$ berarti jawaban query $q_i$ adalah 'tidak' sehingg seluruh $s_j$ pada $\vec{q_i}$ harus ditambah dengan 1 dan jika $z_i=1$ berarti jawaban dari query $\vec{q_i}$ adalah 'ya' sehingga seluruh $s_j$ pada $\vec{q_i}$ ditambah dengan 0 (diabaikan).
+
+Matriks $L^\top$ berukuran $M \times n$ adalah hasil transpose dari matriks $L$. Asumsikan $L^\top$ juga dapat disebut sebagai kode biner $(n,M,d)_2$ di mana $n$ adalah jumlah query, $M$ adalah panjang $S_M$, dan $d$ adalah $2e+1$ di mana $e$ adalah jumlah maksimal bohong. Tambahkan seluruh baris $\vec{c_j}$ pada $L^\top$ dengan $\vec{z}$. Maka jawaban dari permainan Ulam non-interaktif adalah $x = j$ di mana $j$ adalah index dari baris $c$ pada $L^\top$ yang memiliki bobot $wt(\vec{c_j}) > n-e$ \textbf{(kenapa???)}.
 
 \begin{lemma}
-Diketahui integer $n$, $M$, dan $d$. Jika $L'$ adalah kode biner $(n,M,d)_2$ yang valid, maka jika setiap codeword $\vec{c}$ pada $L'$ ditambah dengan $\vec{z} \mid \vec{z} \in \mathbb{F}_2^n$ maka hasilnya akan tetap menjadi kode biner $(n,M,d)_2$ yang valid.
+Diketahui integer $n$, $M$, dan $d$. Jika $L^\top$ adalah kode biner $(n,M,d)_2$ yang valid, maka jika setiap codeword $\vec{c}$ pada $L^\top$ ditambah dengan $\vec{z} \mid \vec{z} \in \mathbb{F}_2^n$ maka hasilnya akan tetap menjadi kode biner $(n,M,d)_2$ yang valid.
 \end{lemma}
 
 \begin{proof}
-Jika $d_H(\vec{x_i},\vec{y_j}) \ge d \mid \vec{x_i},\vec{y_j} \in L'$ maka
+Jika $d_H(\vec{v_i},\vec{w_j}) \ge d \mid \vec{v_i},\vec{w_j} \in L^\top$ maka
 \begin{align*}
-d_H(\vec{x_i}+\vec{z},\vec{y_j}+\vec{z}) &\ge d \\
-wt(\vec{x_i}+\vec{y_j}+\vec{z}+\vec{z}) &\ge d \\
-wt(\vec{x_i}+\vec{y_j}) &\ge d \\
-d_H(\vec{x_i},\vec{y_j}) &\ge d \\
+d_H(\vec{v_i}+\vec{z},\vec{w_j}+\vec{z}) &\ge d \\
+wt(\vec{v_i}+\vec{w_j}+\vec{z}+\vec{z}) &\ge d \\
+wt(\vec{v_i}+\vec{w_j}) &\ge d \\
+d_H(\vec{v_i},\vec{w_j}) &\ge d \\
 \end{align*}
-Jadi jika $d_H(\vec{x_i},\vec{y_j}) \ge d$ maka $d_H(\vec{x_i}+\vec{z},\vec{y_j}+\vec{z}) \ge d$.
+Jadi jika $d_H(\vec{v_i},\vec{w_j}) \ge d$ maka $d_H(\vec{v_i}+\vec{z},\vec{w_j}+\vec{z}) \ge d$.
 \end{proof}
 
-Matriks $L'$ berukuran $M \times n$ adalah hasil transpose dari matriks $L$. Tambahkan seluruh baris pada $L'$ dengan $z'$. Maka jawaban dari permainan Ulam non-interaktif adalah index dari baris $r$ pada $L'$ yang memiliki bobot $wt(\vec{x_r}) > n-e$.
+Penanya memenangkan permainan jika $L^\top$ memiliki paling banyak satu baris dengan $wt(\vec{c}) \ge n-e$. Jika hanya ada satu row, maka row tersebut adalah jawaban permainan. Jika tidak ada satu row pun yang memenuhi, penanya tetap memenangkan permainan karena penjawab melakukan kecurangan, melakukan bohong untuk semua angka lebih dari batas yang ditetapkan.
 
-Penanya memenangkan permainan jika $L'$ memiliki paling banyak satu row dengan $wt(\vec{x}) \ge n-e$. Jika hanya ada satu row, maka row tersebut adalah jawaban permainan. Jika tidak ada satu row pun yang memenuhi, penanya tetap memenangkan permainan karena penjawab melakukan kecurangan, melakukan bohong untuk semua angka lebih dari batas yang ditetapkan.
-
-Untuk meyakinkan bahwa setelah seluruh jawaban $\vec{z}$ diberikan dan diaplikasikan ke matrix $L$ dan tidak pasti hanya ada 1 baris yang memiliki nilai $1$ antara $n-e \le wt(\vec{x_r}) \le n$, adalah dengan memastikan bahwa jarak Hamming setiap row yang berbeda pada $L'$ adalah minimal $d$.
+Untuk meyakinkan bahwa setelah seluruh jawaban $\vec{z}$ diberikan dan diaplikasikan ke matrix $L$ dan tidak pasti hanya ada 1 baris yang memiliki nilai $1$ antara $n-e \le wt(\vec{c_j}) \le n$, adalah dengan memastikan bahwa jarak Hamming setiap row yang berbeda pada $L^\top$ adalah minimal $d$.
 
 \begin{lemma}
-Diketahui integer $n$, $M$, dan $d$. Jika $L'$ adalah kode biner $(n,M,d)_2$ yang valid, maka pasti hanya ada paling banyak satu codeword $\vec{c}$ yang memiliki $0 \le wt(\vec{c}) \le e$.
+Diketahui integer $n$, $M$, dan $d$. Jika $L^\top$ adalah kode biner $(n,M,d)_2$ yang valid, maka pasti hanya ada paling banyak satu codeword $\vec{c}$ yang memiliki $0 \le wt(\vec{c}) \le e$.
 \end{lemma}
 
 \begin{proof}
-Jika ada codeword $c$ di mana $0 \le wt(c) \le e$ maka $wt(\vec{x}) > e$ di mana $\vec{x} \neq c$. Pembuktian dapat dibuktikan dengan dua kasus.\\
+Jika ada codeword $c$ di mana $0 \le wt(c) \le e$ maka $wt(\vec{v}) > e$ di mana $\vec{v} \neq c$. Pembuktian dapat dibuktikan dengan dua kasus.\\
 
 1) Jika $wt(\vec{c}) = 0$ maka
 \begin{align*}
-d_H(\vec{c},\vec{x}) &\ge d \mid \vec{c} \neq \vec{x} , \vec{x} \in L' \\
-wt(\vec{c} + \vec{x}) &\ge d \\
-wt(\vec{x}) &\ge d \label{eq:proofd} \stepcounter{equation} \tag{\theequation}
+d_H(\vec{c},\vec{v}) &\ge d \mid \vec{c} \neq \vec{v} , \vec{v} \in L^\top \\
+wt(\vec{c} + \vec{v}) &\ge d \\
+wt(\vec{v}) &\ge d \label{eq:proofd} \stepcounter{equation} \tag{\theequation}
 \end{align*}
 Sebelumnya telah disebutkan hubungan $d$ dan $e$ pada Persamaan \ref{eq:de}. Persamaan tersebut dapat diturunkan menjadi
 \begin{equation} \label{eq:dge}
@@ -77,26 +111,139 @@ d > e
 \end{equation}
 Dengan memasukkan Persamaan \ref{eq:dge} ke Persamaan \ref{eq:proofd}, maka didapatkan
 \begin{equation*}
-wt(\vec{x}) > e
+wt(\vec{v}) > e
 \end{equation*}
 
 2) Jika $wt(\vec{c}) = e$ maka
 \begin{align*}
-d_H(\vec{c},\vec{x}) &\ge d \mid \vec{c} \neq \vec{x} , \vec{x} \in L' \\
-wt(\vec{c}+\vec{x}) &\ge d \\
-wt(\vec{c}) + wt(\vec{x}) \ge wt(\vec{c}+\vec{x}) &\ge d \\
-wt(\vec{c}) + wt(\vec{x}) &\ge d \\
-e + wt(\vec{x}) &\ge d \\
+d_H(\vec{c},\vec{v}) &\ge d \mid \vec{c} \neq \vec{v} , \vec{v} \in L^\top \\
+wt(\vec{c}+\vec{v}) &\ge d \\
+wt(\vec{c}) + wt(\vec{v}) \ge wt(\vec{c}+\vec{v}) &\ge d \\
+wt(\vec{c}) + wt(\vec{v}) &\ge d \\
+e + wt(\vec{v}) &\ge d \\
 \intertext{Masukkan Persamaan \ref{eq:de} untuk mensubstitusi $d$}\\
-wt(\vec{x}) &\ge 2e+1-e \\
+wt(\vec{v}) &\ge 2e+1-e \\
 &\ge e+1\\
-wt(\vec{x}) &> e
+wt(\vec{v}) &> e
 \end{align*}
-Jadi jika ada codeword $c$ di mana $0 \le wt(c) \le e$ maka $wt(\vec{x}) > e$ di mana $\vec{x} \neq c$.
+Jadi jika ada codeword $c$ di mana $0 \le wt(c) \le e$ maka $wt(\vec{v}) > e$ di mana $\vec{v} \neq c$.
 \end{proof}
 
 Dari pembuktian diatas, dapat disimpulkan bahwa untuk menyelesaikan permainan pencarian Ulam non-interaktif dengan batas pencarian $M$ dan maksimal kebohongan $e$, transpose dari $n$ query yang dibuat harus membentuk kode biner $(n,M,d)_2$.
 
+\subsubsection{Algoritma pembangkitan query}
+
+Untuk membuat kode biner $(n,M,d)_2$, maka diperlukan algoritma untuk membangkitkan kode. Karena setiap satu query adalah hasil transpose dari sebuah kolom pada kode biner, setiap kolom pada kode biner dapat dibuat dari bitstring pembangkit $s = \mathbb{F}_2^m$ yang jika diubah menjadi integer akan memiliki rentang $0 \leq s < M$. Oleh karena itu ada $M-1$ macam $s$ karena $s=0$ akan menghasilkan query $\vec{0}$ yang tidak akan menghasilkan jarak Hamming pada kode biner.
+
+Algoritma untuk membuat sebuah query dengan code generator ditunjukkan pada Kode Sumber \ref{alg:generate_query}. Input dari fungsi ini adalah ruang pencarian $M$ dan bilangan bulat $s$ yang akan diubah menjadi sebuah query. Pertama-tama siapkan bilangan bulat $0 \leq i < M$ untuk perulangan kombinasi linier pada $s$ seperti yang ditunjukkan pada baris \ref{alg:kombinasi_linier_for}. Lalu kalikan semua bit dari $s$ dan $i$ seperti yang ditunjukkan pada baris \ref{alg:kombinasi_linier}. Lalu jumlahkan semua bit hasil perkalian $s \cdot i$ seperti yang ditunjukkan pada baris \ref{alg:counting_bit_set}. Lalu hasil semua kombinasi linear akan ditampung pada string $query$ seperti yang ditunjukkan pada baris \ref{alg:save_query}. Total query akan memiliki panjang $M$.
+
+\begin{algorithm}[h]
+\caption{Algoritma membuat sebuah query dengan code generator}
+\label{alg:generate_query}
+\Fn{generate\_query($M$, $s$)}{
+\KwData{$M$ search space, $s$ initial generator number}
+\KwResult{$query$}
+  $query$ = ""\;
+  \For{$i = 0$ \KwTo $M$}{\label{alg:kombinasi_linier_for}
+    $bitstring = i\ \&\ s$\;\label{alg:kombinasi_linier}
+    $binary = 0$\;
+    \While{$bitstring$}{\label{alg:counting_bit_set}
+      $binary \mathrel{\wedge}= bitstring\ \&\ 1$\;
+      $bitstring \mathrel{>>}= 1$\;
+    }
+    $query \mathrel{+}= binary$\;\label{alg:save_query}
+  }
+  \Return $query$\;
+}
+\end{algorithm}
+
+\subsubsection{Pencarian mendalam untuk mendapatkan urutan kode biner}
+
+Algoritma solusi menggunakan generator matrix harus membuat urutan $s$ tertentu sedemikian hingga seminimal mungkin jumlah query $n$ yang dihasilkan dari $\vec{s} = \{s_1, \ldots, s_n\}$ akan menghasilkan semaksimal mungkin jarak Hamming $d$. Untuk itu dibuatlah algoritma pencarian mendalam \textit{exhaustive search} untuk mendapatkan urutan $\vec{s}$ yang paling optimal seperti yang ditunjukkan pada Kode Sumber \ref{alg:exhaustive_search}.
+
+Pertama-tama program membuat seluruh kemungkinan query menggunakan generator seeder sehingga terbentuk $M-1$ query seperti yang ditunjukkan pada baris \ref{alg:pre_binary_code}. Lalu pada baris \ref{alg:best_order_loop}, program melakukan perulangan untuk membuat query sampai batas jarak Hamming $d$ yang diinginkan. 
+
+Pada baris \ref{alg:best_search_loop}, program melakukan perulangan untuk mencoba semua macam query yang belum digunakan untuk mencari yang terbaik, dan mengabaikan query yang sudah digunakan pada baris \ref{alg:skip_used_code}. Untuk mencari query yang terbaik pada state \texttt{order\_pointer}, parameter yang digunakan adalah yang jarak Hamming minimal yang paling besar dengan jumlah anggota dengan jarak Hamming tersebut yang paling sedikit, seperti yang ditunjukkan pada baris \ref{alg:minmax}. Setelah setiap satu pencarian best query pada satu state, program akan memperbarui jarak Hamming seperti yang ditunjukkan pada baris \ref{alg:update_distance}, lalu masukkan kandidat query terbaik ke \texttt{code\_order} seperti yang ditunkukkan pada baris \ref{alg:update_order}.
+
+\begin{algorithm}[h]
+\caption{Algoritma mencari urutan bibit generator terbaik}
+\label{alg:exhaustive_search}
+\Fn{exhaustive\_search($M$, $e$)}{
+\KwData{$M$ search space, $e$ max lies allowed}
+\KwResult{$code\_order$}
+  $code[M] = [\ ]$\;\label{alg:var_code}
+  $code\_distance[M] = [\ ]$\;\label{alg:var_code_distance}
+  $code\_min=0$\;\label{alg:var_code_min}
+  $code\_order[M] = [\ ]$\;\label{alg:var_code_order}
+  
+  \For{$i = 1$ \KwTo $M$}{\label{alg:pre_binary_code}
+    $code[i]$ = generate\_query($M$, $i$)\;
+  }
+
+  \While{$code\_min < d$}{\label{alg:best_order_loop}
+    $best = 0$\;\label{alg:save_best_candidate}
+    $best\_min = 0$\;\label{alg:most_minimal_distance}
+    $best\_min\_count = \infty$\;\label{alg:least_minimal_member}
+    % /* each loop find the one best code order candidate */
+    \For{$i = 1$ \KwTo $M$}{\label{alg:best_search_loop}
+      \lIf{$code[i]$ already used}{continue}\label{alg:skip_used_code}
+      $min = \infty$\;
+      $min\_count = 0$\;
+      \For{$j = 1$ \KwTo $M$}{\label{alg:test_distance}
+        $temp = code\_distance[j] + (code[i][0] \mathrel{!}= code[i][j])$\;
+        \uIf{$temp == min$}{\label{alg:minmax}
+          $min\_count$++\;
+        }
+        \ElseIf{$temp < min$}{
+          $min = temp$\;
+          $min\_count = 1$\;
+        }
+      }
+      \If{$min > best\_min\ ||\ (min == best\_min\ \&\&\ min\_count <
+          best\_min\_count)$}{\label{alg:save_the_best}
+        $best = i$\;
+        $best\_min = min$\;
+        $best\_min\_count = min\_count$\;
+      }
+    }
+
+    $code\_min = \infty$\;
+    \For{$j = 1$ \KwTo $M$}{\label{alg:update_distance}
+      $code\_distance[j] \mathrel{+}= (code[best][0] != code[best][j])$\;
+      \If{$code\_distance[j] < code\_min$} {
+        $code\_min = code\_distance[j]$\;
+      }
+    }
+
+    $code\_order$[$order\_pointer$++] = $best$\;\label{alg:update_order}
+  }
+  \Return $code\_order$\;
+}
+\end{algorithm}
+
+\subsubsection{Solusi optimal untuk menyelesaikan permasalahan Ulam}
+
+Program mencari urutan bibit generator terbaik akan digunakan untuk menghitung semua kasus uji dalam batasan masalah, yaitu pada $2 < m < 12$ di mana $M = 2^m$ dan pada $2 < e < 16$. Jika digabungkan untuk semua $m$, dihasilkan set vector $S = \{\vec{s_2}, \vec{s_3}, \ldots, \vec{s_12}\}$ di mana $\vec{s_m}$ berisi urutan bibit generator $\{s_1, s_2, \ldots, s_n\}$ di mana $n$ adalah banyaknya bibit generator untuk menghasilkan $d=16$ atau $d=M/2$.
+
+Selanjutnya $S$ akan dimasukkan langsung ke dalam code solusi. Program solusi ada pada Kode Sumber \ref{alg:guessn5_lookup}.
+
+\begin{algorithm}[h]
+\caption{Algoritma mencari urutan bibit generator terbaik}
+\label{alg:guessn5_lookup}
+\Fn{lookup\_binary\_code($M$, $e$)}{
+\KwData{$M$ search space, $e$ max lies allowed}
+\KwResult{$queries$}
+  $queries = [\ ]$\;
+  $the\_real\_M = M$\;
+  $m = \text{ceil}(\log_2(M))$\;
+  $M = 2^m$\;
+  $d = (2e + 1)$\;
+  $minimal[d] = [\ ]$\;
+  $distances[M] = [\ ]$\;
+
+  \Return $queries$\;
+}
+\end{algorithm}
 
 \section{Implementasi algoritma}
 
@@ -107,6 +254,27 @@ Implementasi dalam bahasa coffeescript untuk menghasilkan halaman web. Visualisa
 
 \section{Pengujian}
 
-Tahap pengujian adalah melakukan uji coba menggunakan dataset pada Online Judge SPOJ GUESSN5 untuk mengetahui hasil dan performa dari metode dan struktur data yang dibangun. Hal yang dinilai pada pengujian adalah skor, penggunaan memory, dan waktu yang dibutuhkan. Pembobotan skor adalah jika penjawab menemukan ada suatu set jawaban yang menyebabkan lebih dari satu kemungkinan nilai $x$, maka pengujian dianggap gagal. Jika berhasil, maka nilai skor bertambah $q^2$. Jika gagal, maka nilai skor bertambah $4m^2$. Total skor adalah jumlah semua skor dari setiap kasus uji. Semakin besar skor maka semakin baik algoritma yang digunakan.
+Tahap pengujian adalah melakukan uji coba menggunakan dataset sesuai pada batasan permasalahan untuk mengetahui hasil dan performa dari algoritma dan struktur data yang dibangun. Dataset dibagi menjadi dua jenis, yaitu dataset buatan dan dataset online. Dataset akan divariasikan sesuai dengan jumlah ruang pencarian $M$ dan jumlah maksimal bohong $e$. Pengujian juga akan digunakan untuk membandingkan manakah algoritma yang lebih bagus dari semua kasus uji.
 
-Evaluasi dan perbaikan juga akan dilakukan pada Online Judge hingga perangkat lunak yang diuji mengeluarkan hasil dan performa yang sesuai dengan data uji pada Online Judge SPOJ.
+Untuk menguji kebenaran query akan dibuat program yang dapat menguji query yang dihasilkan oleh algoritma solusi, agar tidak ada satu set pun yang menyebabkan ada lebih dari satu kemungkinan nilai $x$. Isi dari program pengujian kebenaran algoritma adalah mengecek apakah minimal jarak Hamming setiap query yang berbeda pada setiap kasus uji bernilai minimal $2e+1$ seperti yang ditunjukkan pada Kode Sumber \ref{alg:query_assert}. Variabel $dist$ pada baris \ref{alg:assert_distvar} digunakan untuk menyimpan jarak antara bit ke-0 dengan seluruh bit yang lain. Baris \ref{alg:assert_dist} menunjukkan bahwa jarak akan bertambah setiap ada perbedaan nilai bit.
+
+\begin{algorithm}[h]
+\caption{Algoritma pengujian kebenaran query}
+\label{alg:query_assert}
+\Fn{query\_checker\_search($M$, $e$, $queries$)}{
+\KwData{$M$ search space, $e$ max lies allowed, $queries$ to be checked}
+\KwResult{$is\_win$}
+  $dist[M] = [0, \ldots, 0]$\;\label{alg:assert_distvar}
+  \For{$i = 1$ \KwTo $queries$.size}{
+    $dist[j] \mathrel{+}= (queries[i][0] \mathrel{!}= queries[i][j])$\;\label{alg:assert_dist}
+  }
+  \For{$i = 1$ \KwTo $queries$.size} {
+    \If{$dist[i] < 2*e+1$} {
+      \Return false\;
+    }
+  }
+  \Return true\;
+}
+\end{algorithm}
+
+Selain dataset buatan, program juga akan diuji dengan dataset pada Online Judge SPOJ GUESSN5. Hal yang dinilai pada pengujian adalah banyaknya query yang dibuat, waktu yang dibutuhkan, dan penggunaan memory. Pembobotan skor adalah jika penjawab menemukan ada suatu set jawaban yang menyebabkan lebih dari satu kemungkinan nilai $x$, maka pengujian dianggap gagal. Jika berhasil, maka nilai skor bertambah $q^2$. Jika gagal, maka nilai skor bertambah $4m^2$. Total skor adalah jumlah semua skor dari setiap kasus uji. Semakin kecil skor maka semakin baik algoritma yang digunakan. Skor akan dibandingkan dengan pengajuan peserta lain pada SPOJ GUESSN5.

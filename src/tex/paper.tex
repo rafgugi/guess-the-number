@@ -109,7 +109,7 @@ Pada uji kasus yang pertama hanya terdapat dua angka. Jika penjawab tidak berboh
 \begin{align*}
 111111 \;\;& 000000\textrm{.}
 \end{align*}
-Jika penjawab berbohong satu kali, penjawab dapat menjawab 
+Jika penjawab berbohong satu kali, penjawab dapat menjawab
 \begin{align*}
 & 111110 & & 111101 & 111011 \\
 & 110111 & & 101111 & 011111 \\
@@ -261,7 +261,7 @@ Nah masalahnya, jika $d$ yang kita butuhkan kurang dari $M/2$, maka kita harus m
 
 \section{Solusi permainan Ulam non-interaktif}
 
-Diberikan sebuah matriks $L$ berukuran $n \times M$ berisi $n$. Kumpulan query ini dinotasikan dengan $L = \{\vec{q_1},\vec{q_2},\ldots,\vec{q_n}\}$ dimana $\vec{q_i} = \{s_1,s_2,\ldots,s_M\}$. Himpunan nilai $s_i$ yang mungkin adalah $s_i \in \{0,1\}$. Diberikan sebuah vektor $\vec{z} \in \{z_1,z_2,\ldots,z_n\}$ dimana $z_i \in \{0,1\}$ berisi jawaban dari seluruh query secara berurutan, $z_i$ adalah jawaban dari $\vec{q_i}$, dimana $0$ berarti 'tidak' dan $1$ berarti 'ya'. Karena jika jawaban $0$ berarti query harus ditambah dengan 1 dan jika jawaban $1$ berarti query ditambah dengan 0 (diabaikan), maka kita memiliki $\vec{z'}$ yaitu inverse dari $\vec{z}$. 
+Diberikan sebuah matriks $L$ berukuran $n \times M$ berisi $n$. Kumpulan query ini dinotasikan dengan $L = \{\vec{q_1},\vec{q_2},\ldots,\vec{q_n}\}$ dimana $\vec{q_i} = \{s_1,s_2,\ldots,s_M\}$. Himpunan nilai $s_i$ yang mungkin adalah $s_i \in \{0,1\}$. Diberikan sebuah vektor $\vec{z} \in \{z_1,z_2,\ldots,z_n\}$ dimana $z_i \in \{0,1\}$ berisi jawaban dari seluruh query secara berurutan, $z_i$ adalah jawaban dari $\vec{q_i}$, dimana $0$ berarti 'tidak' dan $1$ berarti 'ya'. Karena jika jawaban $0$ berarti query harus ditambah dengan 1 dan jika jawaban $1$ berarti query ditambah dengan 0 (diabaikan), maka kita memiliki $\vec{z'}$ yaitu inverse dari $\vec{z}$.
 
 Matriks $L'$ berukuran $M \times n$ adalah hasil transpose dari matriks $L$. Tambahkan seluruh baris pada $L'$ dengan $z'$. Maka jawaban dari permainan Ulam non-interaktif adalah index dari baris $r$ pada $L'$ yang memiliki bobot $wt(\vec{x_r}) > n-e$.
 
@@ -309,7 +309,7 @@ Jadi jika ada codeword $c$ dimana $0 \le wt(c) \le e$ maka $wt(\vec{x}) > e$ dim
 Dari pembuktian diatas, dapat disimpulkan bahwa untuk menyelesaikan permainan pencarian Ulam non-interaktif dengan batas pencarian $M$ dan maksimal kebohongan $e$, transpose dari $n$ query yang dibuat harus membentuk kode biner $(n,M,d)_2$.
 
 \begin{lemma}
-Diketahui integer $n$, $M$, dan $d$. Jika $L'$ adalah kode biner $(n,M,d)_2$ yang valid, maka jika setiap codeword $\vec{c}$ pada $L'$ ditambah dengan $\vec{z} \mid \vec{z} \in \mathbb{F}_2^n$ maka hasilnya akan tetap menjadi kode biner $(n,M,d)_2$ yang valid.  
+Diketahui integer $n$, $M$, dan $d$. Jika $L'$ adalah kode biner $(n,M,d)_2$ yang valid, maka jika setiap codeword $\vec{c}$ pada $L'$ ditambah dengan $\vec{z} \mid \vec{z} \in \mathbb{F}_2^n$ maka hasilnya akan tetap menjadi kode biner $(n,M,d)_2$ yang valid.
 \end{lemma}
 
 \begin{proof}

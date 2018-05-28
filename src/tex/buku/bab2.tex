@@ -33,11 +33,11 @@ GUESSN5 & 2-16 & Subset & Non-interaktif & challenge & Sangat susah \\
 
 \section{Formulasi permasalahan}
 
-Bentuk permasalahan Ulam yang dibahas pada paper ini diangkat dari online judge SPOJ oleh Micha\l{} Miodek \cite{guessn5}. Penjawab menentukan sebuah bilangan $x$ pada rentang $S_M=\{0,\ldots,M-1\}$. Anda sebagai penanya harus mencari nilai $x$ dengan memberikan maksimal $n$ query khusus apakah "$x \in Q$?", lalu penjawab menjawab "ya" atau "tidak" pada setiap query yang ditanyakan. Permasalahan utama adalah penjawab dapat berbohong sampai $e$ kali. Selain itu, penjawab hanya boleh menjawab query penanya setelah penanya selesai menanyakan semua query-nya. Tujuan dari Ulam adalah mencari jumlah query minimal untuk dapat menentukan nilai $x$.
+Bentuk permasalahan Ulam yang dibahas pada paper ini diangkat dari online judge SPOJ oleh Micha\l{} Miodek \cite{guessn5}. Penjawab menentukan sebuah bilangan $x$ pada rentang $S_M=\{0,\ldots,M-1\}$. Anda sebagai penanya harus mencari nilai $x$ dengan memberikan maksimal $n$ query khusus apakah "$x \in Q$?", lalu penjawab menjawab 'ya' atau 'tidak' pada setiap query yang ditanyakan. Permasalahan utama adalah penjawab dapat berbohong sampai $e$ kali. Selain itu, penjawab hanya boleh menjawab query penanya setelah penanya selesai menanyakan semua query-nya. Tujuan dari Ulam adalah mencari jumlah query minimal untuk dapat menentukan nilai $x$.
 
 Bentuk dari query adalah string $s_1s_2s_3\ldots s_n$ di mana $s_i$ bernilai $0$ atau $1$. Jawaban dari penjawab adalah "Ya" jika $s_x=1$ atau "Tidak" jika $s_x=0$ dengan asumsi penjawab menjawab jujur.
 
-Tugas sesungguhnya dari permasalahan ini adalah bukan untuk mencari nilai $x$, tapi hanya menyiapkan query yang dapat memeungkinkan untuk mendapatkan nilai $x$ dari semua kemungkinan jawaban dari penjawab. Penjawab tidak akan menjawab query yang diberikan penanya. Jika penjawab menemukan ada suatu set jawaban yang menyebabkan lebih dari satu kemungkinan nilai $x$, maka pengujian dianggap gagal.
+Tugas sesungguhnya dari permasalahan ini adalah bukan untuk mencari nilai $x$, tapi hanya menyiapkan query yang dapat memeungkinkan untuk mendapatkan nilai $x$ dari semua kemungkinan jawaban dari penjawab. Penjawab tidak akan menjawab query yang diberikan penanya. Jika penjawab menemukan ada suatu set jawaban yang menyebabkan ada lebih dari satu kemungkinan nilai $x$, maka pengujian dianggap gagal.
 
 \begin{figure}
 \centering
@@ -200,7 +200,7 @@ Notasi umum kode biner adalah $(n,M,d)_2$. Kita bisa asumsikan ada $M$ bola yang
 d = 2e + 1
 \end{equation}
 
-Sebuah kode biner $(n,M,d)_2$ dapat dibangkitkan dari kombinasi linear dari setiap baris pada generator matrix $[n,m,d]_2$ di mana $2^m = M$. Generator matriks $G$ adalah matriks berukuran $n \times m$, dapat juga disebut basis dari sebuah kode biner \cite{VanLint2016}. Contoh kode biner $(6,8,3)_2$ pada Gambar \ref{fig:binarycode683} dapat dibangkitkan dari generator matriks $[6,3,3]_2$ pada Gambar \ref{fig:generator633}. Asumsikan bahwa setiap baris dari $[6,3,3]_2$ adalah $g_1$, $g_2$, and $g_3$, lalu kode biner $(6,8,3)_2$ adalah semua kombinasi linear penjumlahan dari semua vektor dalam bentuk ${\lambda}_1 g_1 + {\lambda}_2 g_2 + {\lambda}_3 g_3$ di mana $\lambda{_i} \in \mathbb{F}_2^6$.
+Sebuah kode biner $(n,M,d)_2$ dapat dibangkitkan dari kombinasi linear dari setiap baris pada generator matrix $[n,m,d]_2$ di mana $2^m = M$. Generator matriks $G$ adalah matriks berukuran $n \times m$, dapat juga disebut basis dari sebuah kode biner \cite{VanLint2016}. Contoh kode biner $(6,8,3)_2$ pada Gambar \ref{fig:binarycode683} dapat dibangkitkan dari generator matriks $[6,3,3]_2$ pada Gambar \ref{fig:generator633}. Asumsikan bahwa setiap baris dari $[6,3,3]_2$ adalah $g_1$, $g_2$, and $g_3$, lalu kode biner $(6,8,3)_2$ adalah semua kombinasi linear penjumlahan dari semua vektor dalam bentuk ${\lambda}_1 g_1 + {\lambda}_2 g_2 + {\lambda}_3 g_3$ di mana $\lambda_{i} \in \mathbb{F}_2^6$.
 
 \begin{figure}
 \centering

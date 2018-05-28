@@ -75,13 +75,11 @@ int main(int argc, char const *argv[]) {
                 if (code_order_check[m][i]) continue; // skip used code
                 for (int j = 1; j < M; ++j) { // test the distance
                     int local = code_distance[m][j] + (code[m][i][0] != code[m][i][j]);
-                    if (local <= min) {
-                        if (local == min) {
-                            min_count++;
-                        } else {
-                            min = local;
-                            min_count = 1;
-                        }
+                    if (local == min) {
+                        min_count++;
+                    } else if (local < min) {
+                        min = local;
+                        min_count = 1;
                     }
                 }
                 /* save the best */

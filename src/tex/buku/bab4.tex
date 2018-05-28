@@ -20,42 +20,15 @@ Uji coba dilakukan pada perangkat dengan spesifikasi berikut.
   \end{enumerate}
 \end{enumerate}
 
+\section{Uji coba menggunakan dataset lokal}
 
-\section{Penyelesaian menggunakan repetisi pencarian biner}
+\section{Uji coba menggunakan dataset online SPOJ}
 
-Algoritma repetisi pencarian biner menghasilkan maksimal sebanyak $\log_2(M) \cdot (2e + 1)$ query non interaktif pada setiap kasus uji. Algoritma pencarian biner ada pada Kode Sumber \ref{alg:repetisi_biner}. Baris \ref{alg:for_qb} menunjukkan perulangan untuk setiap jenis query $qb$. Nilai $qb$ adalah hasil $\log_2$ dari M, lalu dibulatkan ke atas karena $M$ harus merupakan perpangkatan dari 2 sehingga nilai $qb = \text{ceil}(\log_2(M))$. Baris \ref{alg:for_m} menunjukkan perulangan untuk membuat setiap satu jenis query pencarian biner. Baris \ref{alg:find_bit} menunjukkan proses untuk mencari bit pada posisi tertentu pada sebuah integer \cite{bithack}. Setiap query akan diulang sebanyak $qe$ seperti yang ditunjukkan pada baris \ref{alg:for_qe}.
+Subbab ini akan menjelaskan hasil pengujian program penyelesaian permasalahan menggunakan algoritma repetisi pencarian biner dan kode biner.
 
-\begin{algorithm}[h]
-\caption{Algoritma repetisi pencarian biner}
-\label{alg:repetisi_biner}
-\Fn{repetitive\_binary\_search($M$, $e$)}{
-\KwData{$M$ search space, $e$ max lies allowed}
-\KwResult{$queries$}
-  $queries = [\ ]$\;
-  $qb = \text{ceil}(\log_2(M))$\;
-  $qe = 2*e + 1$\;
-  $twopower = 1$\;
-  \For{$i = 0$ \KwTo $qb$}{\label{alg:for_qb}
-    $string = ""$\;
-    \For{$j = 0$ \KwTo $M$}{\label{alg:for_m}
-      \eIf{$j\ \&\ twopower$}{\label{alg:find_bit}
-        $string \mathrel{+}= "1"$\;
-      }{
-        $string \mathrel{+}= "0"$\;
-      }
-    }
-    \For{$j = 0$ \KwTo $qe$}{\label{alg:for_qe}
-      $queries$.push($string$)\;
-    }
-    $twopower \mathrel{*}= 2$\;
-  }
-  \Return $queries$\;
-}
-\end{algorithm}
+\subsection{Uji coba algoritma repetisi pencarian biner pada SPOJ}
 
-\subsection{Skenario Uji Coba}
-
-Subbab ini akan menjelaskan hasil pengujian program penyelesaian permasalahan. Algoritma disubmit ke SPOJ dalam bahasa C, menghasilkan penilaian yang ditunjukkan pada Tabel \ref{tab:score_repetitive}. Karena ini adalah algoritma yang pasti benar dengan cara termudah, maka dapat diasumsikan bahwa skor yang didapat dari algoritma ini adalah skor minimal yang dapat menjadi tolok ukur keberhasilan algoritma yang lain.
+Algoritma repetisi pencarian biner disubmit ke SPOJ dalam bahasa C, menghasilkan penilaian yang ditunjukkan pada Tabel \ref{tab:score_repetitive}. Karena ini adalah algoritma yang pasti benar dengan cara termudah, maka dapat diasumsikan bahwa skor yang didapat dari algoritma ini adalah skor minimal yang dapat menjadi tolok ukur keberhasilan algoritma yang lain.
 
 \begin{table}[h!]
 \caption{Hasil algoritma repetisi pencarian biner pada SPOJ}
@@ -72,4 +45,21 @@ Memori & 2.7M \\ \hline
 \end{center}
 \end{table}
 
-\section{Penyelesaian menggunakan kode biner}
+\subsection{Uji coba algoritma kode biner pada SPOJ}
+
+Algoritma repetisi pencarian biner disubmit ke SPOJ dalam bahasa C, menghasilkan penilaian yang ditunjukkan pada Tabel \ref{tab:score_binary_code}.
+
+\begin{table}[h!]
+\caption{Hasil algoritma kode biner pada SPOJ}
+\label{tab:score_binary_code}
+\begin{center}
+\begin{tabular} {|l|l|}
+\hline
+ID & 21732463 \\ \hline
+Tanggal & 2018-05-27 00:45:01 \\ \hline
+Skor & 4,225,555 \\ \hline
+Waktu & 0.44 \\ \hline
+Memori & 2.8M \\ \hline
+\end{tabular}
+\end{center}
+\end{table}
