@@ -14,7 +14,7 @@ Pendekatan pertama yang mungkin untuk menyelesaikan permasalahan ini adalah deng
 \caption{Contoh pencarian biner pada $M=8$}
 \label{tab:binary_8}
 \begin{center}
-\begin{tabu} {|X[l]|X[c]|X[c]|X[c]|X[c]|X[c]|X[c]|X[c]|X[c]|}
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|}
 \hline
 $x$  & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
 \hline
@@ -26,7 +26,7 @@ $Q_3$ & 0 & 1 & 0 & 1 & 0 & 1 & 0 & 1 \\
 \hline
 Jawaban & NNN & NNY & NYN & NYY & YNN & YNY & YYN & YYY \\
 \hline
-\end{tabu}
+\end{tabular}
 \end{center}
 \end{table}
 
@@ -71,7 +71,7 @@ Tujuan dari permasalahan ini adalah untuk menghasilkan $n$ query. Diberikan sebu
 
 Diberikan sebuah vektor $\vec{z} \in \{z_1,z_2,\ldots,z_n\}$ di mana $z_i \in \{0,1\}$ berisi jawaban dari seluruh query secara berurutan, $z_i$ adalah jawaban dari $\vec{q_i}$. Jika $z_i=0$ berarti jawaban query $q_i$ adalah 'tidak' sehingg seluruh $s_j$ pada $\vec{q_i}$ harus ditambah dengan 1 dan jika $z_i=1$ berarti jawaban dari query $\vec{q_i}$ adalah 'ya' sehingga seluruh $s_j$ pada $\vec{q_i}$ ditambah dengan 0 (diabaikan).
 
-Matriks $L^\top$ berukuran $M \times n$ adalah hasil transpose dari matriks $L$. Asumsikan $L^\top$ juga dapat disebut sebagai kode biner $(n,M,d)_2$ di mana $n$ adalah jumlah query, $M$ adalah panjang $S_M$, dan $d$ adalah $2e+1$ di mana $e$ adalah jumlah maksimal bohong. Tambahkan seluruh baris $\vec{c_j}$ pada $L^\top$ dengan $\vec{z}$. Maka jawaban dari permainan Ulam non-interaktif adalah $x = j$ di mana $j$ adalah index dari baris $c$ pada $L^\top$ yang memiliki bobot $wt(\vec{c_j}) > n-e$ \textbf{(kenapa???)}.
+Matriks $L^\top$ berukuran $M \times n$ adalah hasil transpose dari matriks $L$. Asumsikan $L^\top$ juga dapat disebut sebagai kode biner $(n,M,d)_2$ di mana $n$ adalah jumlah query, $M$ adalah panjang $S_M$, dan $d$ adalah $2e+1$ di mana $e$ adalah jumlah maksimal bohong. Tambahkan seluruh baris $\vec{c_j}$ pada $L^\top$ dengan $\vec{z}$. Maka jawaban dari permainan Ulam non-interaktif adalah $x = j$ di mana $j$ adalah index dari baris $c$ pada $L^\top$ yang memiliki bobot $wt(\vec{c_j}) > n-e$.
 
 \begin{lemma}
 Diketahui integer $n$, $M$, dan $d$. Jika $L^\top$ adalah kode biner $(n,M,d)_2$ yang valid, maka jika setiap codeword $\vec{c}$ pada $L^\top$ ditambah dengan $\vec{z} \mid \vec{z} \in \mathbb{F}_2^n$ maka hasilnya akan tetap menjadi kode biner $(n,M,d)_2$ yang valid.
@@ -157,6 +157,34 @@ Algoritma untuk membuat sebuah query dengan code generator ditunjukkan pada Kode
 }
 \end{algorithm}
 
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{../img/perfect8.png}
+\caption{Hasil tabel jarak Hamming pada $M=8$ dan $n=7$}
+\label{fig:perfect8}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.45]{../img/perfect16.png}
+\caption{Hasil tabel jarak Hamming pada $M=16$ dan $n=15$}
+\label{fig:perfect16}
+\end{figure}
+
+\begin{equation}
+\label{eq:perfectbinarycode}
+\text{Terdapat kode biner sempurna }(M-1, M, M/2)_2
+\end{equation}
+
+Setelah melakukan percobaan menggunakan seluruh $M-1$ query untuk $M$ ruang pencarian, didapatkan seluruh jarak hamming setiap codeword adalah $M/2$. Gambar \ref{fig:perfect8} adalah contoh pada $M=8$ dan $n=7$. Lalu Gambar \ref{fig:perfect16} adalah contoh pada $M=16$ dan $n=15$. Dari hasil tersebut dapat disimpulkan bahwa dengan melakukan seluruh $M-1$ macam query dengan generator untuk ruang pencarian $M$, akan didapatkan kode biner dengan $d=M/2$. Kode biner pada Persamaan \ref{eq:perfectbinarycode} disebut sempurna karena seluruh jarak Hamming pada setiap codeword yang berbeda bernilai $d = M/2$.
+
+\begin{align}
+q_{rep} &= d\ \backslash\ (M/2) \label{eq:qrep} \\
+d_{mod} &= d \text{ mod } (M/2) \label{eq:dmod}
+\end{align}
+
+Oleh karena itu jika kita membutuhkan query yang menghasilkan $d = M/2$, maka gunakan seluruh $M-1$ query dengan generator. Sedangkan jika kita membutuhkan query yang menghasilkan $d < M/2$, pilih sesedikit mungkin $n$ query agar menghasilkan $d$ yang dibutuhkan. Dari kebutuhan tersebut, dibuatlah rumus $q_{rep}$ dan $d_{mod}$. Nilai $q_{rep}$ yang didapat dari Persamaan \ref{eq:qrep} adalah jumlah perulangan yang dilakukan terhadap $M-1$ query untuk mencapai solusi. Nilai $d_{mod}$ yang didapat dari Persamaan \ref{eq:dmod} adalah sisa jarak Hamming $d$ yang dibutuhkan untuk mencapai solusi. Cara untuk mencari jumlah query sisa untuk menghasilkan jarak Hamming distance $d_{mod}$ ada pada subbab selanjutnya.
+
 \subsubsection{Pencarian mendalam untuk mendapatkan urutan kode biner}
 
 Algoritma solusi menggunakan generator matrix harus membuat urutan $s$ tertentu sedemikian hingga seminimal mungkin jumlah query $n$ yang dihasilkan dari $\vec{s} = \{s_1, \ldots, s_n\}$ akan menghasilkan semaksimal mungkin jarak Hamming $d$. Untuk itu dibuatlah algoritma pencarian mendalam \textit{exhaustive search} untuk mendapatkan urutan $\vec{s}$ yang paling optimal seperti yang ditunjukkan pada Kode Sumber \ref{alg:exhaustive_search}.
@@ -189,16 +217,8 @@ Pada baris \ref{alg:best_search_loop}, program melakukan perulangan untuk mencob
       \lIf{$code[i]$ already used}{continue}\label{alg:skip_used_code}
       $min = \infty$\;
       $min\_count = 0$\;
-      \For{$j = 1$ \KwTo $M$}{\label{alg:test_distance}
-        $temp = code\_distance[j] + (code[i][0] \mathrel{!}= code[i][j])$\;
-        \uIf{$temp == min$}{\label{alg:minmax}
-          $min\_count$++\;
-        }
-        \ElseIf{$temp < min$}{
-          $min = temp$\;
-          $min\_count = 1$\;
-        }
-      }
+      $min$ = minimal hamming distance if using $code[i]$\;\label{alg:test_distance}
+      $min\_count$ = how many node which have hamming distance = $min$\;\label{alg:minmax}
       \If{$min > best\_min\ ||\ (min == best\_min\ \&\&\ min\_count <
           best\_min\_count)$}{\label{alg:save_the_best}
         $best = i$\;
@@ -221,14 +241,40 @@ Pada baris \ref{alg:best_search_loop}, program melakukan perulangan untuk mencob
 }
 \end{algorithm}
 
+\begin{table}[h!]
+\caption{Jumlah query keluaran dari Algoritma \textit{exhaustive search}}
+\label{tab:query_count}
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+$M$ & jumlah query & $M$ & jumlah query \\
+\hline
+2 & 1 & 128 & 72 \\
+\hline
+4 & 3 & 256 & 76 \\
+\hline
+8 & 7 & 512 & 79 \\
+\hline
+16 & 15 & 1024 & 81 \\
+\hline
+32 & 31 & 2048 & 84 \\
+\hline
+64 & 63 & 4096 & 86 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+Keluaran dari algoritma ini dengan inputan $2 \leq 2^m \leq 4096$ dan $e=16$ akan menghasilkan jumlah query seperti pada Tabel \ref{tab:query_count}. Setiap sejumlah query pada setiap $M$ ini akan menghasilkan $d = 33$ pada $128 \leq M \leq 4096$ atau telah menggunakan semua seed yang berjumlah $M-1$ pada $2 \leq M \leq 64$. Hasil query tersebut akan dimasukkan langsung ke dalam code pada solusi optimal pencarian Ulam non-interaktif yang akan dijelaskan pada subbab selanjutnya.
+
 \subsubsection{Solusi optimal untuk menyelesaikan permasalahan Ulam}
 
 Program mencari urutan bibit generator terbaik akan digunakan untuk menghitung semua kasus uji dalam batasan masalah, yaitu pada $2 < m < 12$ di mana $M = 2^m$ dan pada $2 < e < 16$. Jika digabungkan untuk semua $m$, dihasilkan set vector $S = \{\vec{s_2}, \vec{s_3}, \ldots, \vec{s_12}\}$ di mana $\vec{s_m}$ berisi urutan bibit generator $\{s_1, s_2, \ldots, s_n\}$ di mana $n$ adalah banyaknya bibit generator untuk menghasilkan $d=16$ atau $d=M/2$.
 
-Selanjutnya $S$ akan dimasukkan langsung ke dalam code solusi. Program solusi ada pada Kode Sumber \ref{alg:guessn5_lookup}.
+Selanjutnya $S$ akan dimasukkan langsung ke dalam code solusi. Program solusi ada pada Kode Sumber \ref{alg:guessn5_lookup} yaitu menggunakan algoritma kode biner menggunakan \textit{lookup table}.
 
 \begin{algorithm}[h]
-\caption{Algoritma mencari urutan bibit generator terbaik}
+\caption{Algoritma solusi optimal pencarian Ulam non-interaktif}
 \label{alg:guessn5_lookup}
 \Fn{lookup\_binary\_code($M$, $e$)}{
 \KwData{$M$ search space, $e$ max lies allowed}
@@ -240,6 +286,18 @@ Selanjutnya $S$ akan dimasukkan langsung ke dalam code solusi. Program solusi ad
   $d = (2e + 1)$\;
   $minimal[d] = [\ ]$\;
   $distances[M] = [\ ]$\;
+  $code\_order$ = preloaded exhaustive\_search($2 \leq 2^m \leq 4096$, $16$)\;
+
+  \For{$i = 0$ \KwTo $M-1$}{
+  % for (int i = 0; i < M-1 \&\& min < d; ++i) {
+    $min = \infty$\;
+    % /* binary start from 0 to M */
+    $query = \text{generate\_query}(M, code\_order[m][i])$\;
+    update the $distances$ after $query$\;
+    $min$ = min($distances$)\;
+    $queries$.push($query$.substr($the\_real\_M$))\;
+    \lIf{$min \geq d$}{break}
+  }
 
   \Return $queries$\;
 }

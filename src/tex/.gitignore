@@ -2,6 +2,7 @@
 *.bbl
 *.blg
 *.gz
+*.loa
 *.lof
 *.log
 *.lol
