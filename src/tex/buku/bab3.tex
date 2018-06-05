@@ -303,16 +303,8 @@ Selanjutnya $S$ akan dimasukkan langsung ke dalam code solusi. Program solusi ad
 }
 \end{algorithm}
 
-\section{Implementasi algoritma}
 
-Implementasi merupakan tahap untuk membangun algoritma yang akan digunakan. Pada tahap ini dilakukan implementasi dari rancangan struktur data yang akan dimodelkan sesuai dengan permasalahan. Implementasi dilakukan dengan menggunakan bahasa pemrograman C++ agar dapat disubmit ke SPOJ. Selain itu akan dilakukan implementasi program dalam bahasa C++ yang dapat mengecek kebenaran query dengan menghitung apakah jarak Hamming dari query sudah melampaui $2e+1$.
-
-Implementasi dalam bahasa coffeescript untuk menghasilkan halaman web. Visualisasi dalam bentuk web digunakan untuk mencari pola pada query karena penampilan yang lebih dapat dipahami. Selain itu akan dibuat visualisasi untuk memudahkan pembacaan jarak Hamming pada kode biner. Aplikasi web akan menerima input, lalu menampilkan visualisasi sesuai dengan kebutuhan.
-
-
-\section{Pengujian}
-
-Tahap pengujian adalah melakukan uji coba menggunakan dataset sesuai pada batasan permasalahan untuk mengetahui hasil dan performa dari algoritma dan struktur data yang dibangun. Dataset dibagi menjadi dua jenis, yaitu dataset buatan dan dataset online. Dataset akan divariasikan sesuai dengan jumlah ruang pencarian $M$ dan jumlah maksimal bohong $e$. Pengujian juga akan digunakan untuk membandingkan manakah algoritma yang lebih bagus dari semua kasus uji.
+\section{Pengujian keabsahan algoritma}
 
 Untuk menguji kebenaran query akan dibuat program yang dapat menguji query yang dihasilkan oleh algoritma solusi, agar tidak ada satu set pun yang menyebabkan ada lebih dari satu kemungkinan nilai $x$. Isi dari program pengujian kebenaran algoritma adalah mengecek apakah minimal jarak Hamming setiap query yang berbeda pada setiap kasus uji bernilai minimal $2e+1$ seperti yang ditunjukkan pada Kode Sumber \ref{alg:query_assert}. Variabel $dist$ pada baris \ref{alg:assert_distvar} digunakan untuk menyimpan jarak antara bit ke-0 dengan seluruh bit yang lain. Baris \ref{alg:assert_dist} menunjukkan bahwa jarak akan bertambah setiap ada perbedaan nilai bit.
 
@@ -335,4 +327,9 @@ Untuk menguji kebenaran query akan dibuat program yang dapat menguji query yang 
 }
 \end{algorithm}
 
-Selain dataset buatan, program juga akan diuji dengan dataset pada Online Judge SPOJ GUESSN5. Hal yang dinilai pada pengujian adalah banyaknya query yang dibuat, waktu yang dibutuhkan, dan penggunaan memory. Pembobotan skor adalah jika penjawab menemukan ada suatu set jawaban yang menyebabkan lebih dari satu kemungkinan nilai $x$, maka pengujian dianggap gagal. Jika berhasil, maka nilai skor bertambah $q^2$. Jika gagal, maka nilai skor bertambah $4m^2$. Total skor adalah jumlah semua skor dari setiap kasus uji. Semakin kecil skor maka semakin baik algoritma yang digunakan. Skor akan dibandingkan dengan pengajuan peserta lain pada SPOJ GUESSN5.
+
+\section{Implementasi algoritma}
+
+Implementasi merupakan tahap untuk membangun algoritma yang akan digunakan. Pada tahap ini dilakukan implementasi dari rancangan struktur data yang akan dimodelkan sesuai dengan permasalahan. Implementasi dilakukan dengan menggunakan bahasa pemrograman C++ agar dapat disubmit ke SPOJ. Selain itu akan dilakukan implementasi program dalam bahasa C++ yang dapat mengecek kebenaran query dengan menghitung apakah jarak Hamming dari query sudah melampaui $2e+1$.
+
+Implementasi dalam bahasa coffeescript untuk menghasilkan halaman web. Visualisasi dalam bentuk web digunakan untuk mencari pola pada query karena penampilan yang lebih dapat dipahami. Selain itu akan dibuat visualisasi untuk memudahkan pembacaan jarak Hamming pada kode biner. Aplikasi web akan menerima input, lalu menampilkan visualisasi sesuai dengan kebutuhan.

@@ -4,13 +4,13 @@ Bab ini menjelaskan uji coba yang dilakukan pada sistem yang telah dibangun bese
 
 \section{Lingkungan Uji Coba}
 
-Uji coba dilakukan pada perangkat dengan spesifikasi berikut.
+Pengujian dibagi menjadi dua jenis, yaitu dengan dataset buatan dan dengan dataset online. Uji coba dilakukan pada perangkat dengan spesifikasi berikut.
 
 \begin{enumerate}
   \item Perangkat Keras
   \begin{enumerate}
     \item Processor Intel® Core™ i7-7400 CPU @ 3.00GHz (4 CPUs), ~3.0GHz
-    \item Random Access Memory 8192MB
+    \item Random Access Memory 3837MB
   \end{enumerate}
   \item Perangkat Lunak
   \begin{enumerate}
@@ -18,13 +18,157 @@ Uji coba dilakukan pada perangkat dengan spesifikasi berikut.
     \item Bahasa Pemrograman C++
     \item gcc 5.4.0
   \end{enumerate}
+  \item Pengujian online SPOJ
+  \begin{enumerate}
+    \item Time limit: 20s
+    \item Source limit: 50000B
+    \item Memory limit: 1536MB
+    \item Cluster: Cube (Intel G860)
+    \item Languages: C++ 4.3.2
+  \end{enumerate}
 \end{enumerate}
 
 \section{Uji coba menggunakan dataset lokal}
 
+Tahap pengujian adalah melakukan uji coba menggunakan dataset sesuai pada batasan permasalahan untuk mengetahui hasil dan performa dari algoritma dan struktur data yang dibangun. Pengujian juga akan digunakan untuk membandingkan jumlah query, waktu, dan memory dari algoritma dari semua kasus uji dataset. Dataset akan divariasikan sesuai dengan jumlah ruang pencarian $M$ dan jumlah maksimal bohong $e$.
+
+\subsection{Hasil pengujian jumlah query}
+
+Pada pengujian jumlah query, pada setiap $2^m \mid 1 \leq m \leq 12$, pada setiap algoritma, diujikan 15 kasus uji sesuai dengan jumlah maksimal bohong $2 \leq e \leq 16$. Pada Gambar \ref{fig:graph_query1} dapat dilihat bahwa jumlah query yang dihasilkan oleh algoritma kode biner dan repetisi biner sama. Lalu untuk kasus uji selanjutnya, algoritma menunjukkan hasil yang lebih bagus karena menghasilkan jumlah query yang lebih sedikit, seperti yang ditunjukkan pada Gambar \ref{fig:graph_query2}, Gambar \ref{fig:graph_query3}, Gambar \ref{fig:graph_query4}, Gambar \ref{fig:graph_query5}, Gambar \ref{fig:graph_query6}, Gambar \ref{fig:graph_query7}, Gambar \ref{fig:graph_query8}, Gambar \ref{fig:graph_query9}, Gambar \ref{fig:graph_query10}, Gambar \ref{fig:graph_query11}, dan Gambar \ref{fig:graph_query12}.
+
+\begin{figure}
+\centering
+\testgraphquery{1}
+\caption{Grafik perbandingan jumlah query pada $M=2$}
+\label{fig:graph_query1}
+\end{figure}
+
+\begin{figure}
+\centering
+\testgraphquery{2}
+\caption{Grafik perbandingan jumlah query pada $M=4$}
+\label{fig:graph_query2}
+\end{figure}
+
+\begin{figure}
+\centering
+\testgraphquery{3}
+\caption{Grafik perbandingan jumlah query pada $M=8$}
+\label{fig:graph_query3}
+\end{figure}
+
+\begin{figure}
+\centering
+\testgraphquery{4}
+\caption{Grafik perbandingan jumlah query pada $M=16$}
+\label{fig:graph_query4}
+\end{figure}
+
+\begin{figure}
+\centering
+\testgraphquery{5}
+\caption{Grafik perbandingan jumlah query pada $M=32$}
+\label{fig:graph_query5}
+\end{figure}
+
+\begin{figure}
+\centering
+\testgraphquery{6}
+\caption{Grafik perbandingan jumlah query pada $M=64$}
+\label{fig:graph_query6}
+\end{figure}
+
+\begin{figure}
+\centering
+\testgraphquery{7}
+\caption{Grafik perbandingan jumlah query pada $M=128$}
+\label{fig:graph_query7}
+\end{figure}
+
+\begin{figure}
+\centering
+\testgraphquery{8}
+\caption{Grafik perbandingan jumlah query pada $M=256$}
+\label{fig:graph_query8}
+\end{figure}
+
+\begin{figure}
+\centering
+\testgraphquery{9}
+\caption{Grafik perbandingan jumlah query pada $M=512$}
+\label{fig:graph_query9}
+\end{figure}
+
+\begin{figure}
+\centering
+\testgraphquery{10}
+\caption{Grafik perbandingan jumlah query pada $M=1024$}
+\label{fig:graph_query10}
+\end{figure}
+
+\begin{figure}
+\centering
+\testgraphquery{11}
+\caption{Grafik perbandingan jumlah query pada $M=2048$}
+\label{fig:graph_query11}
+\end{figure}
+
+\begin{figure}
+\centering
+\testgraphquery{12}
+\caption{Grafik perbandingan jumlah query pada $M=4096$}
+\label{fig:graph_query12}
+\end{figure}
+
+\subsection{Hasil pengujian waktu eksekusi}
+
+Pada pengujian waktu eksekusi, pada setiap algoritma, diujikan 12 kasus uji sesuai dengan jumlah variasi ruang pencarian $1 \leq m \leq 12$. Pada setiap pengujian, terdapat 15 kasus uji sesuai dengan variasi jumlah maksimal bohong $2 \leq e \leq 16$. Hasil pengujian ditunjukkan pada Gambar \ref{fig:graph_time}, terlihat bahwa algoritma kode biner tanpa tabel pencarian menghasilkan laju peningkatan waktu yang tinggi, sedangkan untuk repetisi biner dan kode biner dengan tabel pencarian menghasilkan waktu yang stabil.
+
+\begin{figure}
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+xlabel={Jumlah ruang pencarian($2^m$)},
+ylabel={Waktu eksekusi(detik)},
+legend pos=north west,
+grid style=dashed,
+legend entries={Pengulangan biner,Kode biner,Tabel pencarian},
+]
+\addplot[blue,mark=triangle] table{data/timeR.dat};
+\addplot[red,mark=*] table{data/timeB.dat};
+\addplot[green,mark=square] table{data/timeL.dat};
+\end{axis}
+\end{tikzpicture}
+\caption{Grafik perbandingan waktu eksekusi}
+\label{fig:graph_time}
+\end{figure}
+
+\subsection{Hasil pengujian penggunaan memori}
+
+Pada pengujian penggunaan memori, pada setiap algoritma, diujikan 12 kasus uji sesuai dengan jumlah variasi ruang pencarian $1 \leq m \leq 12$. Pada setiap pengujian, terdapat 15 kasus uji sesuai dengan variasi jumlah maksimal bohong $2 \leq e \leq 16$. Hasil pengujian ditunjukkan pada Gambar \ref{fig:graph_time}, terlihat bahwa algoritma kode biner tanpa tabel pencarian menghasilkan laju peningkatan penggunaan memori yang tinggi, sedangkan untuk repetisi biner dan kode biner dengan tabel pencarian menghasilkan penggunaan memori yang stabil.
+
+\begin{figure}
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+xlabel={Jumlah ruang pencarian($2^m$)},
+ylabel={Penggunaan memory(byte)},
+legend pos=north west,
+grid style=dashed,
+legend entries={Pengulangan biner,Kode biner,Lookup table},
+]
+\addplot[blue,mark=triangle] table{data/memoryR.dat};
+\addplot[red,mark=*] table{data/memoryB.dat};
+\addplot[green,mark=square] table{data/memoryL.dat};
+\end{axis}
+\end{tikzpicture}
+\caption{Grafik perbandingan penggunaan memory}
+\label{fig:graph_memory}
+\end{figure}
+
 \section{Uji coba menggunakan dataset online SPOJ}
 
-Subbab ini akan menjelaskan hasil pengujian program penyelesaian permasalahan menggunakan algoritma repetisi pencarian biner dan kode biner.
+Selain dataset buatan, program juga akan diuji dengan dataset pada Online Judge SPOJ GUESSN5. Hal yang dinilai pada pengujian adalah banyaknya query yang dibuat, waktu yang dibutuhkan, dan penggunaan memory. Pembobotan skor adalah jika penjawab menemukan ada suatu set jawaban yang menyebabkan lebih dari satu kemungkinan nilai $x$, maka pengujian dianggap gagal. Jika berhasil, maka nilai skor bertambah $q^2$. Jika gagal, maka nilai skor bertambah $4m^2$. Total skor adalah jumlah semua skor dari setiap kasus uji. Semakin kecil skor maka semakin baik algoritma yang digunakan. Skor akan dibandingkan dengan pengajuan peserta lain pada SPOJ GUESSN5. Subbab ini akan menjelaskan hasil pengujian program penyelesaian permasalahan menggunakan algoritma repetisi pencarian biner dan kode biner.
 
 \subsection{Uji coba algoritma repetisi pencarian biner pada SPOJ}
 
@@ -47,7 +191,26 @@ Memori & 2.7M \\ \hline
 
 \subsection{Uji coba algoritma kode biner pada SPOJ}
 
-Algoritma repetisi pencarian biner disubmit ke SPOJ dalam bahasa C, menghasilkan penilaian yang ditunjukkan pada Tabel \ref{tab:score_binary_code}.
+Algoritma repetisi pencarian biner disubmit ke SPOJ dalam bahasa C, menghasilkan penilaian yang ditunjukkan pada Tabel \ref{tab:score_brute_binary_code}. Algoritma ini menghasilkan error SIGSEGV karena penggunaan memori melewati batas yang disediakan oleh SPOJ.
+
+\begin{table}[h!]
+\caption{Hasil algoritma kode biner pada SPOJ}
+\label{tab:score_brute_binary_code}
+\begin{center}
+\begin{tabular} {|l|l|}
+\hline
+ID & 21726709 \\ \hline
+Tanggal & 2018-05-26 01:10:34 \\ \hline
+Skor & runtime error (SIGSEGV) \\ \hline
+Waktu & 0.00 \\ \hline
+Memori & 3.1M \\ \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\subsection{Uji coba algoritma kode biner dengan tabel pencarian pada SPOJ}
+
+Algoritma repetisi pencarian biner dengan tabel pencarian disubmit ke SPOJ dalam bahasa C, menghasilkan penilaian yang ditunjukkan pada Tabel \ref{tab:score_binary_code}. Skor ini menjadi skor tertinggi pada SPOJ GUESSN5.
 
 \begin{table}[h!]
 \caption{Hasil algoritma kode biner pada SPOJ}

@@ -31,6 +31,25 @@
 }
 
 %--
+%  Shortcut command for creating graph
+%--
+\newcommand{\testgraphquery}[1]
+{
+\begin{tikzpicture}
+\begin{axis}[
+xlabel={Jumlah maksimal bohong $e$},
+ylabel={Jumlah query},
+legend pos=north west,
+grid style=dashed,
+legend entries={Pengulangan biner,Kode biner,Tabel pencarian},
+]
+\addplot[blue,mark=triangle] table{data/queryR#1.dat};
+\addplot[green,mark=square] table{data/queryL#1.dat};
+\end{axis}
+\end{tikzpicture}
+}
+
+%--
 %  Shortcut command for QED symbol. Use it while in math environment
 %--
 \newcommand{\eop}{\ensuremath{\blacksquare}}
