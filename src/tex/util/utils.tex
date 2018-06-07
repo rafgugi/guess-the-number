@@ -5,32 +5,6 @@
 %-------------------------------------------------------------
 
 %--
-%  A set of command for appendix testing tables
-%--
-\newcommand {\testtableheader}
-{
-  \hline
-  No & \multicolumn{3}{|c|}{BSGS}           & \multicolumn{3}{c|}{Brent} \\
-  & \multicolumn{1}{|l}{R} & S & Verdict & R & S & Verdict        \\
-  \hline
-}
-
-\newcommand {\testtablefooter}
-{
-  \hline
-}
-
-\newenvironment{testtable}
-{
-  \begin{tabular}{|l|l l l|l l l|}
-  \testtableheader
-}
-{
-  \testtablefooter
-  \end{tabular}
-}
-
-%--
 %  Shortcut command for creating graph
 %--
 \newcommand{\testgraphquery}[1]
