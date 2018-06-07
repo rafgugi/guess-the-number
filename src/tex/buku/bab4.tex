@@ -2,6 +2,15 @@
 
 Bab ini menjelaskan uji coba yang dilakukan pada sistem yang telah dibangun beserta analisis dari uji coba yang telah dilakukan. Pembahasan pengujian meliputi lingkungan uji coba, skenario uji coba serta analisis setiap pengujian.
 
+\section{Skenario uji coba}
+
+Subbab ini akan menjelaskan hasil pengujian program penyelesaian permasalahan. Pengujian dilakukan untuk tiga metode: metode repetisi pencarian biner, kode biner, dan kode biner dengan tabel pencarian. Ada dua metode pengujian yang digunakan:
+
+\begin{enumerate}
+  \item Pengujian lokal. Pengujian ini menggunakan mesin yang digunakan dalam pemgembang untuk mengukur kebenaran dan informasi hasil query, waktu eksekusi, dan penggunaan memori.
+  \item Pengujian luar. Pengujian ini menggunakan Online Judge untuk mengukur kebenaran dan informasi lain mengenai program.
+\end{enumerate}
+
 \section{Lingkungan Uji Coba}
 
 Pengujian dibagi menjadi dua jenis, yaitu dengan dataset buatan dan dengan dataset online. Uji coba dilakukan pada perangkat dengan spesifikasi berikut.
@@ -27,17 +36,6 @@ Pengujian dibagi menjadi dua jenis, yaitu dengan dataset buatan dan dengan datas
     \item Languages: C++ 4.3.2
   \end{enumerate}
 \end{enumerate}
-
-\section{Skenario uji coba}
-
-Subbab ini akan menjelaskan hasil pengujian program penyelesaian permasalahan. Pengujian dilakukan untuk tiga metode: metode repetisi pencarian biner, kode biner, dan kode biner dengan tabel pencarian. Ada dua metode pengujian yang digunakan:
-
-\begin{enumerate}
-  \item Pengujian lokal. Pengujian ini menggunakan mesin yang digunakan dalam pemgembang untuk mengukur kebenaran dan informasi hasil query, waktu eksekusi, dan penggunaan memori.
-  \item Pengujian luar. Pengujian ini menggunakan Online Judge untuk mengukur kebenaran dan informasi lain mengenai program.
-\end{enumerate}
-
-Pada pengujian lokal, dibutuhkan beberapa data sebagai masukan. Data yang digunakan beragam sesuai dengan variasi ruang pencarian $2^m \mid 1 \leq m \leq 12$ dan jumlah maksimal bohong $2 \leq e \leq 16$.
 
 \section{Uji coba menggunakan dataset lokal}
 

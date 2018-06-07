@@ -129,6 +129,8 @@ Jadi jika ada codeword $c$ di mana $0 \le wt(c) \le e$ maka $wt(\vec{v}) > e$ di
 
 Dari pembuktian diatas, dapat disimpulkan bahwa untuk menyelesaikan permainan pencarian Ulam non-interaktif dengan batas pencarian $M$ dan maksimal kebohongan $e$, transpose dari $n$ query yang dibuat harus membentuk kode biner $(n,M,d)_2$.
 
+Untuk menyelesaikan permasalahan Ulam non-interaktif, ada tiga algoritma yang digunakan yaitu algoritma pembangkitan query, algoritma pencarian mendalam, dan algoritma solusi utama. Ketiga algoritma tersebut akan dijelaskan pada subbab selanjutnya.
+
 \subsubsection{Algoritma pembangkitan query}
 
 Untuk membuat kode biner $(n,M,d)_2$, maka diperlukan algoritma untuk membangkitkan kode. Karena setiap satu query adalah hasil transpose dari sebuah kolom pada kode biner, setiap kolom pada kode biner dapat dibuat dari bitstring pembangkit $s = \mathbb{F}_2^m$ yang jika diubah menjadi integer akan memiliki rentang $0 \leq s < M$. Oleh karena itu ada $M-1$ macam $s$ karena $s=0$ akan menghasilkan query $\vec{0}$ yang tidak akan menghasilkan jarak Hamming pada kode biner.
@@ -267,9 +269,9 @@ Keluaran dari algoritma ini dengan inputan $2 \leq 2^m \leq 4096$ dan $e=16$ aka
 
 \subsubsection{Solusi optimal untuk menyelesaikan permasalahan Ulam}
 
-Program mencari urutan bibit generator terbaik akan digunakan untuk menghitung semua kasus uji dalam batasan masalah, yaitu pada $2 < m < 12$ di mana $M = 2^m$ dan pada $2 < e < 16$. Jika digabungkan untuk semua $m$, dihasilkan set vector $S = \{\vec{s_2}, \vec{s_3}, \ldots, \vec{s_12}\}$ di mana $\vec{s_m}$ berisi urutan bibit generator $\{s_1, s_2, \ldots, s_n\}$ di mana $n$ adalah banyaknya bibit generator untuk menghasilkan $d=16$ atau $d=M/2$.
+Program solusi ada pada Kode Sumber \ref{alg:guessn5_lookup} yaitu menggunakan algoritma kode biner menggunakan \textit{lookup table}. Program mencari urutan bibit generator terbaik akan digunakan untuk menghitung semua kasus uji dalam batasan masalah, yaitu pada $2 < m < 12$ di mana $M = 2^m$ dan pada $2 < e < 16$. Jika digabungkan untuk semua $m$, dihasilkan set vector $S = \{\vec{s_2}, \vec{s_3}, \ldots, \vec{s_12}\}$ di mana $\vec{s_m}$ berisi urutan bibit generator $\{s_1, s_2, \ldots, s_n\}$ di mana $n$ adalah banyaknya bibit generator untuk menghasilkan $d=16$ atau $d=M/2$. Selanjutnya $S$ akan dimasukkan langsung ke dalam kode solusi seperti pada baris \ref{alg:preloaded}.
 
-Selanjutnya $S$ akan dimasukkan langsung ke dalam code solusi. Program solusi ada pada Kode Sumber \ref{alg:guessn5_lookup} yaitu menggunakan algoritma kode biner menggunakan \textit{lookup table}.
+Array $minimal$ pada baris \ref{alg:minimal} berisi berapa $n$ query untuk menghasilkan jarak Hamming $d$ pada indeksnya, selanjutnya digunakan untuk mengambil $n$ query yang dihasilkan oleh variabel $dmod$ pada baris \ref{alg:dmod}. Sedangkan $qrep$ digunakan untuk mengulangi semua $M-1$ query untuk mencapai jarak Hamming $M/2$. Total jumlah query adalah $n = q_{rep} * (M/2) + minimal[d_{mod}]$.
 
 \begin{algorithm}[h]
 \caption{Algoritma solusi optimal pencarian Ulam non-interaktif}
@@ -284,7 +286,7 @@ Selanjutnya $S$ akan dimasukkan langsung ke dalam code solusi. Program solusi ad
   $d = (2e + 1)$\;
   $minimal[d] = [\ ]$\;
   $distances[M] = [\ ]$\;
-  $code\_order$ = preloaded exhaustive\_search($2 \leq 2^m \leq 4096$, $16$)\;
+  $code\_order$ = preloaded exhaustive\_search($2 \leq 2^m \leq 4096$, $16$)\;\label{alg:preloaded}
 
   \For{$i = 0$ \KwTo $M-1$}{
   % for (int i = 0; i < M-1 \&\& min < d; ++i) {
@@ -293,11 +295,25 @@ Selanjutnya $S$ akan dimasukkan langsung ke dalam code solusi. Program solusi ad
     $query = \text{generate\_query}(M, code\_order[m][i])$\;
     update the $distances$ after $query$\;
     $min$ = min($distances$)\;
+    $minimal[min] = i$\;\label{alg:minimal}
     $queries$.push($query$.substr($the\_real\_M$))\;
     \lIf{$min \geq d$}{break}
   }
 
-  \Return $queries$\;
+  $qrep$ = $d/(M/2)$\;\label{alg:qrep}
+  $dmod$ = $d$ mod $(M/2)$\;\label{alg:dmod}
+  $solution = [\ ]$\;
+
+  \For{$i = 0$ \KwTo $qrep$}{
+    \For{$j = 0$ \KwTo $M-1$}{
+      $solution$.push($queries[j]$)\;
+    }
+  }
+  \For{$i = 0$ \KwTo $minimal[dmod]$}{
+    $solution$.push($queries[i]$)\;
+  }
+
+  \Return $solution$\;
 }
 \end{algorithm}
 
