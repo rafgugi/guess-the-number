@@ -1,135 +1,41 @@
 \chapter{METODE PENELITIAN}
 
-Bab ini memaparkan tentang metodologi penelitian yang digunakan pada penelitian ini yaitu tahap analisis penyelesaian masalah, implementasi, dan pengujian.
+Bab ini memaparkan tentang metodologi penelitian yang digunakan pada penelitian ini yaitu tahap analisis penyelesaian masalah dan implementasi.
 
-\section{Analisis penyelesaian masalah}
+\section{Desain dan analisis penyelesaian masalah}
 
-Pada permasalahan pencarian Ulam non-interaktif, penjawab tidak diperbolehkan menjawab sebelum penanya selesai menanyakan seluruh query. Ada dua pendekatan yang dapat dilakukan untuk menyelesaikan masalah tersebut, yaitu menggunakan repetisi pencarian biner dan menggunakan kode biner.
-
-\subsection{Solusi menggunakan repetisi pencarian biner}
-
-Pendekatan pertama yang mungkin untuk menyelesaikan permasalahan ini adalah dengan mempersiapkan pencarian biner. Query awal pencarian biner berjumlah $q_b=\log_2(M)$, agar setiap kemungkinan jawaban dari penjawab dapat mewakili semua kemungkinan nilai $x$. Lalu setiap query akan diulang sebanyak $q_e=2e+1$ kali agar penjawab pasti menjawab dengan jujur, karena $e$ query untuk jawaban bohong, ditambah dengan $e$ query untuk mengeliminasi jawaban bohong, ditambah dengan satu query jawaban pasti jujur karena kesempatan penjawab untuk berbohong sudah habis. Total jumlah query $q=q_b \times q_e$.
-
-\begin{table}[h!]
-\caption{Contoh pencarian biner pada $M=8$}
-\label{tab:binary_8}
-\begin{center}
-\begin{tabular}{|l|c|c|c|c|c|c|c|c|}
-\hline
-$x$  & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
-\hline
-$Q_1$ & 0 & 0 & 0 & 0 & 1 & 1 & 1 & 1 \\
-\hline
-$Q_2$ & 0 & 0 & 1 & 1 & 0 & 0 & 1 & 1 \\
-\hline
-$Q_3$ & 0 & 1 & 0 & 1 & 0 & 1 & 0 & 1 \\
-\hline
-Jawaban & NNN & NNY & NYN & NYY & YNN & YNY & YYN & YYY \\
-\hline
-\end{tabular}
-\end{center}
-\end{table}
-
-Misalnya jika $M=8$, $e=2$, maka jumlah $q_b$ untuk pencarian biner adalah \texttt{00001111}, \texttt{00110011} dan \texttt{01010101} seperti pada Tabel \ref{tab:binary_8}. Dari tiga query, tersebut, semua jawaban penjawab mulai dari "NNN" sampai "YYY" dapat mewakili semua nilai $x$ dalam $S_M={1,2,...,8}$ sehingga nilai $q_b=3$. Lalu masing-masing query diulang sebanyak $q_e=2e+1=5$ kali. Maka total dari $q=q_b \times q_e=9$.
-
-Algoritma pencarian biner ada pada Kode Sumber \ref{alg:repetisi_biner}. Baris \ref{alg:for_qb} menunjukkan perulangan untuk setiap jenis query $q_b$. Nilai $q_b$ adalah hasil $\log_2$ dari M, lalu dibulatkan ke atas karena $M$ harus merupakan perpangkatan dari 2 sehingga nilai $q_b = \text{ceil}(\log_2(M))$. Baris \ref{alg:for_m} menunjukkan perulangan untuk membuat setiap satu jenis query pencarian biner. Baris \ref{alg:find_bit} menunjukkan proses untuk mencari bit pada posisi tertentu pada sebuah integer \cite{bithack}. Setiap query akan diulang sebanyak $qe$ seperti yang ditunjukkan pada baris \ref{alg:for_qe}.
-
-\begin{algorithm}[h]
-\caption{Algoritma repetisi pencarian biner}
-\label{alg:repetisi_biner}
-\Fn{repetitive\_binary\_search($M$, $e$)}{
-\KwData{$M$ search space, $e$ max lies allowed}
-\KwResult{$queries$}
-  $queries = [\ ]$\;
-  $qb = \text{ceil}(\log_2(M))$\;
-  $qe = 2*e + 1$\;
-  $twopower = 1$\;
-  \For{$i = 0$ \KwTo $qb$}{\label{alg:for_qb}
-    $string = ""$\;
-    \For{$j = 0$ \KwTo $M$}{\label{alg:for_m}
-      \eIf{$j\ \&\ twopower$}{\label{alg:find_bit}
-        $string \mathrel{+}= "1"$\;
-      }{
-        $string \mathrel{+}= "0"$\;
-      }
-    }
-    \For{$j = 0$ \KwTo $qe$}{\label{alg:for_qe}
-      $queries$.push($string$)\;
-    }
-    $twopower \mathrel{*}= 2$\;
-  }
-  \Return $queries$\;
-}
-\end{algorithm}
-
+Pada permasalahan pencarian Ulam non-interaktif, penjawab tidak diperbolehkan menjawab sebelum penanya selesai menanyakan seluruh query. Ada dua pendekatan berbeda yang dapat dilakukan untuk menyelesaikan masalah tersebut, yaitu menggunakan repetisi pencarian biner dan menggunakan kode biner. Perlu diketahui bahwa kedua solusi tersebut tidak saling berhubungan.
 
 \subsection{Solusi menggunakan kode biner}
 
-Tujuan dari permasalahan ini adalah untuk menghasilkan $n$ query. Diberikan sebuah matriks $L$ berukuran $n \times M$ berisi $n$ query. Kumpulan query ini dinotasikan dengan $L = \{\vec{q_1},\vec{q_2},\ldots,\vec{q_n}\}$ di mana $\vec{q_i} = \{s_1,s_2,\ldots,s_M\}$. Himpunan nilai $s_j$ yang mungkin adalah $s_j \in \{0,1\}$.
+Tahap untuk menyelesaikan permasalahan Ulam non-interaktif ada pada Gambar \ref{fig:flow_binarycode}. Setelah dilakukan input ruang pencarian $M$ dan maksimal bohong $e$, simpan $M$ untuk digunakan pada saat output query terakhir. Ubah $M$ menjadi perpangkatan dua terdekat, karena algoritma selanjutnya hanya dapat berjalan jika $M$ adalah perpangkatan dua. Pada subbab selanjutnya akan dijelaskan algoritma untuk menggunakan query generator dan juga algoritma utama untuk menyelesaikan permasalahan Ulam non-interaktif.
 
-Diberikan sebuah vektor $\vec{z} \in \{z_1,z_2,\ldots,z_n\}$ di mana $z_i \in \{0,1\}$ berisi jawaban dari seluruh query secara berurutan, $z_i$ adalah jawaban dari $\vec{q_i}$. Jika $z_i=0$ berarti jawaban query $q_i$ adalah 'tidak' sehingg seluruh $s_j$ pada $\vec{q_i}$ harus ditambah dengan 1 dan jika $z_i=1$ berarti jawaban dari query $\vec{q_i}$ adalah 'ya' sehingga seluruh $s_j$ pada $\vec{q_i}$ ditambah dengan 0 (diabaikan).
-
-Matriks $L^\top$ berukuran $M \times n$ adalah hasil transpose dari matriks $L$. Asumsikan $L^\top$ juga dapat disebut sebagai kode biner $(n,M,d)_2$ di mana $n$ adalah jumlah query, $M$ adalah panjang $S_M$, dan $d$ adalah $2e+1$ di mana $e$ adalah jumlah maksimal bohong. Tambahkan seluruh baris $\vec{c_j}$ pada $L^\top$ dengan $\vec{z}$. Maka jawaban dari permainan Ulam non-interaktif adalah $x = j$ di mana $j$ adalah index dari baris $c$ pada $L^\top$ yang memiliki bobot $wt(\vec{c_j}) > n-e$.
-
-\begin{lemma}
-Diketahui integer $n$, $M$, dan $d$. Jika $L^\top$ adalah kode biner $(n,M,d)_2$ yang valid, maka jika setiap codeword $\vec{c}$ pada $L^\top$ ditambah dengan $\vec{z} \mid \vec{z} \in \mathbb{F}_2^n$ maka hasilnya akan tetap menjadi kode biner $(n,M,d)_2$ yang valid.
-\end{lemma}
-
-\begin{proof}
-Jika $d_H(\vec{v_i},\vec{w_j}) \ge d \mid \vec{v_i},\vec{w_j} \in L^\top$ maka
-\begin{align*}
-d_H(\vec{v_i}+\vec{z},\vec{w_j}+\vec{z}) &\ge d \\
-wt(\vec{v_i}+\vec{w_j}+\vec{z}+\vec{z}) &\ge d \\
-wt(\vec{v_i}+\vec{w_j}) &\ge d \\
-d_H(\vec{v_i},\vec{w_j}) &\ge d \\
-\end{align*}
-Jadi jika $d_H(\vec{v_i},\vec{w_j}) \ge d$ maka $d_H(\vec{v_i}+\vec{z},\vec{w_j}+\vec{z}) \ge d$.
-\end{proof}
-
-Penanya memenangkan permainan jika $L^\top$ memiliki paling banyak satu baris dengan $wt(\vec{c}) \ge n-e$. Jika hanya ada satu row, maka row tersebut adalah jawaban permainan. Jika tidak ada satu row pun yang memenuhi, penanya tetap memenangkan permainan karena penjawab melakukan kecurangan, melakukan bohong untuk semua angka lebih dari batas yang ditetapkan.
-
-Untuk meyakinkan bahwa setelah seluruh jawaban $\vec{z}$ diberikan dan diaplikasikan ke matrix $L$ dan tidak pasti hanya ada 1 baris yang memiliki nilai $1$ antara $n-e \le wt(\vec{c_j}) \le n$, adalah dengan memastikan bahwa jarak Hamming setiap row yang berbeda pada $L^\top$ adalah minimal $d$.
-
-\begin{lemma}
-Diketahui integer $n$, $M$, dan $d$. Jika $L^\top$ adalah kode biner $(n,M,d)_2$ yang valid, maka pasti hanya ada paling banyak satu codeword $\vec{c}$ yang memiliki $0 \le wt(\vec{c}) \le e$.
-\end{lemma}
-
-\begin{proof}
-Jika ada codeword $c$ di mana $0 \le wt(c) \le e$ maka $wt(\vec{v}) > e$ di mana $\vec{v} \neq c$. Pembuktian dapat dibuktikan dengan dua kasus.\\
-
-1) Jika $wt(\vec{c}) = 0$ maka
-\begin{align*}
-d_H(\vec{c},\vec{v}) &\ge d \mid \vec{c} \neq \vec{v} , \vec{v} \in L^\top \\
-wt(\vec{c} + \vec{v}) &\ge d \\
-wt(\vec{v}) &\ge d \label{eq:proofd} \stepcounter{equation} \tag{\theequation}
-\end{align*}
-Sebelumnya telah disebutkan hubungan $d$ dan $e$ pada Persamaan \ref{eq:de}. Persamaan tersebut dapat diturunkan menjadi
-\begin{equation} \label{eq:dge}
-d > e
-\end{equation}
-Dengan memasukkan Persamaan \ref{eq:dge} ke Persamaan \ref{eq:proofd}, maka didapatkan
-\begin{equation*}
-wt(\vec{v}) > e
-\end{equation*}
-
-2) Jika $wt(\vec{c}) = e$ maka
-\begin{align*}
-d_H(\vec{c},\vec{v}) &\ge d \mid \vec{c} \neq \vec{v} , \vec{v} \in L^\top \\
-wt(\vec{c}+\vec{v}) &\ge d \\
-wt(\vec{c}) + wt(\vec{v}) \ge wt(\vec{c}+\vec{v}) &\ge d \\
-wt(\vec{c}) + wt(\vec{v}) &\ge d \\
-e + wt(\vec{v}) &\ge d \\
-\intertext{Masukkan Persamaan \ref{eq:de} untuk mensubstitusi $d$}\\
-wt(\vec{v}) &\ge 2e+1-e \\
-&\ge e+1\\
-wt(\vec{v}) &> e
-\end{align*}
-Jadi jika ada codeword $c$ di mana $0 \le wt(c) \le e$ maka $wt(\vec{v}) > e$ di mana $\vec{v} \neq c$.
-\end{proof}
-
-Dari pembuktian diatas, dapat disimpulkan bahwa untuk menyelesaikan permainan pencarian Ulam non-interaktif dengan batas pencarian $M$ dan maksimal kebohongan $e$, transpose dari $n$ query yang dibuat harus membentuk kode biner $(n,M,d)_2$.
-
-Untuk menyelesaikan permasalahan Ulam non-interaktif, ada tiga algoritma yang digunakan yaitu algoritma pembangkitan query, algoritma pencarian mendalam, dan algoritma solusi utama. Ketiga algoritma tersebut akan dijelaskan pada subbab selanjutnya.
+\begin{figure}
+\centering
+\begin{tikzpicture}[node distance=2cm,on grid,auto]
+% nodes
+\node (n0) [start] {Start};
+\node (n1) [io,below of=n0] {Input $M$, $e$};
+\node (n2) [process,below of=n1,align=center] {$real\_M = M$\\$m$ = ceil($\log_2(M)$)\\$M=2^m$};
+\node (n3) [process,below of=n2,align=center] {$code$ = Generate all possible query using query generator};
+\node (n4) [process,below of=n3,align=center] {$code\_order$ = Preloaded exhaustive search($2 \leq 2^m  \leq 4096$, 16)};
+\node (n5) [process,below of=n4] {$minimal$ = Generate minimal query};
+\node (n6) [process,below of=n5] {$queries$ = Generate actual query};
+\node (n7) [io,below of=n6] {Print all the $queries$};
+\node (n8) [start,below of=n7] {End};
+% arrows
+\draw[arrow] (n0) -- (n1);
+\draw[arrow] (n1) -- (n2);
+\draw[arrow] (n2) -- (n3);
+\draw[arrow] (n3) -- (n4);
+\draw[arrow] (n4) -- (n5);
+\draw[arrow] (n5) -- (n6);
+\draw[arrow] (n6) -- (n7);
+\draw[arrow] (n7) -- (n8);
+\end{tikzpicture}
+\caption{Diagram alir solusi menggunakan pembobotan Berlekamp}
+\label{fig:flow_binarycode}
+\end{figure}
 
 \subsubsection{Algoritma pembangkitan query}
 
@@ -193,6 +99,30 @@ Pertama-tama program membuat seluruh kemungkinan query menggunakan generator see
 
 Pada baris \ref{alg:best_search_loop}, program melakukan perulangan untuk mencoba semua macam query yang belum digunakan untuk mencari yang terbaik, dan mengabaikan query yang sudah digunakan pada baris \ref{alg:skip_used_code}. Untuk mencari query yang terbaik pada state \texttt{order\_pointer}, parameter yang digunakan adalah yang jarak Hamming minimal yang paling besar dengan jumlah anggota dengan jarak Hamming tersebut yang paling sedikit, seperti yang ditunjukkan pada baris \ref{alg:minmax}. Setelah setiap satu pencarian best query pada satu state, program akan memperbarui jarak Hamming seperti yang ditunjukkan pada baris \ref{alg:update_distance}, lalu masukkan kandidat query terbaik ke \texttt{code\_order} seperti yang ditunkukkan pada baris \ref{alg:update_order}.
 
+\begin{table}[h!]
+\caption{Jumlah query keluaran dari Algoritma \textit{exhaustive search}}
+\label{tab:query_count}
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+$M$ & jumlah query & $M$ & jumlah query \\
+\hline
+2 & 1 & 128 & 72 \\
+\hline
+4 & 3 & 256 & 76 \\
+\hline
+8 & 7 & 512 & 79 \\
+\hline
+16 & 15 & 1024 & 81 \\
+\hline
+32 & 31 & 2048 & 84 \\
+\hline
+64 & 63 & 4096 & 86 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
 \begin{algorithm}[h]
 \caption{Algoritma mencari urutan bibit generator terbaik}
 \label{alg:exhaustive_search}
@@ -227,6 +157,7 @@ Pada baris \ref{alg:best_search_loop}, program melakukan perulangan untuk mencob
       }
     }
 
+    %update the $code\_distance$\;\label{alg:update_distance}
     $code\_min = \infty$\;
     \For{$j = 1$ \KwTo $M$}{\label{alg:update_distance}
       $code\_distance[j] \mathrel{+}= (code[best][0] != code[best][j])$\;
@@ -241,52 +172,18 @@ Pada baris \ref{alg:best_search_loop}, program melakukan perulangan untuk mencob
 }
 \end{algorithm}
 
-\begin{table}[h!]
-\caption{Jumlah query keluaran dari Algoritma \textit{exhaustive search}}
-\label{tab:query_count}
-\begin{center}
-\begin{tabular}{|c|c|c|c|}
-\hline
-$M$ & jumlah query & $M$ & jumlah query \\
-\hline
-2 & 1 & 128 & 72 \\
-\hline
-4 & 3 & 256 & 76 \\
-\hline
-8 & 7 & 512 & 79 \\
-\hline
-16 & 15 & 1024 & 81 \\
-\hline
-32 & 31 & 2048 & 84 \\
-\hline
-64 & 63 & 4096 & 86 \\
-\hline
-\end{tabular}
-\end{center}
-\end{table}
-
 Keluaran dari algoritma ini dengan inputan $2 \leq 2^m \leq 4096$ dan $e=16$ akan menghasilkan jumlah query seperti pada Tabel \ref{tab:query_count}. Setiap sejumlah query pada setiap $M$ ini akan menghasilkan $d = 33$ pada $128 \leq M \leq 4096$ atau telah menggunakan semua seed yang berjumlah $M-1$ pada $2 \leq M \leq 64$. Hasil query tersebut akan dimasukkan langsung ke dalam code pada solusi optimal pencarian Ulam non-interaktif yang akan dijelaskan pada subbab selanjutnya.
 
-\subsubsection{Solusi optimal untuk menyelesaikan permasalahan Ulam}
+\subsubsection{Algoritma mencari query minimal}
 
-Program solusi ada pada Kode Sumber \ref{alg:guessn5_lookup} yaitu menggunakan algoritma kode biner menggunakan \textit{lookup table}. Program mencari urutan bibit generator terbaik akan digunakan untuk menghitung semua kasus uji dalam batasan masalah, yaitu pada $2 < m < 12$ di mana $M = 2^m$ dan pada $2 < e < 16$. Jika digabungkan untuk semua $m$, dihasilkan set vector $S = \{\vec{s_2}, \vec{s_3}, \ldots, \vec{s_12}\}$ di mana $\vec{s_m}$ berisi urutan bibit generator $\{s_1, s_2, \ldots, s_n\}$ di mana $n$ adalah banyaknya bibit generator untuk menghasilkan $d=16$ atau $d=M/2$. Selanjutnya $S$ akan dimasukkan langsung ke dalam kode solusi seperti pada baris \ref{alg:preloaded}.
-
-Array $minimal$ pada baris \ref{alg:minimal} berisi berapa $n$ query untuk menghasilkan jarak Hamming $d$ pada indeksnya, selanjutnya digunakan untuk mengambil $n$ query yang dihasilkan oleh variabel $dmod$ pada baris \ref{alg:dmod}. Sedangkan $qrep$ digunakan untuk mengulangi semua $M-1$ query untuk mencapai jarak Hamming $M/2$. Total jumlah query adalah $n = q_{rep} * (M/2) + minimal[d_{mod}]$.
+Dari keluaran algoritma mencari urutan kode biner, akan dibuat algoritma mencari query minimal untuk menghasilkan array $minimal$ berisi pasangan \textit{key-value}, minimal jarak Hamming $d$ sebagai \textit{key} dan $n$ jumlah query yang dibutuhkan untuk membuat codeword dengan jarak minimal jarak Hamming $d$. Pembuatan array $minimal$ pada baris \ref{alg:minimal}. Array $minimal$ akan digunakan untuk mendapatkan nilai $d_{mod}$ yang sebelumnya dijelaskan pada Persamaan \ref{eq:dmod}.
 
 \begin{algorithm}[h]
-\caption{Algoritma solusi optimal pencarian Ulam non-interaktif}
-\label{alg:guessn5_lookup}
-\Fn{lookup\_binary\_code($M$, $e$)}{
-\KwData{$M$ search space, $e$ max lies allowed}
-\KwResult{$queries$}
-  $queries = [\ ]$\;
-  $the\_real\_M = M$\;
-  $m = \text{ceil}(\log_2(M))$\;
-  $M = 2^m$\;
-  $d = (2e + 1)$\;
-  $minimal[d] = [\ ]$\;
+\caption{Algoritma mencari query minimal}
+\label{alg:generate_minimal_query}
+\KwResult{$minimal$ array}
+  $minimal = [\ ]$\;
   $distances[M] = [\ ]$\;
-  $code\_order$ = preloaded exhaustive\_search($2 \leq 2^m \leq 4096$, $16$)\;\label{alg:preloaded}
 
   \For{$i = 0$ \KwTo $M-1$}{
   % for (int i = 0; i < M-1 \&\& min < d; ++i) {
@@ -296,29 +193,74 @@ Array $minimal$ pada baris \ref{alg:minimal} berisi berapa $n$ query untuk mengh
     update the $distances$ after $query$\;
     $min$ = min($distances$)\;
     $minimal[min] = i$\;\label{alg:minimal}
-    $queries$.push($query$.substr($the\_real\_M$))\;
     \lIf{$min \geq d$}{break}
   }
+  \Return $minimal$\;
+\end{algorithm}
 
-  $qrep$ = $d/(M/2)$\;\label{alg:qrep}
-  $dmod$ = $d$ mod $(M/2)$\;\label{alg:dmod}
+\subsubsection{Membuat query yang sebenarnya}
+
+Setelah mendapatkan array $minimal$, tahap terakhir adalah membuat query yang sebenarnya. Total query yang dihasilkan ada pada Persamaan \ref{eq:total_query}. Query tersebut terdiri dari $q_{rep} \times M/2$ seperti ditunjukkan pada baris \ref{alg:qrep} dan $minimal[d_{mod}]$ seperti ditunjukkan pada baris \ref{alg:dmod}.
+
+\begin{equation}
+\label{eq:total_query}
+q = q_{rep} \times M/2 + minimal[d_{mod}]
+\end{equation}
+
+\begin{algorithm}[h]
+\caption{Algoritma membuat query yang sebenarnya}
+\label{alg:actual_query}
+\KwResult{$solutions$}
+  $qrep$ = $d/(M/2)$\;
+  $dmod$ = $d$ mod $(M/2)$\;
   $solution = [\ ]$\;
 
-  \For{$i = 0$ \KwTo $qrep$}{
+  \For{$i = 0$ \KwTo $qrep$}{ \label{alg:qrep}
     \For{$j = 0$ \KwTo $M-1$}{
-      $solution$.push($queries[j]$)\;
+      $solution$.push($code[j]$.substr($real\_M$))\;
     }
   }
-  \For{$i = 0$ \KwTo $minimal[dmod]$}{
-    $solution$.push($queries[i]$)\;
+  \For{$i = 0$ \KwTo $minimal[dmod]$}{ \label{alg:dmod}
+    $solution$.push($code[code\_order[i]]$.substr($real\_M$))\;
   }
 
   \Return $solution$\;
+\end{algorithm}
+
+\subsection{Solusi menggunakan repetisi pencarian biner}
+
+Algoritma pencarian biner ada pada Kode Sumber \ref{alg:repetisi_biner}. Baris \ref{alg:for_qb} menunjukkan perulangan untuk setiap jenis query $q_b$. Nilai $q_b$ adalah hasil $\log_2$ dari M, lalu dibulatkan ke atas karena $M$ harus merupakan perpangkatan dari 2 sehingga nilai $q_b = \text{ceil}(\log_2(M))$. Baris \ref{alg:for_m} menunjukkan perulangan untuk membuat setiap satu jenis query pencarian biner. Baris \ref{alg:find_bit} menunjukkan proses untuk mencari bit pada posisi tertentu pada sebuah integer \cite{bithack}. Setiap query akan diulang sebanyak $qe$ seperti yang ditunjukkan pada baris \ref{alg:for_qe}.
+
+\begin{algorithm}[h]
+\caption{Algoritma repetisi pencarian biner}
+\label{alg:repetisi_biner}
+\Fn{repetitive\_binary\_search($M$, $e$)}{
+\KwData{$M$ search space, $e$ max lies allowed}
+\KwResult{$queries$}
+  $queries = [\ ]$\;
+  $qb = \text{ceil}(\log_2(M))$\;
+  $qe = 2*e + 1$\;
+  $twopower = 1$\;
+  \For{$i = 0$ \KwTo $qb$}{\label{alg:for_qb}
+    $string = ""$\;
+    \For{$j = 0$ \KwTo $M$}{\label{alg:for_m}
+      \leIf{$j\ \&\ twopower$}{\label{alg:find_bit}
+        $string \mathrel{+}= "1"$\;
+      }{
+        $string \mathrel{+}= "0"$\;
+      }
+    }
+    \For{$j = 0$ \KwTo $qe$}{\label{alg:for_qe}
+      $queries$.push($string$)\;
+    }
+    $twopower \mathrel{*}= 2$\;
+  }
+  \Return $queries$\;
 }
 \end{algorithm}
 
 
-\section{Pengujian keabsahan algoritma}
+\section{Desain pengujian keabsahan algoritma}
 
 Untuk menguji kebenaran query akan dibuat program yang dapat menguji query yang dihasilkan oleh algoritma solusi, agar tidak ada satu set pun yang menyebabkan ada lebih dari satu kemungkinan nilai $x$. Isi dari program pengujian kebenaran algoritma adalah mengecek apakah minimal jarak Hamming setiap query yang berbeda pada setiap kasus uji bernilai minimal $2e+1$ seperti yang ditunjukkan pada Kode Sumber \ref{alg:query_assert}. Variabel $dist$ pada baris \ref{alg:assert_distvar} digunakan untuk menyimpan jarak antara bit ke-0 dengan seluruh bit yang lain. Baris \ref{alg:assert_dist} menunjukkan bahwa jarak akan bertambah setiap ada perbedaan nilai bit.
 

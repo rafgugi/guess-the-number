@@ -128,6 +128,33 @@ Untuk mengetahui sebuah query memiliki selisih bobot jawaban "ya" dan "tidak" se
 \end{equation}
 
 
+\section{Repetisi kode biner}
+
+Ide pertama yang mungkin untuk menyelesaikan permasalahan ini adalah dengan mempersiapkan pencarian biner \cite{VanLint2016}. Query awal pencarian biner berjumlah $q_b=\log_2(M)$, agar setiap kemungkinan jawaban dari penjawab dapat mewakili semua kemungkinan nilai $x$. Lalu setiap query akan diulang sebanyak $q_e=2e+1$ kali agar penjawab pasti menjawab dengan jujur, karena $e$ query untuk jawaban bohong, ditambah dengan $e$ query untuk mengeliminasi jawaban bohong, ditambah dengan satu query jawaban pasti jujur karena kesempatan penjawab untuk berbohong sudah habis. Total jumlah query $q=q_b \times q_e$.
+
+\begin{table}[h!]
+\caption{Contoh pencarian biner pada $M=8$}
+\label{tab:binary_8}
+\begin{center}
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|}
+\hline
+$x$  & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
+\hline
+$Q_1$ & 0 & 0 & 0 & 0 & 1 & 1 & 1 & 1 \\
+\hline
+$Q_2$ & 0 & 0 & 1 & 1 & 0 & 0 & 1 & 1 \\
+\hline
+$Q_3$ & 0 & 1 & 0 & 1 & 0 & 1 & 0 & 1 \\
+\hline
+Jawaban & NNN & NNY & NYN & NYY & YNN & YNY & YYN & YYY \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+Misalnya jika $M=8$, $e=2$, maka jumlah $q_b$ untuk pencarian biner adalah \texttt{00001111}, \texttt{00110011} dan \texttt{01010101} seperti pada Tabel \ref{tab:binary_8}. Dari tiga query, tersebut, semua jawaban penjawab mulai dari "NNN" sampai "YYY" dapat mewakili semua nilai $x$ dalam $S_M={1,2,...,8}$ sehingga nilai $q_b=3$. Lalu masing-masing query diulang sebanyak $q_e=2e+1=5$ kali. Maka total dari $q=q_b \times q_e=9$.
+
+
 \section{Teori pengkodean}
 
 Tujuan utama dari teori pengkodean (\textit{coding theory}) adalah bagaimana mengirimkan pesan pada kanal yang mengandung derau (\textit{noisy channel}) \cite{VanLint2016}. Misal jika ada delapan macam kata pesan yang akan dikirim, maka kita merepresentasikan pesan tersebut menjadi bitstring biner dengan panjang 3. Namun jika pesan tersebut dikirm langsung melewati kanal yang mengandung derau, bisa jadi misalkan ada 1 bit akan tertukar, misal \texttt{001} menjadi \texttt{011}. Jika terjadi seperti itu, maka sebuah kata dapat tertukar menjadi kata yang lain.
@@ -214,3 +241,69 @@ Sebuah kode biner $(n,M,d)_2$ dapat dibangkitkan dari kombinasi linear dari seti
 \end{figure}
 
 Dari sebuah kode biner, kita dapat membuat kode biner yang baru dengan memodifikasi kode biner yang sudah ada \cite{Huffman}. Modifikasi yang dapat dilakukan adalah menambah dan mengurangi kode. Dari sebuah kode biner $(n,M,d)_2$, dapat dilakukan pemotongan pada kolom tertentu sehingga kode biner menjadi $(n-1,M,d^\prime)_2$ di mana $d^\prime=d$ atau $d^\prime=d-1$. Begitu pula dengan penambahan kode, dari sebuah kode biner $(n,M,d)_2$, dapat dilakukan penambahan kode sehingga kode biner menjadi $(n+1,M,d^\prime)_2$ di mana $d^\prime=d$ atau $d^\prime=d+1$.
+
+\section{Kolerasi kode biner dengan permasalahan Ulam non interaktif}
+
+Tujuan dari permasalahan ini adalah untuk menghasilkan $n$ query. Diberikan sebuah matriks $L$ berukuran $n \times M$ berisi $n$ query. Kumpulan query ini dinotasikan dengan $L = \{\vec{q_1},\vec{q_2},\ldots,\vec{q_n}\}$ di mana $\vec{q_i} = \{s_1,s_2,\ldots,s_M\}$. Himpunan nilai $s_j$ yang mungkin adalah $s_j \in \{0,1\}$.
+
+Diberikan sebuah vektor $\vec{z} \in \{z_1,z_2,\ldots,z_n\}$ di mana $z_i \in \{0,1\}$ berisi jawaban dari seluruh query secara berurutan, $z_i$ adalah jawaban dari $\vec{q_i}$. Jika $z_i=0$ berarti jawaban query $q_i$ adalah 'tidak' sehingg seluruh $s_j$ pada $\vec{q_i}$ harus ditambah dengan 1 dan jika $z_i=1$ berarti jawaban dari query $\vec{q_i}$ adalah 'ya' sehingga seluruh $s_j$ pada $\vec{q_i}$ ditambah dengan 0 (diabaikan).
+
+Matriks $L^\top$ berukuran $M \times n$ adalah hasil transpose dari matriks $L$. Asumsikan $L^\top$ juga dapat disebut sebagai kode biner $(n,M,d)_2$ di mana $n$ adalah jumlah query, $M$ adalah panjang $S_M$, dan $d$ adalah $2e+1$ di mana $e$ adalah jumlah maksimal bohong. Tambahkan seluruh baris $\vec{c_j}$ pada $L^\top$ dengan $\vec{z}$. Maka jawaban dari permainan Ulam non-interaktif adalah $x = j$ di mana $j$ adalah index dari baris $c$ pada $L^\top$ yang memiliki bobot $wt(\vec{c_j}) > n-e$.
+
+\begin{lemma}
+Diketahui integer $n$, $M$, dan $d$. Jika $L^\top$ adalah kode biner $(n,M,d)_2$ yang valid, maka jika setiap codeword $\vec{c}$ pada $L^\top$ ditambah dengan $\vec{z} \mid \vec{z} \in \mathbb{F}_2^n$ maka hasilnya akan tetap menjadi kode biner $(n,M,d)_2$ yang valid.
+\end{lemma}
+
+\begin{proof}
+Jika $d_H(\vec{v_i},\vec{w_j}) \ge d \mid \vec{v_i},\vec{w_j} \in L^\top$ maka
+\begin{align*}
+d_H(\vec{v_i}+\vec{z},\vec{w_j}+\vec{z}) &\ge d \\
+wt(\vec{v_i}+\vec{w_j}+\vec{z}+\vec{z}) &\ge d \\
+wt(\vec{v_i}+\vec{w_j}) &\ge d \\
+d_H(\vec{v_i},\vec{w_j}) &\ge d \\
+\end{align*}
+Jadi jika $d_H(\vec{v_i},\vec{w_j}) \ge d$ maka $d_H(\vec{v_i}+\vec{z},\vec{w_j}+\vec{z}) \ge d$.
+\end{proof}
+
+Penanya memenangkan permainan jika $L^\top$ memiliki paling banyak satu baris dengan $wt(\vec{c}) \ge n-e$. Jika hanya ada satu row, maka row tersebut adalah jawaban permainan. Jika tidak ada satu row pun yang memenuhi, penanya tetap memenangkan permainan karena penjawab melakukan kecurangan, melakukan bohong untuk semua angka lebih dari batas yang ditetapkan.
+
+Untuk meyakinkan bahwa setelah seluruh jawaban $\vec{z}$ diberikan dan diaplikasikan ke matrix $L$ dan tidak pasti hanya ada 1 baris yang memiliki nilai $1$ antara $n-e \le wt(\vec{c_j}) \le n$, adalah dengan memastikan bahwa jarak Hamming setiap row yang berbeda pada $L^\top$ adalah minimal $d$.
+
+\begin{lemma}
+Diketahui integer $n$, $M$, dan $d$. Jika $L^\top$ adalah kode biner $(n,M,d)_2$ yang valid, maka pasti hanya ada paling banyak satu codeword $\vec{c}$ yang memiliki $0 \le wt(\vec{c}) \le e$.
+\end{lemma}
+
+\begin{proof}
+Jika ada codeword $c$ di mana $0 \le wt(c) \le e$ maka $wt(\vec{v}) > e$ di mana $\vec{v} \neq c$. Pembuktian dapat dibuktikan dengan dua kasus.\\
+
+1) Jika $wt(\vec{c}) = 0$ maka
+\begin{align*}
+d_H(\vec{c},\vec{v}) &\ge d \mid \vec{c} \neq \vec{v} , \vec{v} \in L^\top \\
+wt(\vec{c} + \vec{v}) &\ge d \\
+wt(\vec{v}) &\ge d \label{eq:proofd} \stepcounter{equation} \tag{\theequation}
+\end{align*}
+Sebelumnya telah disebutkan hubungan $d$ dan $e$ pada Persamaan \ref{eq:de}. Persamaan tersebut dapat diturunkan menjadi
+\begin{equation} \label{eq:dge}
+d > e
+\end{equation}
+Dengan memasukkan Persamaan \ref{eq:dge} ke Persamaan \ref{eq:proofd}, maka didapatkan
+\begin{equation*}
+wt(\vec{v}) > e
+\end{equation*}
+
+2) Jika $wt(\vec{c}) = e$ maka
+\begin{align*}
+d_H(\vec{c},\vec{v}) &\ge d \mid \vec{c} \neq \vec{v} , \vec{v} \in L^\top \\
+wt(\vec{c}+\vec{v}) &\ge d \\
+wt(\vec{c}) + wt(\vec{v}) \ge wt(\vec{c}+\vec{v}) &\ge d \\
+wt(\vec{c}) + wt(\vec{v}) &\ge d \\
+e + wt(\vec{v}) &\ge d \\
+\intertext{Masukkan Persamaan \ref{eq:de} untuk mensubstitusi $d$}\\
+wt(\vec{v}) &\ge 2e+1-e \\
+&\ge e+1\\
+wt(\vec{v}) &> e
+\end{align*}
+Jadi jika ada codeword $c$ di mana $0 \le wt(c) \le e$ maka $wt(\vec{v}) > e$ di mana $\vec{v} \neq c$.
+\end{proof}
+
+Dari pembuktian diatas, dapat disimpulkan bahwa untuk menyelesaikan permainan pencarian Ulam non-interaktif dengan batas pencarian $M$ dan maksimal kebohongan $e$, transpose dari $n$ query yang dibuat harus membentuk kode biner $(n,M,d)_2$.
