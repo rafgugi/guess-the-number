@@ -4,11 +4,13 @@ Bab ini memaparkan tentang metodologi penelitian yang digunakan pada penelitian 
 
 \section{Desain dan analisis penyelesaian masalah}
 
-Pada permasalahan pencarian Ulam non-interaktif, penjawab tidak diperbolehkan menjawab sebelum penanya selesai menanyakan seluruh query. Ada dua pendekatan berbeda yang dapat dilakukan untuk menyelesaikan masalah tersebut, yaitu menggunakan repetisi pencarian biner dan menggunakan kode biner. Perlu diketahui bahwa kedua solusi tersebut tidak saling berhubungan.
+Pada permasalahan pencarian Ulam non interaktif, penjawab tidak diperbolehkan menjawab sebelum penanya selesai menanyakan seluruh query. Ada dua pendekatan berbeda yang dapat dilakukan untuk menyelesaikan masalah tersebut, yaitu menggunakan repetisi pencarian biner dan menggunakan kode biner. Perlu diketahui bahwa kedua solusi tersebut tidak saling berhubungan.
 
 \subsection{Solusi menggunakan kode biner}
 
-Tahap untuk menyelesaikan permasalahan Ulam non-interaktif ada pada Gambar \ref{fig:flow_binarycode}. Setelah dilakukan input ruang pencarian $M$ dan maksimal bohong $e$, simpan $M$ untuk digunakan pada saat output query terakhir. Ubah $M$ menjadi perpangkatan dua terdekat, karena algoritma selanjutnya hanya dapat berjalan jika $M$ adalah perpangkatan dua. Pada subbab selanjutnya akan dijelaskan algoritma untuk menggunakan query generator dan juga algoritma utama untuk menyelesaikan permasalahan Ulam non-interaktif.
+Tahap untuk menyelesaikan permasalahan Ulam non interaktif ada pada Gambar \ref{fig:flow_binarycode}. Setelah dilakukan input ruang pencarian $M$ dan maksimal bohong $e$, simpan $M$ untuk digunakan pada saat output query terakhir. Ubah $M$ menjadi perpangkatan dua terdekat, karena algoritma selanjutnya hanya dapat berjalan jika $M$ adalah perpangkatan dua. Pada subbab selanjutnya akan dijelaskan algoritma untuk menggunakan query generator dan juga algoritma utama untuk menyelesaikan permasalahan Ulam non interaktif.
+
+Proses pencarian mendalam (\textit{exhaustive search}) akan dilakukan sebagai pra proses dan hasil pra proses tersebut akan langsung dimasukkan ke dalam kode sumber solusi, karena proses pencarian mendalam memiliki kompleksitas $O(M^3)$ sedangkan jika dilakukan sebagai pra proses dan dimasukkan langsung ke dalam kode sumber solusi sebagai array akan mengurangi kompleksitas menjadi $O(1)$. Namun untuk keperluan pengujian, algoritma kode biner tanpa tabel pencarian (algoritma kode biner yang melakukan proses pencarian mendalam) akan dibandingkan dengan algoritma kode biner dengan tabel pencarian (proses pencarian mendalam dilakukan sebagai pra proses).
 
 \begin{figure}
 \centering
@@ -172,7 +174,7 @@ $M$ & jumlah query & $M$ & jumlah query \\
 }
 \end{algorithm}
 
-Keluaran dari algoritma ini dengan inputan $2 \leq 2^m \leq 4096$ dan $e=16$ akan menghasilkan jumlah query seperti pada Tabel \ref{tab:query_count}. Setiap sejumlah query pada setiap $M$ ini akan menghasilkan $d = 33$ pada $128 \leq M \leq 4096$ atau telah menggunakan semua seed yang berjumlah $M-1$ pada $2 \leq M \leq 64$. Hasil query tersebut akan dimasukkan langsung ke dalam code pada solusi optimal pencarian Ulam non-interaktif yang akan dijelaskan pada subbab selanjutnya.
+Keluaran dari algoritma ini dengan inputan $2 \leq 2^m \leq 4096$ dan $e=16$ akan menghasilkan jumlah query seperti pada Tabel \ref{tab:query_count}. Setiap sejumlah query pada setiap $M$ ini akan menghasilkan $d = 33$ pada $128 \leq M \leq 4096$ atau telah menggunakan semua seed yang berjumlah $M-1$ pada $2 \leq M \leq 64$. Hasil query tersebut akan dimasukkan langsung ke dalam code pada solusi optimal pencarian Ulam non interaktif yang akan dijelaskan pada subbab selanjutnya.
 
 \subsubsection{Algoritma mencari query minimal}
 
