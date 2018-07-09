@@ -1,4 +1,4 @@
-\documentclass[conference,compsoc]{IEEEtran}
+\documentclass[10pt,conference,compsoc,onecolumn]{IEEEtran}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -36,20 +36,17 @@
 \title{Perfect Queries for Non-interactive\\Ulam Searching Game with Many Lies}
 
 \author{\IEEEauthorblockN{Risyanggi Azmi Faizin\IEEEauthorrefmark{1},
-Rully Sulaiman\IEEEauthorrefmark{2},
-Hari Ginardi\IEEEauthorrefmark{3} and
-Micha\l{} Miodek\IEEEauthorrefmark{4}}
+Rully Sulaiman\IEEEauthorrefmark{2}, and
+Hari Ginardi\IEEEauthorrefmark{3}}
 \IEEEauthorblockA{\IEEEauthorrefmark{1}Informatics Engineering\\
 Institut Teknologi Sepupuh Nopember,
 Indonesia\\ Email: risyanggi@gmail.com}
 \IEEEauthorblockA{\IEEEauthorrefmark{2}Informatics Engineering\\
 Institut Teknologi Sepupuh Nopember,
-Indonesia\\ Email: rully@is.its.ac.id}
+Indonesia\\ Email: hari@its.ac.id}
 \IEEEauthorblockA{\IEEEauthorrefmark{3}Informatics Engineering\\
 Institut Teknologi Sepupuh Nopember,
-Indonesia\\ Email: hari@its.ac.id}
-\IEEEauthorblockA{\IEEEauthorrefmark{4}University of Warsaw\\
-Poland\\ Email: miodziu@gmail.com}}
+Indonesia\\ Email: rully@is.its.ac.id}}
 
 \maketitle
 
@@ -84,9 +81,7 @@ Salah satu variasi permasalahan Ulam dan Rényi yang diangkat dalam penelitian i
 
 Bentuk permasalahan Ulam yang dibahas pada paper ini diangkat dari online judge SPOJ oleh Micha\l{} Miodek \cite{guessn5}. Penjawab menentukan sebuah bilangan $x$ pada rentang $S_M=\{0,\ldots,M-1\}$. Anda sebagai penanya harus mencari nilai $x$ dengan memberikan maksimal $n$ query khusus apakah "$x \in Q$?", lalu penjawab menjawab "ya" atau "tidak" pada setiap query yang ditanyakan. Permasalahan utama adalah penjawab dapat berbohong sampai $e$ kali. Selain itu, penjawab hanya boleh menjawab query penanya setelah penanya selesai menanyakan semua query-nya. Tujuan dari Ulam adalah mencari jumlah query minimal untuk dapat menentukan nilai $x$.
 
-Bentuk dari query adalah string $s_1s_2s_3\ldots s_n$ dimana si bernilai '0' atau '1'. Jawaban dari penjawab adalah "Ya" jika $s_x=1$ atau "Tidak" jika $s_x=0$ dengan asumsi penjawab menjawab jujur.
-
-Tugas sesungguhnya dari permasalahan ini adalah bukan untuk mencari nilai $x$, tapi hanya menyiapkan query yang dapat memeungkinkan untuk mendapatkan nilai $x$ dari semua kemungkinan jawaban dari penjawab. Penjawab tidak akan menjawab query yang diberikan penanya. Jika penjawab menemukan ada suatu set jawaban yang menyebabkan lebih dari satu kemungkinan nilai $x$, maka pengujian dianggap gagal.
+Bentuk dari query adalah string $s_1s_2s_3\ldots s_n$ dimana $s_i \in \{0,1\}$. Jawaban dari penjawab adalah "Ya" jika $s_x=1$ atau "Tidak" jika $s_x=0$ dengan asumsi penjawab menjawab jujur. Tugas sesungguhnya dari permasalahan ini adalah bukan untuk mencari nilai $x$, tapi hanya menyiapkan query yang dapat memeungkinkan untuk mendapatkan nilai $x$ dari semua kemungkinan jawaban dari penjawab. Penjawab tidak akan menjawab query yang diberikan penanya. Jika penjawab menemukan ada suatu set jawaban yang menyebabkan lebih dari satu kemungkinan nilai $x$, maka pengujian dianggap gagal.
 
 Batasan yang digunakan pada permasalahan Ulam adalah sebagai berikut:
 \begin{itemize}
@@ -199,7 +194,7 @@ Dengan kode biner $(6,8,3)_2$ pada Gambar \ref{fig:binarycode683}, pengirim dan 
 
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{../img/codewordsball.png}
+\includegraphics[scale=0.4]{../img/codewordsball.png}
 \caption{Bola codeword yang tidak saling overlap}
 \label{fig:codewordsball}
 \end{figure}

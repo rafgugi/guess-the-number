@@ -1,0 +1,143 @@
+\documentclass{TTP_DSL2006}
+
+%\usepackage{xparse}
+\usepackage[intlimits]{amsmath}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb}
+\usepackage{caption}
+\usepackage{exscale}
+\usepackage{fontspec} 
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{subfigure}
+\usepackage{times}
+\usepackage{xesearch}
+
+% Theorems
+\newtheorem{exmp}{Example}[section]
+
+% Override fonts to Times New Roman and Arial%
+\renewcommand{\large}{\fontsize{14}{18pt}\selectfont}
+\renewcommand{\small}{\fontsize{11}{13.6pt}\selectfont}
+\setmainfont{Times New Roman}
+\setsansfont{Arial}
+
+% New commands for quick editing of the document%
+\newcommand{\titleformat}{\sffamily\bfseries \large}  %  <--- Doc. title
+\newcommand{\authorformat}{\sffamily \large}            %  <--- Authors
+\newcommand{\keywordsformat}{\noindent \small \sffamily}  %  <--- Kyewords
+\newcommand{\abstractformat}{\noindent \textbf}              %  <--- Abstract
+\newcommand{\contentformat}{\rmfamily \normalsize\vspace{18pt}}  %  <--- Main content
+\newcommand{\email}{\sffamily \small \vspace{-8pt}}          %  <--- E-mail
+\renewcommand{\subsection}{\textbf}  
+
+% Make all internal and external links - black color%
+\hypersetup{
+    colorlinks,%
+    citecolor=black,%
+    filecolor=black,%
+    linkcolor=black,%
+    urlcolor=black
+}
+
+% Set the basic parameters of the page. DO NOT CHANGE!%
+\special{papersize=210mm,297mm}
+\textheight=25.6cm
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+\bibliographystyle{acm}
+
+\begin{document}
+
+\title{\titleformat Perfect Queries for Non-interactive\\Ulam Searching Game with Many Lies}
+
+\author{\authorformat Risyanggi Azmi Faizin$^{\rm{a}}$\text{,} R. V. Hari Ginardi$^{\rm{b}}$\text{,} and Rully Soelaiman$^{\rm{c}}$}
+
+\institute{\sffamily Institut Teknologi Sepupuh Nopember, Indonesia}
+
+\maketitle
+
+\begin{center}
+\email{ $^{\rm a}$risyanggi@gmail.com, $^{\rm b}$hari@its.ac.id, $^{\rm c}$rully@is.its.ac.id}
+\end{center}
+
+\keywordsformat{{\textbf{Keywords:}} ulam game; lies; hamming distances; binary codes; query;}
+
+\contentformat
+
+\abstractformat{Abstract.} On the classic Ulam and Rényi searching problem, the questioner has to ask some yes-no questions to find an unknown value within the agreed search space, but the answerer is allowed to lie. There are already solutions of some variations on the Ulam and Rényi searching problem, ie on the type of query between range or subset and the maximum number of lies between one, two, three, and so on. But there is no perfect solution for non-interactive queries which the answerer can only answer the questioner's query after the questioner has finished querying all the queries. In this paper we will describe the perfect solution for non-interactive Ulam and Rényi searching problem with many lies using binary code with Hamming distance.
+
+\section{Introduction}
+% \vspace{-6pt}
+
+In the development of information technology over the last few decades, information technology is often used as a solution to the problems that ever existed, which was previously solved manually by humans. Examples of problems that ever existed were one of the classic Ulam and Rényi searching problem. This problem can be illustrated by the presence of two players called questioner and answerer. Given search space $S_M = {0,\ldots,M-1}$, answerer choose a value $x \in S_M$. Questioner must find the value $x$ by asking some yes-no question, is "$x \in Q$?", where $Q \subset S_M$, then answerer answer with "yes" or "no". The main problem is the answerers can lie up $e$ times. The problem with this game is to find the minimum number of queries to be able to determine the value of $x$.
+
+On the Ulam and Rényi searching problem, questioner and answerer must agree on some rules before playing. They include search space constraints, limits on how answerers are allowed to lie, question formats, and how interactions between answerer and questioner \cite{Pelc2002}. First, questioner and answerer agree on the search space $S_M$, which has $M$ numbers, answerer can only choose a number $x$ within $\{0,\ldots,M-1\}$.
+
+The rule of how the answerers are allowed to lie is the fundamental rule in the Ulam and Rényi search game. The rules of probability lie triggered by Rényi and the lie number rule triggered by Ulam \cite{Ulam1991}. On a globally bounded error probability, the probability of the answerer may lie is $r$, so the answerer may lie up to $rn$ times where $n$ is number of question and $r<1$ \cite{Dhagat1992}. On the rule of how many times the answerer can lie, the amount of answerer can lie vary between only one \cite{Ellis2008} \cite{Pelc1988}, two \cite{Cicalese2000}, three \cite{Negro1992}, and more than three lies \cite{Berlekamp1998} \cite{Deppe2004}.
+
+In the question format rule, there are several variations. The first is the comparative question, the question form is "Is $x<a$?" where $a \in S_M$ \cite{Innes} \cite{Auletta1992}. Then there are interval and bi-interval questions, the question form is "Is $x$ in the interval $[a, b]$?" \cite{Peter2017} and "Is $x$ in the interval $[a, b] \cup [c, d]$?" \cite{Mundici1997}. Then the subset question format, the question form is "Is $x$ in $A$ where $A \subseteq S_M$" \cite{Katona} \cite{Macula1997}.
+
+In the interaction between questioner and answerer, there are three variations which are interactive, batch, and non-interactive. The most commonly used rule is interactive, where the answerer must answer each question asked by the questioner before the questioner asks the next question. In batch rules, the questioner and the answerer agree on how many batches. Then in each batch, the asker gives a few questions, then the answerer gives answers to the questions asked by the questioner \cite{Cicalese2000}. The last rule is non-interactive, that the answerer must answer all the questions at once \cite{Macula1997}.
+
+Variation of Ulam and Renyi problems raised in this study is Ulam searching problem with $n$ query subset ${q_1,q_2,\ldots,q_n} | q_i \in S_M$, answerer can lie up to $e$ answers, and the query is non-interactive. No research has resolved this problem yet. Therefore this study aims to provide solutions to this problem.
+
+\section{Problem formulation}
+
+The form of the Ulam problem discussed in this paper is taken from online judge SPOJ by Micha\l{} Miodek \cite{guessn5}. Answerer specifies $x$, a number in the range $S_M = \{0, \ldots, M-1 \}$. You as the questioner must find $x$ by giving the as minimal as possible $n$ query. The form of query is "is $x \in Q$?". Then the answerer answers "yes" or "no" to each query in question. The answerers can lie up to $e$ times. Additionally, the answerer may only answer the questioner's queries after the questioner has finished asking all the queries. The main problem is how to find the minimum number of queries to be able to determine the value of $x$.
+
+The form of the query is string $s_1s_2s_3\ldots s_n$ where $s_i \in \{0,1\}$. The answer of the answerer is "Yes" if $s_x = 1$ or "No" if $s_x = 0$ assuming the answerer tell the truth. The real task of the problem is not to find value of $x$, but to just set up queries that will allow it to get value of $x$ from all possible answers from answerer. The answerer will not answer the query provided by the questioner. If the answerer find that there is a set of answers that cause more than one possible value of $x$, then testing is considered a failure.
+
+\section{Backround of binary code}
+
+The main purpose of coding theory is how to send a message on a noisy channel \cite{VanLint2016}. Suppose if there are eight kinds of messages to be sent, then we represent the message into binary bitstring with length 3. However if the message is sent directly through the channel containing the noise, suppose there is 1 bit will be swapped, eg $001$ to $011$, then a word can be confused into another word.
+
+We know that if the binary code with length $n$ is used to make $2^n$ bitstring can't detect an error. The most likely idea is that the sender and receiver agree on a bitstring encryption method into a longer bitstring and can detect a maximum of $e$ errors using a linear code.
+
+The linear code is the most studied code because the algebraic structure is easy to learn compared to the non-linear code \cite{Huffman}. The linear code field can be denoted as $\mathbb{F}_q^n$, ie the code has $q$ element type and has a length of $n$. The binary code form is $\mathbb{F}_2^n $, has the following addition and subtraction algebraic structure.
+
+\begin{align*}
+0 + 0 &= 0 & 0 \cdot 0 &= 0 \\
+0 + 1 &= 1 & 0 \cdot 1 &= 0 \\
+1 + 0 &= 1 & 1 \cdot 0 &= 0 \\
+1 + 1 &= 0 & 1 \cdot 1 &= 1
+\end{align*}
+
+Hamming distance between
+
+\section{Organization of the Text}
+
+\noindent \textbf{Section Headings.} The section headings are in boldface capital and lowercase letters. 
+Second level headings are typed as part of the succeeding paragraph (like the subsection heading of this paragraph).
+
+\textbf{Figures}. Figures (refer with: Fig.~1, Fig.~2, ...) also should be presented as part of the text, leaving enough space so that the 
+caption will not be confused with the text. The caption should be self-contained and placed \textit{below or beside }the 
+figure. Generally, only original drawings or photographic reproductions are acceptable. Only very good photocopies are 
+acceptable. Utmost care must be taken to \textit{insert the figures in correct alignment with the text}. Half-tone pictures
+ should be in the form of glossy prints. If possible, please include your figures as graphic images in the electronic version. 
+For best quality the pictures should have a resolution of 300 dpi(dots per inch).
+\noindent Color figures are welcome for the online version of the journal. Generally, these figures will be reduced to black 
+and white for the print version. The author should indicate on the checklist if he wishes to have them printed in full color 
+and make the necessary payments in advance.
+
+\vspace{6pt}
+\textbf{Equations}.  Equations (refer with: Eq.~1, Eq.~2, ...) should be indented 5 mm (0.2"). 
+There should be one line of space above the equation and one line of space below it before the text continues. 
+The equations have to be numbered sequentially, and the number put in parentheses at the right-hand edge of the 
+text. Equations should be punctuated as if they were an ordinary part of the text. Punctuation appears after the 
+equation but before the equation number, e.g.
+
+\begin{eqnarray}
+c^2 = a^2 + b^2.
+\end{eqnarray}
+
+\section{Summary}
+\noindent If you follow the `checklist` your paper will conform to the requirements
+ of the publisher and facilitate a problem-free publication process.
+
+\bibliography{holy}
+
+\end{document}
