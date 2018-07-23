@@ -1,7 +1,7 @@
 \documentclass{TTP_DSL2006}
 
 %\usepackage{xparse}
-\usepackage[intlimits]{amsmath}
+\usepackage{amsmath}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{amssymb}
@@ -9,6 +9,7 @@
 \usepackage{exscale}
 \usepackage{fontspec} 
 \usepackage{graphicx}
+\usepackage{fancyvrb}
 \usepackage{hyperref}
 \usepackage{subfigure}
 \usepackage{times}
@@ -30,7 +31,9 @@
 \newcommand{\abstractformat}{\noindent \textbf}              %  <--- Abstract
 \newcommand{\contentformat}{\rmfamily \normalsize\vspace{18pt}}  %  <--- Main content
 \newcommand{\email}{\sffamily \small \vspace{-8pt}}          %  <--- E-mail
-\renewcommand{\subsection}{\textbf}  
+\renewcommand{\subsection}{\textbf}
+
+\renewcommand{\vec}{\overrightarrow}
 
 % Make all internal and external links - black color%
 \hypersetup{
@@ -68,7 +71,13 @@
 
 \contentformat
 
-\abstractformat{Abstract.} On the classic Ulam and Rényi searching problem, the questioner has to ask some yes-no questions to find an unknown value within the agreed search space, but the answerer is allowed to lie. There are already solutions of some variations on the Ulam and Rényi searching problem, ie on the type of query between range or subset and the maximum number of lies between one, two, three, and so on. But there is no perfect solution for non-interactive queries which the answerer can only answer the questioner's query after the questioner has finished querying all the queries. In this paper we will describe the perfect solution for non-interactive Ulam and Rényi searching problem with many lies using binary code with Hamming distance.
+\abstractformat{Abstract.}
+On the classic Ulam and Rényi searching problem, the questioner has to ask some yes-no questions to find an unknown value within the agreed search space, but the answerer is allowed to lie.
+There are already solutions of some variations in the Ulam and Rényi searching problem, i.e. on the type of query between range or subset and the maximum number of lies between one, two, three, and so on.
+But there is no perfect solution for non-interactive queries which the answerer can only answer the questioner's query after the questioner has finished querying all the queries.
+No research has resolved this problem yet.
+In this paper we will describe the perfect solution for non-interactive Ulam and Rényi searching problem with many lies using binary code with Hamming distance.
+The algorithm results in this paper show a much smaller number of queries than the common binary repetition algorithm and the best results on a reputable online judge.
 
 \section{Introduction}
 % \vspace{-6pt}
@@ -83,7 +92,7 @@ In the question format rule, there are several variations. The first is the comp
 
 In the interaction between questioner and answerer, there are three variations which are interactive, batch, and non-interactive. The most commonly used rule is interactive, where the answerer must answer each question asked by the questioner before the questioner asks the next question. In batch rules, the questioner and the answerer agree on how many batches. Then in each batch, the asker gives a few questions, then the answerer gives answers to the questions asked by the questioner \cite{Cicalese2000}. The last rule is non-interactive, that the answerer must answer all the questions at once \cite{Macula1997}.
 
-Variation of Ulam and Renyi problems raised in this study is Ulam searching problem with $n$ query subset ${q_1,q_2,\ldots,q_n} | q_i \in S_M$, answerer can lie up to $e$ answers, and the query is non-interactive. No research has resolved this problem yet. Therefore this study aims to provide solutions to this problem.
+Variation of Ulam and Rényi problems raised in this study is Ulam searching problem with $n$ query subset ${q_1,q_2,\ldots,q_n} | q_i \in S_M$, answerer can lie up to $e$ answers, and the query is non-interactive. No research has resolved this problem yet. Therefore this study aims to provide solutions to this problem.
 
 \section{Problem formulation}
 
@@ -91,8 +100,10 @@ The form of the Ulam problem discussed in this paper is taken from online judge 
 
 The form of the query is string $s_1s_2s_3\ldots s_n$ where $s_i \in \{0,1\}$. The answer of the answerer is "Yes" if $s_x = 1$ or "No" if $s_x = 0$ assuming the answerer tell the truth. The real task of the problem is not to find value of $x$, but to just set up queries that will allow it to get value of $x$ from all possible answers from answerer. The answerer will not answer the query provided by the questioner. If the answerer find that there is a set of answers that cause more than one possible value of $x$, then testing is considered a failure.
 
+
 \section{Backround of binary code}
 
+\noindent \textbf{Coding Theory.}
 The main purpose of coding theory is how to send a message on a noisy channel \cite{VanLint2016}. Suppose if there are eight kinds of messages to be sent, then we represent the message into binary bitstring with length 3. However if the message is sent directly through the channel containing the noise, suppose there is 1 bit will be swapped, eg $001$ to $011$, then a word can be confused into another word.
 
 We know that if the binary code with length $n$ is used to make $2^n$ bitstring can't detect an error. The most likely idea is that the sender and receiver agree on a bitstring encryption method into a longer bitstring and can detect a maximum of $e$ errors using a linear code.
@@ -106,9 +117,91 @@ The linear code is the most studied code because the algebraic structure is easy
 1 + 1 &= 0 & 1 \cdot 1 &= 1
 \end{align*}
 
-Hamming distance between
+Hamming distance between two bitstrings $\vec{x}$ and $\vec{y}$ with the same length $n$ is defined by Eq.~\ref{eq:dh}. For example, $d_H(0000,1111)= 4$ and $d_H(00110,00101)= 2$. $d_H(\vec{x},\vec{y})$ can also be defined as the minimum transformation to change $\vec{x}$ to $\vec{y}$. For example, $\vec{x}=00110$ and $\vec{y}=00101$, have two different on the last bits with Hamming distance 2, can also be said $\vec{x}+00011 = \vec{y}$.
 
-\section{Organization of the Text}
+\begin{equation} \label{eq:dh}
+d_H(\vec{x},\vec{y}) = |\{i \in {1,\ldots,n} \mid x_i \neq y_i\}|
+\end{equation}
+
+Weight of bitstring $\vec{x}$ defined with $wt(\vec{x})$, that is number of digits of $\vec{x}$ which is not $0$ as defined by Eq.~\ref{eq:wt}. For example, $wt(00101) = 2$ and $wt(11111) = 5$. Jika dihubungkan dengan jarak Hamming, jika $\vec{x}+\vec{e} = \vec{y}$ maka $d_H(\vec{x},\vec{y}) = wt(\vec{x}+\vec{y})$.
+
+\begin{equation} \label{eq:wt}
+wt(\vec{x}) = |\{i \in {1,\ldots,n} \mid x_i \neq 0\}|
+\end{equation}
+
+There is an Euclidean metric in the Euclidean space requirement known as triangle inequality \cite{VanLint2016}. From Eq.~\ref{eq:dh_unequal}, assuming $\vec{z}$ is a zero vector $\vec{0}$, then Eq.~\ref{eq:wt_unequal} is obtained.
+
+\begin{align}
+d_H(\vec{x},\vec{y}) &\le d_H(\vec{x},\vec{z}) + d_H(\vec{y},\vec{z}) \label{eq:dh_unequal} \\
+wt(\vec{x}+\vec{y}) &\le wt(\vec{x}) + wt(\vec{y}) \label{eq:wt_unequal}
+\end{align}
+
+
+\noindent \textbf{Binary Code.}
+Binary code is a collection of $M$ binary bitstrings with length $n$ and Hamming distance between every two different bitstrings are maximum $d$. Example $M=8$, $n=6$, and $d=3$ in Fig.~\ref{fig:binarycode683}. Parameter in this binary code is $(6,8,3)_2$, binary is shown by number 2, bitstring length 6, contains 8 bitstrings, and minimum Hamming distance 3. Bitstring in binary code hereinafter called codeword.
+
+\begin{figure}
+\centering
+\begin{BVerbatim}
+000000  100110
+001011  101101
+010101  110011
+011110  111000
+\end{BVerbatim}
+\caption{Kode biner $(6,8,3)_2$}
+\label{fig:binarycode683}
+\end{figure}
+
+% With binary code $(6,8,3)_2$ in Fig.~\ref{fig:binarycode683}, sender and receiver agreed on only those codeword that will be sent and received. Assumed only one bit will be error, the message can still be recovered to the original message. Hamming distance between two different codewords is 3, that means in Jarak Hamming antara setiap dua kata kode yang berbeda adalah 3, berarti dari setiap kata kode, terdapat sejumlah bitstring selain kata kode berjarak 1.
+
+General notation of binary code is $(n,M,d)_2$. We can assume there are $M$ balls with radius $e$ that are not intersecting each others as in Fig.~\ref{fig:codewordsball}. Distance between one ball to another is at least $d$, so that we can obtain Eq.~\ref{eq:de}.
+
+\begin{equation} \label{eq:de}
+d = 2e + 1
+\end{equation}
+
+
+\noindent \textbf{Generate Binary Code.}
+An $(n,M,d)_2$ binary code can be generated by using linear combination of each row of a generator matrix $[n,m,d]_2$ where $2^m = M$. A Generator matrix $G$ is an $n \times m$ matrix. Now see that binary code $(6,8,3)_2$ in Figure \ref{fig:binarycode683} can be generated using generator matrix $[6,3,3]_2$ in Figure \ref{fig:generator633}. Assume that each row of $[6,3,3]_2$ is $g_1$, $g_2$, and $g_3$, then binary code $(6,8,3)_2$ is the linear combination of all vectors of the form ${\lambda}_1 g_1 + {\lambda}_2 g_2 + {\lambda}_3 g_3$ where $\lambda{_i} \in \mathbb{F}_2^6$.
+
+\begin{figure}
+\centering
+\begin{BVerbatim}
+100110
+010101
+001011
+\end{BVerbatim}
+\caption{Generator matrix $[6,3,3]_2$}
+\label{fig:generator633}
+\end{figure}
+
+Now again see a generator matrix $[7,3,4]_2$ in Figure \ref{fig:generator734} can create a perfect binary code $(7,8,4)_2$ code in Figure \ref{fig:binarycode784}. A generator matrix $[n, m, d]_2$ where $n = 2^m - 1$ and each \textbf{column} is a linear combination of $m$ bit binary string except $\vec{0}$ can make a perfect binary code $(n,M,d)_2$ where $d = M/2$.
+\textbf{\textit{We need a profing or citation..}}
+
+\begin{figure}
+\centering
+\begin{BVerbatim}
+1001101
+0101011
+0010111
+\end{BVerbatim}
+\caption{Generator matrix $[7,3,4]_2$}
+\label{fig:generator734}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{BVerbatim}
+0000000  1000111
+0011101  1000111
+0101011  1000111
+0110110  1000111
+\end{BVerbatim}
+\caption{Perfect binary code $(7,8,4)_2$}
+\label{fig:binarycode784}
+\end{figure}
+
+Nah masalahnya, jika $d$ yang kita butuhkan kurang dari $M/2$, maka kita harus menggunakan seminimal mungkin $n$ kolom pertama $[M-1,M,M/2]_2$ sehingga menghasilkan $[n,M,d]_2$. Asumsikan kita memiliki fungsi $\aleph(d)$ adalah berapa kolom pada generator matrix yang akan menghasilkan kode biner dengan minimal jarak Hamming $d$. Hal yang pasti adalah $\aleph(M/2) = M-1$ dan $\aleph(1) = {log}_2(m)$ (need proving). Worst case adalah $\aleph(d)=M/2 + d - 1$. Best case adalah karena ada $M-1$ kolom untuk $0 \leq d \leq M/2$, maka $\aleph(d) = d/2$ (sepertinya tidak mungkin). Nah problem kita adalah bagaimana mengurutkan kolom pada generator matrix sehingga $\aleph(d)$ sesempurna mungkin, atau bisa dikatakan $\aleph(d) - \aleph(d-1) \approx 2$.
 
 \noindent \textbf{Section Headings.} The section headings are in boldface capital and lowercase letters. 
 Second level headings are typed as part of the succeeding paragraph (like the subsection heading of this paragraph).

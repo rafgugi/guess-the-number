@@ -7,5 +7,6 @@ Use TeXstudio and compile with XeLaTeX.
  - [ ] 2 margin sebelum dan sesudah equation beda
  - [ ] 4 daftar kode sumber tidak ada di daftar isi
  - [ ] 5 banyak warning pada saat compile
+ - [ ] 3 pengujian yang buat pilih brute force terbaik
  - [X] 1 posisi nomor halaman harusnya di bawah baik romawi maupun angka
  - [X] 3 `\subsubsection` tidak masuk dalam daftar isi

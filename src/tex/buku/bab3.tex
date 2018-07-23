@@ -147,7 +147,6 @@ $M$ & jumlah query & $M$ & jumlah query \\
     % /* each loop find the one best code order candidate */
     \For{$i = 1$ \KwTo $M$}{\label{alg:best_search_loop}
       \lIf{$code[i]$ already used}{continue}\label{alg:skip_used_code}
-      $min = \infty$\;
       $min\_count = 0$\;
       $min$ = minimal hamming distance if using $code[i]$\;\label{alg:test_distance}
       $min\_count$ = how many node which have hamming distance = $min$\;\label{alg:minmax}
