@@ -10,7 +10,7 @@ Pada permasalahan pencarian Ulam non interaktif, penjawab tidak diperbolehkan me
 
 Tahap untuk menyelesaikan permasalahan Ulam non interaktif ada pada Gambar \ref{fig:flow_binarycode}. Setelah dilakukan input ruang pencarian $M$ dan maksimal bohong $e$, simpan $M$ untuk digunakan pada saat output query terakhir. Ubah $M$ menjadi perpangkatan dua terdekat, karena algoritma selanjutnya hanya dapat berjalan jika $M$ adalah perpangkatan dua. Pada subbab selanjutnya akan dijelaskan algoritma untuk menggunakan query generator dan juga algoritma utama untuk menyelesaikan permasalahan Ulam non interaktif.
 
-Proses pencarian mendalam (\textit{exhaustive search}) akan dilakukan sebagai pra proses dan hasil pra proses tersebut akan langsung dimasukkan ke dalam kode sumber solusi, karena proses pencarian mendalam memiliki kompleksitas $O(M^3)$ sedangkan jika dilakukan sebagai pra proses dan dimasukkan langsung ke dalam kode sumber solusi sebagai array akan mengurangi kompleksitas menjadi $O(1)$. Namun untuk keperluan pengujian, algoritma kode biner tanpa tabel pencarian (algoritma kode biner yang melakukan proses pencarian mendalam) akan dibandingkan dengan algoritma kode biner dengan tabel pencarian (proses pencarian mendalam dilakukan sebagai pra proses).
+Proses pencarian mendalam (\textit{exhaustive search}) menggunakan pendekatan \textit{greedy} akan dilakukan sebagai pra proses dan hasil pra proses tersebut akan langsung dimasukkan ke dalam kode sumber solusi, karena proses pencarian mendalam memiliki kompleksitas $O(M^3)$ sedangkan jika dilakukan sebagai pra proses dan dimasukkan langsung ke dalam kode sumber solusi sebagai array akan mengurangi kompleksitas menjadi $O(1)$. Namun untuk keperluan pengujian, algoritma kode biner tanpa tabel pencarian (algoritma kode biner yang melakukan proses pencarian mendalam) akan dibandingkan dengan algoritma kode biner dengan tabel pencarian (proses pencarian mendalam dilakukan sebagai pra proses).
 
 \begin{figure}
 \centering
@@ -95,11 +95,20 @@ Oleh karena itu jika kita membutuhkan query yang menghasilkan $d = M/2$, maka gu
 
 \subsubsection{Pencarian mendalam untuk mendapatkan urutan kode biner}
 
-Algoritma solusi menggunakan generator matrix harus membuat urutan $s$ tertentu sedemikian hingga seminimal mungkin jumlah query $n$ yang dihasilkan dari $\vec{s} = \{s_1, \ldots, s_n\}$ akan menghasilkan semaksimal mungkin jarak Hamming $d$. Untuk itu dibuatlah algoritma pencarian mendalam \textit{exhaustive search} untuk mendapatkan urutan $\vec{s}$ yang paling optimal seperti yang ditunjukkan pada Kode Sumber \ref{alg:exhaustive_search}.
+Algoritma solusi menggunakan generator matrix harus membuat urutan $s$ tertentu sedemikian hingga seminimal mungkin jumlah query $n$ yang dihasilkan dari $\vec{s} = \{s_1, \ldots, s_n\}$ akan menghasilkan semaksimal mungkin jarak Hamming $d$. Untuk itu dibuatlah algoritma pencarian mendalam \textit{exhaustive search} dengan pendekatan \textit{greedy} untuk mendapatkan urutan $\vec{s}$ yang paling optimal seperti yang ditunjukkan pada Kode Sumber \ref{alg:exhaustive_search}.
 
-Pertama-tama program membuat seluruh kemungkinan query menggunakan generator seeder sehingga terbentuk $M-1$ query seperti yang ditunjukkan pada baris \ref{alg:pre_binary_code}. Lalu pada baris \ref{alg:best_order_loop}, program melakukan perulangan untuk membuat query sampai batas jarak Hamming $d$ yang diinginkan. 
+Pertama-tama program membuat seluruh $M-1$ kemungkinan query menggunakan algoritma pembangkit query sehingga terbentuk $M-1$ query seperti yang ditunjukkan pada baris \ref{alg:pre_binary_code}. Lalu pada baris \ref{alg:best_order_loop}, program melakukan perulangan pencarian mendalam untuk membuat query sampai batas jarak Hamming $d$ yang diinginkan menggunakan. Dilakukan pendekatan \textit{greedy} karena \textit{global optimum} yang dicari adalah sebesar mungkin nilai jarak minimal dengan query sesedikit mungkin. \textit{Global optimum} tersebut dapat didapat dengan mencari \textit{local optimum} di setiap iterasi.
 
-Pada baris \ref{alg:best_search_loop}, program melakukan perulangan untuk mencoba semua macam query yang belum digunakan untuk mencari yang terbaik, dan mengabaikan query yang sudah digunakan pada baris \ref{alg:skip_used_code}. Untuk mencari query yang terbaik pada state \texttt{order\_pointer}, parameter yang digunakan adalah yang jarak Hamming minimal yang paling besar dengan jumlah anggota dengan jarak Hamming tersebut yang paling sedikit, seperti yang ditunjukkan pada baris \ref{alg:minmax}. Setelah setiap satu pencarian best query pada satu state, program akan memperbarui jarak Hamming seperti yang ditunjukkan pada baris \ref{alg:update_distance}, lalu masukkan kandidat query terbaik ke \texttt{code\_order} seperti yang ditunkukkan pada baris \ref{alg:update_order}.
+Pada algoritma \textit{greedy} ini, fungsi seleksi untuk memilih kandidat query terbaik pada setiap iterasi ada empat macam, yang nanti akan diuji untuk dipilih fungsi seleksi terbaik. Fungsi seleksi tersebut adalah sebagai berikut:
+\begin{itemize}
+  \item Jarak minimum terbesar;
+  \item Jarak minimum terbesar diikuti dengan jarak maximum terkecil;
+  \item Yang paling kecil dari jarak maximum dikurangi dengan jarak minimum;
+  \item Jarak minimum terbesar diikuti dengan jumlah angka yang memiliki nilai minimum terkecil.
+\end{itemize}
+Keempat fungsi seleksi tersebut ditentukan karena \textit{global optimum} yang dicari adalah jarak minimum terbesar, selisih nilai jarak maximum dan jarak minimum harus sekecil mungkin, dan mencari query yang dapat menghabiskan sebanyak mungkin angka dengan jarak minimum.
+
+Pada baris \ref{alg:best_search_loop}, program melakukan perulangan untuk mencoba semua macam query yang belum digunakan untuk mencari yang terbaik, dan mengabaikan query yang sudah digunakan pada baris \ref{alg:skip_used_code}. Untuk mencari query yang terbaik pada state \texttt{order\_pointer}, parameter yang digunakan adalah sesuai dengan empat fungsi seleksi yang ditunjukkan pada baris \ref{alg:greedy_selection}. Setelah setiap satu pencarian best query pada satu state, program akan memperbarui jarak Hamming seperti yang ditunjukkan pada baris \ref{alg:update_distance}, lalu masukkan kandidat query terbaik ke \texttt{code\_order} seperti yang ditunkukkan pada baris \ref{alg:update_order}.
 
 \begin{table}[h!]
 \caption{Jumlah query keluaran dari Algoritma \textit{exhaustive search}}
@@ -142,23 +151,20 @@ $M$ & jumlah query & $M$ & jumlah query \\
 
   \While{$code\_min < d$}{\label{alg:best_order_loop}
     $best = 0$\;\label{alg:save_best_candidate}
-    $best\_min = 0$\;\label{alg:most_minimal_distance}
-    $best\_min\_count = \infty$\;\label{alg:least_minimal_member}
+    $most\_min = 0$\;\label{alg:most_minimal_distance}
+    $least\_min\_count = \infty$\;\label{alg:least_minimal_member}
     % /* each loop find the one best code order candidate */
     \For{$i = 1$ \KwTo $M$}{\label{alg:best_search_loop}
       \lIf{$code[i]$ already used}{continue}\label{alg:skip_used_code}
-      $min\_count = 0$\;
       $min$ = minimal hamming distance if using $code[i]$\;\label{alg:test_distance}
-      $min\_count$ = how many node which have hamming distance = $min$\;\label{alg:minmax}
-      \If{$min > best\_min\ ||\ (min == best\_min\ \&\&\ min\_count <
-          best\_min\_count)$}{\label{alg:save_the_best}
+      $min\_count$ = how many node which have hamming distance is $min$\;\label{alg:minmax}
+      \If{meet the greedy selection function}{\label{alg:greedy_selection}
         $best = i$\;
-        $best\_min = min$\;
-        $best\_min\_count = min\_count$\;
+        $most\_min = min$\;\label{alg:save_the_best}
+        $least\_min\_count = min\_count$\;
       }
     }
 
-    %update the $code\_distance$\;\label{alg:update_distance}
     $code\_min = \infty$\;
     \For{$j = 1$ \KwTo $M$}{\label{alg:update_distance}
       $code\_distance[j] \mathrel{+}= (code[best][0] != code[best][j])$\;
