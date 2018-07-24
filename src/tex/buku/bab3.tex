@@ -102,9 +102,9 @@ Pertama-tama program membuat seluruh $M-1$ kemungkinan query menggunakan algorit
 Pada algoritma \textit{greedy}, fungsi seleksi untuk memilih kandidat query terbaik pada setiap iterasi ada empat macam:
 \begin{enumerate}
   \item Jarak minimum terbesar;
-  \item Jarak minimum terbesar diikuti dengan jarak maximum terkecil;
-  \item Yang paling kecil dari jarak maximum dikurangi dengan jarak minimum;
-  \item Jarak minimum terbesar diikuti dengan jumlah angka yang memiliki nilai minimum terkecil.
+  \item Jarak minimum terbesar lalu jarak maximum terkecil;
+  \item Pengurangan jarak maximum dengan jarak minimum terkecil;
+  \item Jarak minimum terbesar lalu jumlah angka yang memiliki nilai minimum terkecil.
 \end{enumerate}
 
 Keempat fungsi seleksi tersebut ditentukan karena \textit{global optimum} yang dicari adalah jarak minimum terbesar, selisih nilai jarak maximum dan jarak minimum harus sekecil mungkin, dan mencari query yang dapat menghabiskan sebanyak mungkin angka dengan jarak minimum. Keempat fungsi seleksi  akan diuji untuk dipilih fungsi seleksi terbaik dan digunakan pada program utama. 

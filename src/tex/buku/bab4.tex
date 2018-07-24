@@ -66,7 +66,7 @@ legend entries={1,2,3,4,5},
 \label{fig:graph_selection_function}
 \end{figure}
 
-Pada Gambar \ref{fig:graph_selection_function}, legenda nomor satu sampai lima secara berurutan adalah jarak minimum terbesar, jarak minimum terbesar diikuti dengan jarak maximum terkecil, pengurangan dari jarak maximum terkecil dengan jarak minimum terbesar terkecil, jarak minimum terbesar diikuti dengan jumlah angka memiliki nilai minimum terkecil, dan terakhir algoritma repetisi biner. Dari gambar tersebut dapat disimpulkan bahwa fungsi seleksi yang paling optimal adalah minimum terbesar diikuti dengan jumlah angka memiliki nilai minimum terkecil.
+Pada Gambar \ref{fig:graph_selection_function}, legenda nomor satu sampai lima secara berurutan adalah jarak minimum terbesar, jarak minimum terbesar lalu jarak maximum terkecil, pengurangan jarak maximum dengan jarak minimum terkecil, jarak minimum terbesar lalu jumlah angka memiliki nilai minimum terkecil, dan terakhir algoritma repetisi biner. Dari gambar tersebut dapat disimpulkan bahwa fungsi seleksi yang paling optimal adalah minimum terbesar diikuti dengan jumlah angka memiliki nilai minimum terkecil.
 
 \begin{table}[h!]
 \caption{Jumlah query keluaran dari Algoritma \textit{exhaustive search}}
@@ -92,7 +92,14 @@ $M$ & jumlah query & $M$ & jumlah query \\
 \end{center}
 \end{table}
 
-Setelah kandidat fungsi seleksi terpilih, keluaran dari algoritma pencarian mendalam dengan inputan $2 \leq 2^m \leq 4096$ dan $e=16$ akan menghasilkan jumlah query seperti pada Tabel \ref{tab:query_count}. Setiap sejumlah query pada setiap $M$ ini akan menghasilkan $d = 33$ pada $128 \leq M \leq 4096$ atau telah menggunakan semua seed yang berjumlah $M-1$ pada $2 \leq M \leq 64$. Hasil query tersebut akan dimasukkan langsung ke dalam code pada solusi optimal pencarian Ulam non interaktif, pada program utama.
+Setelah kandidat fungsi seleksi terpilih, keluaran dari algoritma pencarian mendalam dengan inputan $2 \leq 2^m \leq 4096$ dan $e=16$ akan menghasilkan jumlah query seperti pada Tabel \ref{tab:query_count}. Setiap sejumlah query pada setiap $M$ ini akan menghasilkan $d = 33$ pada $128 \leq M \leq 4096$ atau telah menggunakan semua seed yang berjumlah $M-1$ pada $2 \leq M \leq 64$. Hasil query tersebut akan dimasukkan langsung ke dalam code pada solusi optimal pencarian Ulam non interaktif, pada program utama seperti pada Gambar \ref{fig:sourcecode_lookup}.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.80]{../img/kodingan.png}
+\caption{Potongan kode sumber tabel pencarian}
+\label{fig:sourcecode_lookup}
+\end{figure}
 
 \subsection{Hasil pengujian jumlah query}
 
