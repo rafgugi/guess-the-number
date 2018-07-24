@@ -7,7 +7,7 @@ Bab ini menjelaskan uji coba yang dilakukan pada sistem yang telah dibangun bese
 Subbab ini akan menjelaskan hasil pengujian program penyelesaian permasalahan. Pengujian dilakukan untuk tiga metode: metode repetisi pencarian biner, kode biner, dan kode biner dengan tabel pencarian. Ada dua metode pengujian yang digunakan:
 
 \begin{enumerate}
-  \item Pengujian lokal. Pengujian ini menggunakan mesin yang digunakan dalam pemgembang untuk mengukur kebenaran dan informasi hasil query, waktu eksekusi, dan penggunaan memori.
+  \item Pengujian lokal. Pengujian ini menggunakan mesin yang digunakan dalam pemgembang untuk mengukur kebenaran dan informasi hasil query, waktu eksekusi, dan penggunaan memori. Selain itu akan dilakukan pengujian untuk menentukan fungsi seleksi pada algoritma pencarian mendalam dengan pendekatan \textit{greedy}
   \item Pengujian luar. Pengujian ini menggunakan Online Judge untuk mengukur kebenaran dan informasi lain mengenai program.
 \end{enumerate}
 
@@ -40,6 +40,59 @@ Pengujian dibagi menjadi dua jenis, yaitu dengan dataset buatan dan dengan datas
 \section{Uji coba menggunakan dataset lokal}
 
 Tahap pengujian adalah melakukan uji coba menggunakan dataset sesuai pada batasan permasalahan untuk mengetahui hasil dan performa dari algoritma dan struktur data yang dibangun. Pengujian juga akan digunakan untuk membandingkan jumlah query, waktu, dan memory dari algoritma dari semua kasus uji dataset. Dataset akan divariasikan sesuai dengan jumlah ruang pencarian $M$ dan jumlah maksimal bohong $e$.
+
+\subsection{Hasil pengujian fungsi seleksi greedy}
+
+Pada pengujian empat fungsi seleksi \textit{gredy}, dataset yang digunakan adalah ruang pencarian $M=2^m \mid 1 \leq m \leq 12$ dan jumlah maksimal bohong $2 \leq e \leq 16$. Hasil yang akan dilihat adalah jumlah query dari setiap fungsi seleksi, semakin sedikit query pada semua kasus uji maka akan semakin bagus. Algoritma \textit{greedy} dengan empat variasi fungsi seleksi akan dibandingkan dengan algoritma repetisi biner \textit{ground truth}. Hasil algoritma repetisi biner juga akan menjadi batas maksimal query, jika jumlah query hasil algoritma \textit{greedy} melebihi jumlah query hasil repetisi biner, maka jumlah query repetisi biner yang akan dipilih.
+
+\begin{figure}
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+xlabel={Jumlah maksimal bohong $e$},
+ylabel={Jumlah query},
+legend pos=north west,
+grid style=dashed,
+legend entries={1,2,3,4,5},
+]
+\addplot[green,mark=*] table{data/brute-min.dat};
+\addplot[red,mark=o] table{data/brute-min-max.dat};
+\addplot[blue,mark=o] table{data/brute-max-min.dat};
+\addplot[purple,mark=*] table{data/brute-min-mincount.dat};
+\addplot[black,mark=o] table{data/brute-repetition.dat};
+\end{axis}
+\end{tikzpicture}
+\caption{Grafik pengujian fungsi seleksi greedy}
+\label{fig:graph_selection_function}
+\end{figure}
+
+Pada Gambar \ref{fig:graph_selection_function}, legenda nomor satu sampai lima secara berurutan adalah jarak minimum terbesar, jarak minimum terbesar diikuti dengan jarak maximum terkecil, pengurangan dari jarak maximum terkecil dengan jarak minimum terbesar terkecil, jarak minimum terbesar diikuti dengan jumlah angka memiliki nilai minimum terkecil, dan terakhir algoritma repetisi biner. Dari gambar tersebut dapat disimpulkan bahwa fungsi seleksi yang paling optimal adalah minimum terbesar diikuti dengan jumlah angka memiliki nilai minimum terkecil.
+
+\begin{table}[h!]
+\caption{Jumlah query keluaran dari Algoritma \textit{exhaustive search}}
+\label{tab:query_count}
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+$M$ & jumlah query & $M$ & jumlah query \\
+\hline
+2 & 1 & 128 & 72 \\
+\hline
+4 & 3 & 256 & 76 \\
+\hline
+8 & 7 & 512 & 79 \\
+\hline
+16 & 15 & 1024 & 81 \\
+\hline
+32 & 31 & 2048 & 84 \\
+\hline
+64 & 63 & 4096 & 86 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+Setelah kandidat fungsi seleksi terpilih, keluaran dari algoritma pencarian mendalam dengan inputan $2 \leq 2^m \leq 4096$ dan $e=16$ akan menghasilkan jumlah query seperti pada Tabel \ref{tab:query_count}. Setiap sejumlah query pada setiap $M$ ini akan menghasilkan $d = 33$ pada $128 \leq M \leq 4096$ atau telah menggunakan semua seed yang berjumlah $M-1$ pada $2 \leq M \leq 64$. Hasil query tersebut akan dimasukkan langsung ke dalam code pada solusi optimal pencarian Ulam non interaktif, pada program utama.
 
 \subsection{Hasil pengujian jumlah query}
 
