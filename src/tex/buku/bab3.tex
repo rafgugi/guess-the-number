@@ -8,7 +8,7 @@ Pada permasalahan pencarian Ulam non interaktif, penjawab tidak diperbolehkan me
 
 \subsection{Solusi menggunakan kode biner}
 
-Kita tahu bahwa permasalahan Ulam dengan ruang pencarian $M$ dan maksimal bohong $e$ dapat deselesaikan dengan membuat $q$ query yang jika ditranspose akan membentuk kode biner $(n,M,d)_2$ dimana $d = 2*e+1$. Oleh karena itu tahap selanjutnya adalah jika diketahui $M$ dan $d$, bagaimana membuat seminimal mungkin $n$ agar kode biner $(n,M,d)_2$ valid. Langkah utama untuk membuat kode biner tersebut dengan $M$ dan $e$ yang diketahui adalah dengan menambahkan kode agar minimal jarak Hamming kode biner mencapai $e$.
+Kita tahu bahwa permasalahan Ulam dengan ruang pencarian $M$ dan maksimal bohong $e$ dapat deselesaikan dengan membuat $q$ query yang jika ditranspose akan membentuk kode biner $(n,M,d)_2$ dimana $d = 2*e+1$. Oleh karena itu tahap selanjutnya adalah jika diketahui $M$ dan $d$, bagaimana membuat seminimal mungkin $n$ agar kode biner $(n,M,d)_2$ valid. Langkah utama untuk membuat kode biner tersebut dengan $M$ dan $e$ yang diketahui adalah dengan menambahkan kode secara iteratif agar minimal jarak Hamming kode biner mencapai $e$.
 
 Gambar \ref{fig:hamming1} menunjukkan ilustrasi jika $M = 8$, $n = 3$, dan $d = 1$. Tabel pada gambar  menunjukkan jarak Hamming antar codeword $x$ dan $y$, sehingga dapat disimpulkan jarak Hamming minimal adalah 1. Gambar \ref{fig:hamming2} adalah penambahan dua kode dari Gambar \ref{fig:hamming1} sehingga $n = 5$ dan $d = 2$.
 
