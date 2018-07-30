@@ -33,7 +33,7 @@ GUESSN5 & 2-16 & Subset & Non-interaktif & challenge & Sangat susah \\
 
 \section{Formulasi permasalahan}
 
-Bentuk permasalahan Ulam yang dibahas pada paper ini diangkat dari online judge SPOJ oleh Micha\l{} Miodek \cite{guessn5}. Penjawab menentukan sebuah bilangan $x$ pada rentang $S_M=\{0,\ldots,M-1\}$. Anda sebagai penanya harus mencari nilai $x$ dengan memberikan maksimal $n$ query khusus apakah "$x \in Q$?", lalu penjawab menjawab 'ya' atau 'tidak' pada setiap query yang ditanyakan. Permasalahan utama adalah penjawab dapat berbohong sampai $e$ kali. Selain itu, penjawab hanya boleh menjawab query penanya setelah penanya selesai menanyakan semua query-nya. Tujuan dari Ulam adalah mencari jumlah query minimal untuk dapat menentukan nilai $x$.
+Bentuk permasalahan Ulam yang dibahas pada paper ini diangkat dari \textit{online judge} SPOJ oleh Micha\l{} Miodek \cite{guessn5}. Penjawab menentukan sebuah bilangan $x$ pada rentang $S_M=\{0,\ldots,M-1\}$. Anda sebagai penanya harus mencari nilai $x$ dengan memberikan maksimal $n$ query khusus apakah "$x \in Q$?", lalu penjawab menjawab 'ya' atau 'tidak' pada setiap query yang ditanyakan. Permasalahan utama adalah penjawab dapat berbohong sampai $e$ kali. Selain itu, penjawab hanya boleh menjawab query penanya setelah penanya selesai menanyakan semua query-nya. Tujuan dari Ulam adalah mencari jumlah query minimal untuk dapat menentukan nilai $x$.
 
 Bentuk dari query adalah string $s_1s_2s_3\ldots s_n$ di mana $s_i$ bernilai $0$ atau $1$. Jawaban dari penjawab adalah "Ya" jika $s_x=1$ atau "Tidak" jika $s_x=0$ dengan asumsi penjawab menjawab jujur.
 
@@ -159,7 +159,7 @@ Misalnya jika $M=8$, $e=2$, maka jumlah $q_b$ untuk pencarian biner adalah \text
 
 Tujuan utama dari teori pengkodean (\textit{coding theory}) adalah bagaimana mengirimkan pesan pada kanal yang mengandung derau (\textit{noisy channel}) \cite{VanLint2016}. Misal jika ada delapan macam kata pesan yang akan dikirim, maka kita merepresentasikan pesan tersebut menjadi bitstring biner dengan panjang 3. Namun jika pesan tersebut dikirm langsung melewati kanal yang mengandung derau, bisa jadi misalkan ada 1 bit akan tertukar, misal \texttt{001} menjadi \texttt{011}. Jika terjadi seperti itu, maka sebuah kata dapat tertukar menjadi kata yang lain.
 
-Kita tahu bahwa jika kode biner sepanjang $n$ digunakan untuk membuat $2^n$ bitstring tidak dapat mendeteksi eror. Ide yang paling mungkin adalah pengirim dan penerima menyetujui sebuah metode enkripsi bitstring menjadi bitstring yang lebih panjang dan dapat mendeteksi maksimal sebanyak $e$ error menggunakan kode linear.
+Kita tahu bahwa jika kode biner sepanjang $n$ digunakan untuk membuat $2^n$ bitstring tidak dapat mendeteksi error. Ide yang paling mungkin adalah pengirim dan penerima menyetujui sebuah metode enkripsi bitstring menjadi bitstring yang lebih panjang dan dapat mendeteksi maksimal sebanyak $e$ error menggunakan kode linear.
 
 Kode linear adalah kode yang paling banyak dipelajari karena struktur aljabar yang mudah dipelajari dibandingkan kode non-linear \cite{Huffman}. Bidang kode linear dapat dinotasikan sebagai $\mathbb{F}_q^n$, yaitu kode memiliki $q$ jenis elemen dan memiliki panjang $n$. Bentuk kode biner adalah $\mathbb{F}_2^n$, memiliki struktur aljabar penjumlahan dan perkalian pada Gambar \ref{fig:algebra}.
 

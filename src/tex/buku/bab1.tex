@@ -13,10 +13,12 @@ Pada aturan format pertanyaan, terdapat beberapa variasi. Yang pertama adalah pe
 
 Pada aturan interaksi antara penjawab dan penanya, terdapat tiga macam variasi yaitu interaktif, batch, dan non interaktif. Aturan yang paling umum digunakan adalah interaktif, yaitu penjawab harus menjawab setiap pertanyaan yang diajukan penanya sebelum penanya menanyakan pertanyaan selanjutnya. Pada aturan batch, penanya dan penjawab menyepakati berapa jumlah batch. Lalu pada setiap batch, penanya memberikan beberapa pertanyaan, lalu penjawab memberikan jawaban sejumlah pertanyaan yang diberikan oleh penanya \cite{Cicalese2000}. Aturan yang terakhir adalah non interaktif, yaitu penjawab harus menjawab semua pertanyaan penanya sekaligus \cite{Macula1997}.
 
-Salah satu variasi permasalahan Ulam dan Rényi yang diangkat dalam penelitian ini adalah pencarian Ulam dengan $n$ query subset ${q_1,q_2,\ldots,q_n} | q_i \in S_M$, maksimal bohong adalah $e$, dan penjawab hanya boleh menjawab query penanya setelah penanya selesai menanyakan semua query-nya. Belum ada penelitian yang menyelesaikan permasalahan ini. Oleh karena itu penelitian ini bertujuan untuk memberikan solusi pada permasalahan ini.
+Salah satu variasi permasalahan Ulam dan Rényi yang diangkat dalam penelitian ini adalah pencarian Ulam dengan $n$ query subset ${q_1,q_2,\ldots,q_n} | q_i \in S_M$, maksimal bohong adalah $e$, dan penjawab hanya boleh menjawab query penanya setelah penanya selesai menanyakan semua query. Permasalahan ini diangkat oleh Micha\l{} Miodek pada kategori \textit{challenge} di \textit{online judge} ternama yaitu SPOJ dengan identifikasi soal GUESSN5 \cite{guessn5}. Kategori \textit{challenge} pada SPOJ adalah solusi yang diajukan oleh user akan dinilai beradasarkan skor untuk ditentukan rankingnya, sehingga ada solusi lebih bagus daripada solusi yang lain.
+
+Pengujian dan evaluasi algoritma yang dirumuskan pada tesis ini dilakukan dengan pengujian dataset lokal dan pengujian dataset online menggunakan SPOJ. Pengujian dataset lokal dilakukan untuk membandingkan jumlah query, waktu eksekusi, dan penggunaan memory dari semua algoritma dari semua kasus uji dataset. Pengujian pada SPOJ dilakukan untuk membandingkan algoritma solusi pada tesis ini dengan algoritma orang lain.
 
 
-\section {Rumusan Masalah}
+\section{Rumusan Masalah}
 Permasalahan yang akan diselesaikan pada tesis ini adalah sebagai berikut:
 
 \begin {enumerate}
@@ -27,7 +29,26 @@ Permasalahan yang akan diselesaikan pada tesis ini adalah sebagai berikut:
 \end {enumerate}
 
 
-\section {Batasan Masalah}
+\section{Tujuan}
+Tujuan tesis ini adalah sebagai berikut:
+
+\begin{enumerate}
+  \item Melakukan analisis dan mendesain algoritma dan struktur data untuk mencari bilangan dengan kebohongan dalam studi kasus permasalahan pencarian Ulam non interaktif dengan kebohongan.
+  \item Mengevaluasi hasil dan kinerja algoritma dan struktur data yang telah dirancang untuk permasalahan pencarian Ulam non interaktif dengan kebohongan.
+\end{enumerate}
+
+
+\section{Manfaat penelitian}
+
+Permasalahan Ulam non-interaktif dapat menjadi penting dalam beberapa aplikasi praktis. Salah satunya dapat digunakan untuk membuat enkode untuk mengirimkan data pada jarak yang sangat jauh seperti pada luar angkasa, yaitu pada saat $M$ macam data yang dikirimkan, terdapat kemungkinan ada $e$ bit yang error. Dengan solusi yang dihasilkan pada permasalahan Ulam non-interaktif, data yang error dapat dikembalikan ke data semula dengan asumsi error yang terjadi tidak melebihi batas maksimal error yang sebelumnya sudah ditentukan. Demikian pula pada tes medis yang mungkin harus dilakukan secara paralel tanpa menunggu hasilnya untuk menentukan tes selanjutnya seperti pada rangkaian tes seri, bertujuan untuk mempercepat proses diagnostik \cite{Pelc2002}.
+
+
+\section{Kontribusi penelitian}
+
+Belum ada pembahasan tentang permasalahan Ulam dengan query non-interaktif dan jumlah bohong lebih dari satu, dimana penanya harus menyiapkan seluruh query-nya sebelum penjawab menjawab seluruh query penanya sekaligus.
+
+
+\section{Batasan Masalah}
 Masalah yang akan diselesaikan memiliki batasan-batasan berikut:
 
 \begin{enumerate}
@@ -37,23 +58,4 @@ Masalah yang akan diselesaikan memiliki batasan-batasan berikut:
   \item Interval ruang pencarian adalah $[1,M]$, dengan $M$ maksimum $2^{12}$.
   \item Jumlah maksimal penjawab dapat berbohong adalah $2 \leq e \leq 16$.
   \item Dataset yang digunakan adalah dataset pada permasalahan SPOJ GUESSN5.
-\end{enumerate}
-
-
-\section {Tujuan}
-Tujuan tesis ini adalah sebagai berikut:
-
-\begin{enumerate}
-  \item Melakukan analisis dan mendesain algoritma dan struktur data untuk mencari bilangan dengan kebohongan dalam studi kasus permasalahan pencarian Ulam non interaktif dengan kebohongan.
-  \item Mengevaluasi hasil dan kinerja algoritma dan struktur data yang telah dirancang untuk permasalahan pencarian Ulam non interaktif dengan kebohongan.
-\end{enumerate}
-
-
-\section {Sistematika Penulisan}
-Sistematika laporan tesis yang akan digunakan adalah sebagai berikut:
-
-\begin{enumerate}
-\item Bagian awal, meliputi halaman depan, halaman pengesahan, abstrak, kata pengantar, daftar isi, daftar gambar, dan daftar tabel.
-\item Bagian inti, meliputi pendahuluan, tinjauan pustaka, metodologi, hasil dan pembahasan, dan kesimpulan dan saran.
-\item Bagian akhir, meliputi daftar pustaka, lampiran-lampiran, dan biodata penulis.
 \end{enumerate}

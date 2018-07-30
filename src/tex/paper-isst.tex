@@ -14,6 +14,12 @@
 \usepackage{subfigure}
 \usepackage{times}
 \usepackage{xesearch}
+\usepackage{tikz}
+\usepackage{pgfplots}
+
+\usetikzlibrary{backgrounds}
+\usetikzlibrary{shapes.geometric, arrows}
+\usetikzlibrary{automata,positioning}
 
 % Theorems
 \newtheorem{exmp}{Example}[section]
@@ -55,7 +61,7 @@
 
 \begin{document}
 
-\title{\titleformat Perfect Queries for Non-interactive\\Ulam Searching Game with Many Lies}
+\title{\titleformat Exhaustive Search of Binary Code Generator for Solving Non\\Interactive Ulam's Searching Problem with Many Lies}
 
 \author{\authorformat Risyanggi Azmi Faizin$^{\rm{a}}$\text{,} R. V. Hari Ginardi$^{\rm{b}}$\text{,} and Rully Soelaiman$^{\rm{c}}$}
 
@@ -76,11 +82,11 @@ On the classic Ulam and Rényi searching problem, the questioner has to ask some
 There are already solutions of some variations in the Ulam and Rényi searching problem, i.e. on the type of query between range or subset and the maximum number of lies between one, two, three, and so on.
 But there is no perfect solution for non-interactive queries which the answerer can only answer the questioner's query after the questioner has finished querying all the queries.
 No research has resolved this problem yet.
-In this paper we will describe the perfect solution for non-interactive Ulam and Rényi searching problem with many lies using binary code with Hamming distance.
-The algorithm results in this paper show a much smaller number of queries than the common binary repetition algorithm and the best results on a reputable online judge.
+In this paper we will describe the perfect solution for non-interactive Ulam and Rényi searching problem with many lies using greedy exhaustive search to generate binary code with Hamming distance.
+The algorithm results in this paper show a much smaller number of queries than the common binary repetition algorithm.
+
 
 \section{Introduction}
-% \vspace{-6pt}
 
 In the development of information technology over the last few decades, information technology is often used as a solution to the problems that ever existed, which was previously solved manually by humans. Examples of problems that ever existed were one of the classic Ulam and Rényi searching problem. This problem can be illustrated by the presence of two players called questioner and answerer. Given search space $S_M = {0,\ldots,M-1}$, answerer choose a value $x \in S_M$. Questioner must find the value $x$ by asking some yes-no question, is "$x \in Q$?", where $Q \subset S_M$, then answerer answer with "yes" or "no". The main problem is the answerers can lie up $e$ times. The problem with this game is to find the minimum number of queries to be able to determine the value of $x$.
 
@@ -94,6 +100,8 @@ In the interaction between questioner and answerer, there are three variations w
 
 Variation of Ulam and Rényi problems raised in this study is Ulam searching problem with $n$ query subset ${q_1,q_2,\ldots,q_n} | q_i \in S_M$, answerer can lie up to $e$ answers, and the query is non-interactive. No research has resolved this problem yet. Therefore this study aims to provide solutions to this problem.
 
+There haven't been discussion of Ulam problem with non-interactive queries and more than one lie number, which the questioner must prepare all of his queries before the answerer answer all the query requests at once. The solution generated from this problem can be used to create error correctiong encoding for sending data over a noisy channel, ie when $M$ maca data is sent, there may be an error $e$ bits.
+
 \section{Problem formulation}
 
 The form of the Ulam problem discussed in this paper is taken from online judge SPOJ by Micha\l{} Miodek \cite{guessn5}. Answerer specifies $x$, a number in the range $S_M = \{0, \ldots, M-1 \}$. You as the questioner must find $x$ by giving the as minimal as possible $n$ query. The form of query is "is $x \in Q$?". Then the answerer answers "yes" or "no" to each query in question. The answerers can lie up to $e$ times. Additionally, the answerer may only answer the questioner's queries after the questioner has finished asking all the queries. The main problem is how to find the minimum number of queries to be able to determine the value of $x$.
@@ -101,44 +109,14 @@ The form of the Ulam problem discussed in this paper is taken from online judge 
 The form of the query is string $s_1s_2s_3\ldots s_n$ where $s_i \in \{0,1\}$. The answer of the answerer is "Yes" if $s_x = 1$ or "No" if $s_x = 0$ assuming the answerer tell the truth. The real task of the problem is not to find value of $x$, but to just set up queries that will allow it to get value of $x$ from all possible answers from answerer. The answerer will not answer the query provided by the questioner. If the answerer find that there is a set of answers that cause more than one possible value of $x$, then testing is considered a failure.
 
 
-\section{Backround of binary code}
+\section{Backround of Binary Code}
 
 \noindent \textbf{Coding Theory.}
 The main purpose of coding theory is how to send a message on a noisy channel \cite{VanLint2016}. Suppose if there are eight kinds of messages to be sent, then we represent the message into binary bitstring with length 3. However if the message is sent directly through the channel containing the noise, suppose there is 1 bit will be swapped, eg $001$ to $011$, then a word can be confused into another word.
 
 We know that if the binary code with length $n$ is used to make $2^n$ bitstring can't detect an error. The most likely idea is that the sender and receiver agree on a bitstring encryption method into a longer bitstring and can detect a maximum of $e$ errors using a linear code.
 
-The linear code is the most studied code because the algebraic structure is easy to learn compared to the non-linear code \cite{Huffman}. The linear code field can be denoted as $\mathbb{F}_q^n$, ie the code has $q$ element type and has a length of $n$. The binary code form is $\mathbb{F}_2^n $, has the following addition and subtraction algebraic structure.
-
-\begin{align*}
-0 + 0 &= 0 & 0 \cdot 0 &= 0 \\
-0 + 1 &= 1 & 0 \cdot 1 &= 0 \\
-1 + 0 &= 1 & 1 \cdot 0 &= 0 \\
-1 + 1 &= 0 & 1 \cdot 1 &= 1
-\end{align*}
-
-Hamming distance between two bitstrings $\vec{x}$ and $\vec{y}$ with the same length $n$ is defined by Eq.~\ref{eq:dh}. For example, $d_H(0000,1111)= 4$ and $d_H(00110,00101)= 2$. $d_H(\vec{x},\vec{y})$ can also be defined as the minimum transformation to change $\vec{x}$ to $\vec{y}$. For example, $\vec{x}=00110$ and $\vec{y}=00101$, have two different on the last bits with Hamming distance 2, can also be said $\vec{x}+00011 = \vec{y}$.
-
-\begin{equation} \label{eq:dh}
-d_H(\vec{x},\vec{y}) = |\{i \in {1,\ldots,n} \mid x_i \neq y_i\}|
-\end{equation}
-
-Weight of bitstring $\vec{x}$ defined with $wt(\vec{x})$, that is number of digits of $\vec{x}$ which is not $0$ as defined by Eq.~\ref{eq:wt}. For example, $wt(00101) = 2$ and $wt(11111) = 5$. Jika dihubungkan dengan jarak Hamming, jika $\vec{x}+\vec{e} = \vec{y}$ maka $d_H(\vec{x},\vec{y}) = wt(\vec{x}+\vec{y})$.
-
-\begin{equation} \label{eq:wt}
-wt(\vec{x}) = |\{i \in {1,\ldots,n} \mid x_i \neq 0\}|
-\end{equation}
-
-There is an Euclidean metric in the Euclidean space requirement known as triangle inequality \cite{VanLint2016}. From Eq.~\ref{eq:dh_unequal}, assuming $\vec{z}$ is a zero vector $\vec{0}$, then Eq.~\ref{eq:wt_unequal} is obtained.
-
-\begin{align}
-d_H(\vec{x},\vec{y}) &\le d_H(\vec{x},\vec{z}) + d_H(\vec{y},\vec{z}) \label{eq:dh_unequal} \\
-wt(\vec{x}+\vec{y}) &\le wt(\vec{x}) + wt(\vec{y}) \label{eq:wt_unequal}
-\end{align}
-
-
-\noindent \textbf{Binary Code.}
-Binary code is a collection of $M$ binary bitstrings with length $n$ and Hamming distance between every two different bitstrings are maximum $d$. Example $M=8$, $n=6$, and $d=3$ in Fig.~\ref{fig:binarycode683}. Parameter in this binary code is $(6,8,3)_2$, binary is shown by number 2, bitstring length 6, contains 8 bitstrings, and minimum Hamming distance 3. Bitstring in binary code hereinafter called codeword.
+Binary code is a collection of $M$ binary bitstrings with length $n$ and Hamming distance between every two different bitstrings are maximum $d$. Example $M=8$, $n=6$, and $d=3$ in Fig.~\ref{fig:binarycode683}. Parameter in this binary code is $(6,8,3)_2$, binary is shown by number 2, bitstring length 6, contains 8 bitstrings, and minimum Hamming distance 3. Bitstring in binary code hereinafter called codeword. General notation of binary code is $(n,M,d)_2$.
 
 \begin{figure}
 \centering
@@ -148,18 +126,17 @@ Binary code is a collection of $M$ binary bitstrings with length $n$ and Hamming
 010101  110011
 011110  111000
 \end{BVerbatim}
-\caption{Kode biner $(6,8,3)_2$}
+\caption{Binary code $(6,8,3)_2$}
 \label{fig:binarycode683}
 \end{figure}
 
 % With binary code $(6,8,3)_2$ in Fig.~\ref{fig:binarycode683}, sender and receiver agreed on only those codeword that will be sent and received. Assumed only one bit will be error, the message can still be recovered to the original message. Hamming distance between two different codewords is 3, that means in Jarak Hamming antara setiap dua kata kode yang berbeda adalah 3, berarti dari setiap kata kode, terdapat sejumlah bitstring selain kata kode berjarak 1.
 
-General notation of binary code is $(n,M,d)_2$. We can assume there are $M$ balls with radius $e$ that are not intersecting each others as in Fig.~\ref{fig:codewordsball}. Distance between one ball to another is at least $d$, so that we can obtain Eq.~\ref{eq:de}.
+% We can assume there are $M$ balls with radius $e$ that are not intersecting each others. Distance between one ball to another is at least $d$, so that we can obtain Eq.~\ref{eq:de}.
 
 \begin{equation} \label{eq:de}
 d = 2e + 1
 \end{equation}
-
 
 \noindent \textbf{Generate Binary Code.}
 An $(n,M,d)_2$ binary code can be generated by using linear combination of each row of a generator matrix $[n,m,d]_2$ where $2^m = M$. A Generator matrix $G$ is an $n \times m$ matrix. Now see that binary code $(6,8,3)_2$ in Figure \ref{fig:binarycode683} can be generated using generator matrix $[6,3,3]_2$ in Figure \ref{fig:generator633}. Assume that each row of $[6,3,3]_2$ is $g_1$, $g_2$, and $g_3$, then binary code $(6,8,3)_2$ is the linear combination of all vectors of the form ${\lambda}_1 g_1 + {\lambda}_2 g_2 + {\lambda}_3 g_3$ where $\lambda{_i} \in \mathbb{F}_2^6$.
@@ -175,55 +152,95 @@ An $(n,M,d)_2$ binary code can be generated by using linear combination of each 
 \label{fig:generator633}
 \end{figure}
 
-Now again see a generator matrix $[7,3,4]_2$ in Figure \ref{fig:generator734} can create a perfect binary code $(7,8,4)_2$ code in Figure \ref{fig:binarycode784}. A generator matrix $[n, m, d]_2$ where $n = 2^m - 1$ and each \textbf{column} is all possible $m$ bits binary strings except $\vec{0}$ can make a perfect binary code $(n,M,d)_2$ where $d = M/2$.
-\textbf{\textit{We need a proofing or citation..}}
-
-\begin{figure}
-\centering
-\begin{BVerbatim}
-1001101
-0101011
-0010111
-\end{BVerbatim}
-\caption{Generator matrix $[7,3,4]_2$}
-\label{fig:generator734}
-\end{figure}
-
-\begin{figure}
-\centering
-\begin{BVerbatim}
-0000000  1000111
-0011101  1000111
-0101011  1000111
-0110110  1000111
-\end{BVerbatim}
-\caption{Perfect binary code $(7,8,4)_2$}
-\label{fig:binarycode784}
-\end{figure}
-
 From a binary code, we can create a new binary code by modifying the existing binary code \cite{Huffman}. Modifications that can be done is to add and reduce the code. From a binary code $(n,M,d)_2 $, it can be deducted on a particular column so the binary code becomes $(n-1,M,d^\prime) _2 $ where $d^\prime = d$ or $d^\prime = d-1$. Similarly with the addition of code, from a binary code $(n,M,d)_2$, it can be added code so the binary code becomes $(n+1,M,d^\prime)_2 $ where $d^\prime = d$ or $d^\prime = d+1$.
+
+\section{Greedy Exhaustive Search}
 
 We know that the Ulam problem with the $M$ search space and the maximum $e$ lies can be solved by making $q$ queries which if the set of the queries is transposed, it will form the binary code $(n,M,d) _2$ where $d=2*e+1$. Therefore the next stage is how to find as minimum as possible $n$ to make the binary code $(n,M,d)_2$ where $M$ and $d$ is known. The main step to make the binary code with $M$ and $e$ known is to add the code iteratively until its minimum Hamming distance reaches $e$.
 
-Fig.~\ref{fig:hamming1} shows an illustration if $M = 8$, $n = 3$, and $d = 1$. The table in the picture shows the Hamming distance between codeword $x$ and $y$, so it can be concluded that the minimum Hamming distance is 1. Fig.~\ref{fig:hamming2} is addition of two codes from Fig.~\ref{fig:hamming1} so that $n = 5$ and $d = 2$.
+The solution using the matrix generator should make a certain $s$ sequence such that a minimum number of $n$ queries generated from $\vec{s}= \{s_1,\ldots,s_n\}$ will generate as many as possible Hamming distance $d$. For that reason, a greedy exhaustive search is proposed to get the most optimized $\vec{s}$ sequences. The greedy approach is used because the global optimum sought is as many as possible the minimum distance value with as few queries as possible. Global optimum can be obtained by finding local optimum in each iteration.
+
+In the greedy algorithm, there are four kinds of selection functions to select the best query candidate on each iteration:
+\begin{enumerate}
+  \item The most minimum distance;
+  \item The most minimum distance, then the least maximum distance;
+  \item The most {maximum distance - minimum distance};
+  \item The most minimum distance, then the least min count distance.
+\end{enumerate}
+
+The four selection functions are determined because the global optimum sought is the largest minimum distance, the difference between the maximum distance and minimum distances should be as small as possible, and the resulting query can eliminate as much as possible the number with minimum distance. The four selection functions will be tested to choose the best selection function and used in the main greedy exhaustive search algorithm.
+
+\section{Testing and Evaluation.}
+
+The testing phase is to test the dataset according to the limit of the problem to find out the results and the performance of the algorithm. Testing will also be used to compare the number of queries, execution time, and memory of the algorithm from all dataset test cases. The dataset will be varied according to the $2 \le M \le 4096$ search space and the maximal $2 \le e \le 16$ lies.
+
+In testing four gredy selection functions, the result shows the number of queries from each selection function, the less the query in all test cases the better. The greedy algorithm with four variations of the selection function will be compared with the bin truth binary repetition algorithm. The result of binary repetition algorithm will also be the maximum query limit, if the number of queries resulted in greedy algorithm exceeds the number of query result of binary repetition, then the number of binary repetition query to be selected.
 
 \begin{figure}
-\centering
-\includegraphics[scale=0.7]{../img/hamming1.png}
-\caption{Hasil tabel jarak Hamming pada $(3,8,1)_2$}
-\label{fig:hamming1}
+	\centering
+	\begin{tikzpicture}
+	\begin{axis}[
+	xlabel={Jumlah maksimal bohong $e$},
+	ylabel={Jumlah query},
+	legend pos=north west,
+	grid style=dashed,
+	legend entries={1,2,3,4,5},
+	]
+	\addplot[green,mark=*] table{data/brute-min.dat};
+	\addplot[red,mark=o] table{data/brute-min-max.dat};
+	\addplot[blue,mark=o] table{data/brute-max-min.dat};
+	\addplot[purple,mark=*] table{data/brute-min-mincount.dat};
+	\addplot[black,mark=o] table{data/brute-repetition.dat};
+	\end{axis}
+	\end{tikzpicture}
+	\caption{Testing of selection function greedy algorithm}
+	\label{fig:graph_selection_function}
 \end{figure}
 
 \begin{figure}
-\centering
-\includegraphics[scale=0.7]{../img/hamming2.png}
-\caption{Hasil tabel jarak Hamming pada $(5,8,2)_2$}
-\label{fig:hamming2}
+	\centering
+	\begin{tikzpicture}
+	\begin{axis}[
+	xlabel={Jumlah ruang pencarian($2^m$)},
+	ylabel={Waktu eksekusi(detik)},
+	legend pos=north west,
+	grid style=dashed,
+	legend entries={Pengulangan biner,Kode biner,Tabel pencarian},
+	]
+	\addplot[blue,mark=triangle] table{data/timeR.dat};
+	\addplot[red,mark=*] table{data/timeB.dat};
+	\addplot[green,mark=square] table{data/timeL.dat};
+	\end{axis}
+	\end{tikzpicture}
+	\caption{Grafik perbandingan waktu eksekusi}
+	\label{fig:graph_time}
 \end{figure}
 
-\section{Summary}
-\noindent If you follow the `checklist` your paper will conform to the requirements
- of the publisher and facilitate a problem-free publication process.
+\begin{figure}
+	\centering
+	\begin{tikzpicture}
+	\begin{axis}[
+	xlabel={Jumlah ruang pencarian($2^m$)},
+	ylabel={Penggunaan memory(byte)},
+	legend pos=north west,
+	grid style=dashed,
+	legend entries={Pengulangan biner,Kode biner,Tabel pencarian},
+	]
+	\addplot[blue,mark=triangle] table{data/memoryR.dat};
+	\addplot[red,mark=*] table{data/memoryB.dat};
+	\addplot[green,mark=square] table{data/memoryL.dat};
+	\end{axis}
+	\end{tikzpicture}
+	\caption{Grafik perbandingan penggunaan memory}
+	\label{fig:graph_memory}
+\end{figure}
+
+In Fig.~\ref{fig:graph_selection_function}, legends number one to five are respectively the largest minimum distance, the largest minimum distance then the smallest maximum distance, the maximum distance reducted with the smallest minimum distance, the largest minimum distance then the number of numbers has the smallest minimum value, and last is binary repetition algorithm. From the figure it can be concluded that the most optimal selection function is the largest minimum followed by the number of numbers has the smallest minimum value and the selection function is used in the main greedy exhaustive search algorithm.
+
+In the test of execution time and memory usage, on each algorithm, tested 12 test cases according to the number of search space variations $M = 2^m \mid 1 \leq m \leq 12$. In each test case, there is 15 test cases according to the maximum lie variation $2 \leq e \leq 16$. The test results are shown in Fig.~\ref{fig:graph_time} and Fig.~\ref{fig:graph_memory}. It can be concluded that binary code algorithm without search table resulted in a higher execution time and memory usage, while for binary repetition and binary code with lookup table result in stable execution time and memory usage. This is because the binary code algorithm without the lookup table has the complexity of $O(M^3) $ in the exhaustive search process, whereas the binary code algorithm with the lookup table has the $O(1)$ complexity because the exhaustive search process is done as a pre-process.
+
+\section{Conclusion}
+\noindent The conclusion is that the generating binary code with greedy exhaustive search algorithm with greedy selection function used is the largest minimum followed by the number of numbers has the smallest minimum value shows much better results in terms of the number of queries produced, but the execution time and memory usage. Therefore, binary code algorithm can be optimized with lookup table as preprocess so that it can reduce and stabilize the execution time.
 
 \bibliography{holy}
 
