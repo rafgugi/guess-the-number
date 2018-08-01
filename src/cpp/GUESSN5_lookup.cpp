@@ -34,7 +34,7 @@ int main(int argc, char const *argv[]) {
 
     cin >> t;
     while (t--) {
-        cin >> M >> e >> max_query_allowed; // variabel m buat coba coba
+        cin >> M >> e >> max_query_allowed;
 
         the_real_M = M;
         M = pow(2, ceil(log2(M))); // M is the closest power(2)

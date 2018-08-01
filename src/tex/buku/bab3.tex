@@ -115,7 +115,7 @@ d_{mod} &= d \text{ mod } (M/2) \label{eq:dmod}
 Oleh karena itu jika kita membutuhkan query yang menghasilkan $d = M/2$, maka gunakan seluruh $M-1$ query dengan generator. Sedangkan jika kita membutuhkan query yang menghasilkan $d < M/2$, pilih sesedikit mungkin $n$ query agar menghasilkan $d$ yang dibutuhkan. Dari kebutuhan tersebut, dibuatlah rumus $q_{rep}$ dan $d_{mod}$. Nilai $q_{rep}$ yang didapat dari Persamaan \ref{eq:qrep} adalah jumlah perulangan yang dilakukan terhadap $M-1$ query untuk mencapai solusi. Nilai $d_{mod}$ yang didapat dari Persamaan \ref{eq:dmod} adalah sisa jarak Hamming $d$ yang dibutuhkan untuk mencapai solusi. Cara untuk mencari jumlah query sisa untuk menghasilkan jarak Hamming distance $d_{mod}$ ada pada subbab selanjutnya.
 
 
-\subsubsection{Pencarian mendalam untuk mendapatkan urutan kode biner}
+\subsubsection{Pencarian mendalam dengan greedy}
 
 Algoritma solusi menggunakan generator matrix harus membuat urutan $s$ tertentu sedemikian hingga seminimal mungkin jumlah query $n$ yang dihasilkan dari $\vec{s} = \{s_1, \ldots, s_n\}$ akan menghasilkan semaksimal mungkin jarak Hamming $d$. Untuk itu dibuatlah algoritma pencarian mendalam \textit{exhaustive search} dengan pendekatan \textit{greedy} untuk mendapatkan urutan $\vec{s}$ yang paling optimal seperti yang ditunjukkan pada Kode Sumber \ref{alg:exhaustive_search}.
 
